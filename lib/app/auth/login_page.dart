@@ -45,25 +45,25 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      
+
       Logger.printDebug('Login successful');
 
       // Update app state
       await AppDataService.instance.setItem(
-        AppDataKey.introSeen, 
+        AppDataKey.introSeen,
         '1',
         updateGlobalState: true,
       );
-      
+
       final user = FirebaseAuth.instance.currentUser;
       if (user?.displayName != null) {
-         await UserSettingService.instance.setItem(
-          SettingKey.userName, 
+        await UserSettingService.instance.setItem(
+          SettingKey.userName,
           user!.displayName,
           updateGlobalState: true,
         );
       }
-      
+
       // Show success message and force navigation
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             duration: Duration(seconds: 1),
           ),
         );
-        
+
         // Force navigation - pop to trigger auth state rebuild
         await Future.delayed(const Duration(milliseconds: 300));
         if (mounted) {
@@ -139,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
       Logger.printDebug('Google Sign-In successful');
 
       final user = FirebaseAuth.instance.currentUser;
-      
+
       // Save user to local SQLite database if not exists (or update)
       if (user != null) {
         final db = AppDB.instance;
@@ -154,18 +154,18 @@ class _LoginPageState extends State<LoginPage> {
               datetime('now')
             )
           ''');
-          
-         // Check if we need to seed data (if user has no accounts)
-         final accounts = await db.select(db.accounts).get();
-         if (accounts.isEmpty) {
-            try {
-              await fillWithChurchData();
-              await fillWithChurchCategories();
-              Logger.printDebug('Church data seeded successfully (Login Flow)!');
-            } catch (seedError) {
-              Logger.printDebug('Warning: Church seeding failed: $seedError');
-            }
-         }
+
+        // Check if we need to seed data (if user has no accounts)
+        final accounts = await db.select(db.accounts).get();
+        if (accounts.isEmpty) {
+          try {
+            await fillWithChurchData();
+            await fillWithChurchCategories();
+            Logger.printDebug('Church data seeded successfully (Login Flow)!');
+          } catch (seedError) {
+            Logger.printDebug('Warning: Church seeding failed: $seedError');
+          }
+        }
       }
 
       // Update app state
@@ -263,7 +263,10 @@ class _LoginPageState extends State<LoginPage> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 400),
                   child: Form(
@@ -303,7 +306,9 @@ class _LoginPageState extends State<LoginPage> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: colorScheme.errorContainer.withOpacity(0.8),
+                              color: colorScheme.errorContainer.withOpacity(
+                                0.8,
+                              ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: colorScheme.error.withOpacity(0.5),
@@ -342,8 +347,9 @@ class _LoginPageState extends State<LoginPage> {
                             labelText: 'Correo electrónico',
                             prefixIcon: const Icon(Icons.email_outlined),
                             filled: true,
-                            fillColor: isDark 
-                                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                            fillColor: isDark
+                                ? colorScheme.surfaceContainerHighest
+                                      .withOpacity(0.5)
                                 : colorScheme.surfaceContainerLow,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -392,12 +398,15 @@ class _LoginPageState extends State<LoginPage> {
                                     : Icons.visibility_off_outlined,
                               ),
                               onPressed: () {
-                                setState(() => _obscurePassword = !_obscurePassword);
+                                setState(
+                                  () => _obscurePassword = !_obscurePassword,
+                                );
                               },
                             ),
                             filled: true,
-                            fillColor: isDark 
-                                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                            fillColor: isDark
+                                ? colorScheme.surfaceContainerHighest
+                                      .withOpacity(0.5)
                                 : colorScheme.surfaceContainerLow,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),

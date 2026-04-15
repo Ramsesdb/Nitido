@@ -155,14 +155,14 @@ class MonekinAppEntryPoint extends StatelessWidget {
     );
 
     if (lang != null) {
-       UserSettingService.instance.setItem(SettingKey.appLanguage, 'es');
+      UserSettingService.instance.setItem(SettingKey.appLanguage, 'es');
     }
 
     // Force Spanish:
     LocaleSettings.setLocaleRaw('es').then((_) {
       Logger.printDebug('App language forcefully set to Spanish (es)');
     });
-    
+
     // Also save it to settings so it persists explicitly
     UserSettingService.instance.setItem(SettingKey.appLanguage, 'es');
     return;
@@ -397,11 +397,7 @@ class InitialPageRouteNavigator extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
-                          Icons.block,
-                          size: 64,
-                          color: Colors.red,
-                        ),
+                        const Icon(Icons.block, size: 64, color: Colors.red),
                         const SizedBox(height: 16),
                         const Text(
                           'Acceso Denegado',
@@ -438,7 +434,9 @@ class InitialPageRouteNavigator extends StatelessWidget {
               child: Navigator(
                 key: navigatorKey,
                 onGenerateRoute: (settings) => RouteUtils.getPageRouteBuilder(
-                  introSeen ? PageSwitcher(key: tabsPageKey) : const IntroPage(),
+                  introSeen
+                      ? PageSwitcher(key: tabsPageKey)
+                      : const IntroPage(),
                 ),
               ),
             );
@@ -459,7 +457,7 @@ Future<void> _checkAndAutoUpdateCurrencyRate() async {
   if (lastUpdateStr != null) {
     final lastUpdate = DateTime.parse(lastUpdateStr);
     if (now.difference(lastUpdate).inHours < 24) {
-      return; 
+      return;
     }
   }
 

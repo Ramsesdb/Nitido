@@ -34,8 +34,6 @@ typedef TransactionQueryOrderBy =
       Categories,
     );
 
-
-
 class TransactionService {
   final AppDB db;
 
@@ -47,23 +45,23 @@ class TransactionService {
   /// Create a transaction atomically with audit log
   Future<int> insertTransaction(TransactionInDB transaction) async {
     return db.transaction(() async {
-        final toReturn = await db.into(db.transactions).insert(transaction);
+      final toReturn = await db.into(db.transactions).insert(transaction);
 
-        // Audit Log
-        await AuditService.instance.logTransactionAction(
-          db, 
-          'CREATE', 
-          null, 
-          transaction
-        );
+      // Audit Log
+      await AuditService.instance.logTransactionAction(
+        db,
+        'CREATE',
+        null,
+        transaction,
+      );
 
-        // Push to organization collection for multi-device sync (Fire and forget)
-        FirebaseSyncService.instance.pushTransaction(transaction);
+      // Push to organization collection for multi-device sync (Fire and forget)
+      FirebaseSyncService.instance.pushTransaction(transaction);
 
-        // To update the getAccountsData() function results
-        db.markTablesUpdated([db.accounts, db.transactions]);
-        
-        return toReturn;
+      // To update the getAccountsData() function results
+      db.markTablesUpdated([db.accounts, db.transactions]);
+
+      return toReturn;
     });
   }
 
@@ -71,16 +69,18 @@ class TransactionService {
   Future<int> updateTransaction(TransactionInDB transaction) async {
     return db.transaction(() async {
       // Fetch old transaction for diffing
-      final oldTx = await (db.select(db.transactions)..where((t) => t.id.equals(transaction.id))).getSingleOrNull();
+      final oldTx = await (db.select(
+        db.transactions,
+      )..where((t) => t.id.equals(transaction.id))).getSingleOrNull();
 
       final toReturn = await db.update(db.transactions).replace(transaction);
 
       // Audit Log
       await AuditService.instance.logTransactionAction(
-        db, 
-        'UPDATE', 
-        oldTx, 
-        transaction
+        db,
+        'UPDATE',
+        oldTx,
+        transaction,
       );
 
       // Push to organization collection for multi-device sync (Fire and forget)
@@ -116,7 +116,9 @@ class TransactionService {
   Future<int> deleteTransaction(String transactionId) async {
     return db.transaction(() async {
       // Fetch old transaction for logging
-      final oldTx = await (db.select(db.transactions)..where((t) => t.id.equals(transactionId))).getSingleOrNull();
+      final oldTx = await (db.select(
+        db.transactions,
+      )..where((t) => t.id.equals(transactionId))).getSingleOrNull();
 
       // Delete from organization collection for multi-device sync (Fire and forget)
       FirebaseSyncService.instance.deleteTransaction(transactionId);
@@ -126,12 +128,12 @@ class TransactionService {
       )..where((tbl) => tbl.id.equals(transactionId))).go();
 
       if (result > 0) {
-         // Audit Log
+        // Audit Log
         await AuditService.instance.logTransactionAction(
-          db, 
-          'DELETE', 
-          oldTx, 
-          null
+          db,
+          'DELETE',
+          oldTx,
+          null,
         );
       }
 

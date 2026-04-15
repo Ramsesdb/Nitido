@@ -35,10 +35,10 @@ class DolarApiRate {
 /// Service to fetch exchange rates from DolarApi.com for Venezuela
 class DolarApiService {
   static const String _baseUrl = 'https://ve.dolarapi.com/v1';
-  
+
   static DolarApiService? _instance;
   static DolarApiService get instance => _instance ??= DolarApiService._();
-  
+
   DolarApiService._();
 
   /// Cached rates
@@ -48,22 +48,24 @@ class DolarApiService {
 
   /// Get the official USD rate
   DolarApiRate? get oficialRate => _oficialRate;
-  
-  /// Get the parallel USD rate  
+
+  /// Get the parallel USD rate
   DolarApiRate? get paraleloRate => _paraleloRate;
 
   /// Fetch all USD rates (official and parallel)
   Future<List<DolarApiRate>> fetchAllRates() async {
     try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/dolares'),
-        headers: {'Accept': 'application/json'},
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(
+            Uri.parse('$_baseUrl/dolares'),
+            headers: {'Accept': 'application/json'},
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = json.decode(response.body);
         final rates = jsonList.map((j) => DolarApiRate.fromJson(j)).toList();
-        
+
         // Cache the rates
         for (final rate in rates) {
           if (rate.fuente == 'oficial') {
@@ -73,12 +75,12 @@ class DolarApiService {
           }
         }
         _lastFetch = DateTime.now();
-        
+
         Logger.printDebug(
           'DolarApi: Fetched rates - Oficial: ${_oficialRate?.promedio}, '
           'Paralelo: ${_paraleloRate?.promedio}',
         );
-        
+
         return rates;
       } else {
         Logger.printDebug('DolarApi: Error ${response.statusCode}');
@@ -95,23 +97,21 @@ class DolarApiService {
   /// Returns the cached rate if the API call fails (offline fallback).
   Future<DolarApiRate?> fetchOficialRate() async {
     try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/dolares/oficial'),
-        headers: {'Accept': 'application/json'},
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(
+            Uri.parse('$_baseUrl/dolares/oficial'),
+            headers: {'Accept': 'application/json'},
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
-        final rate = DolarApiRate.fromJson(
-          json.decode(response.body),
-        );
+        final rate = DolarApiRate.fromJson(json.decode(response.body));
         _oficialRate = rate;
         _lastFetch = DateTime.now();
         return rate;
       }
     } catch (e) {
-      Logger.printDebug(
-        'DolarApi: Exception fetching oficial rate: $e',
-      );
+      Logger.printDebug('DolarApi: Exception fetching oficial rate: $e');
     }
     // Fallback to cached rate if available
     return _oficialRate;
@@ -120,23 +120,21 @@ class DolarApiService {
   /// Fetch only the parallel rate
   Future<DolarApiRate?> fetchParaleloRate() async {
     try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/dolares/paralelo'),
-        headers: {'Accept': 'application/json'},
-      ).timeout(const Duration(seconds: 10));
+      final response = await http
+          .get(
+            Uri.parse('$_baseUrl/dolares/paralelo'),
+            headers: {'Accept': 'application/json'},
+          )
+          .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {
-        final rate = DolarApiRate.fromJson(
-          json.decode(response.body),
-        );
+        final rate = DolarApiRate.fromJson(json.decode(response.body));
         _paraleloRate = rate;
         _lastFetch = DateTime.now();
         return rate;
       }
     } catch (e) {
-      Logger.printDebug(
-        'DolarApi: Exception fetching paralelo rate: $e',
-      );
+      Logger.printDebug('DolarApi: Exception fetching paralelo rate: $e');
     }
     return _paraleloRate;
   }
@@ -147,7 +145,6 @@ class DolarApiService {
   /// Check if rates are stale (older than 1 hour)
   bool get isStale {
     if (_lastFetch == null) return true;
-    return DateTime.now().difference(_lastFetch!) >
-        const Duration(hours: 1);
+    return DateTime.now().difference(_lastFetch!) > const Duration(hours: 1);
   }
 }

@@ -102,10 +102,7 @@ class BackupDatabaseService {
     }
 
     // Use semicolon separator for Latin American Excel locales
-    return bom +
-        const ListToCsvConverter(
-          fieldDelimiter: ';',
-        ).convert(rows);
+    return bom + const ListToCsvConverter(fieldDelimiter: ';').convert(rows);
   }
 
   Future<File> exportSpreadsheet(
@@ -120,7 +117,11 @@ class BackupDatabaseService {
           "Monekin_Report_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.csv",
     );
 
-    return file.writeAsString(csvData, mode: FileMode.writeOnly, encoding: const Utf8Codec());
+    return file.writeAsString(
+      csvData,
+      mode: FileMode.writeOnly,
+      encoding: const Utf8Codec(),
+    );
   }
 
   Future<bool> importDatabase() async {

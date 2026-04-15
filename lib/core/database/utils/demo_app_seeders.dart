@@ -96,6 +96,7 @@ Future<void> fillWithDemoData() async {
           categoryID: '10', // Salary
           isHidden: false,
           status: TransactionStatus.reconciled,
+          calcTithe: true,
           createdAt: DateTime.now(),
         ),
       );
@@ -173,6 +174,7 @@ Future<void> fillWithDemoData() async {
             title: title,
             isHidden: false,
             status: TransactionStatus.reconciled,
+            calcTithe: true,
             createdAt: DateTime.now(),
           ),
         );
@@ -230,6 +232,7 @@ Future<void> fillWithDemoData() async {
             title: title,
             isHidden: false,
             status: TransactionStatus.reconciled,
+            calcTithe: true,
             createdAt: DateTime.now(),
           ),
         );
@@ -287,12 +290,15 @@ Future<void> fillWithDemoData() async {
 Future<void> fillWithChurchData() async {
   Logger.printDebug('Starting CHURCH data seeding...');
   final db = AppDB.instance;
-  
+
   // 1. Force Spanish Language (just in case, though main.dart handles launch)
   await UserSettingService.instance.setItem(SettingKey.appLanguage, 'es');
 
   // 2. Set Preferred Currency to VES (Bolívares)
-  await UserSettingService.instance.setItem(SettingKey.preferredCurrency, 'VES');
+  await UserSettingService.instance.setItem(
+    SettingKey.preferredCurrency,
+    'VES',
+  );
 
   // 3. Create Accounts
   final accounts = <AccountInDB>[
@@ -341,7 +347,7 @@ Future<void> fillWithChurchData() async {
   await db.batch((batch) {
     batch.insertAll(db.accounts, accounts);
   });
-  
+
   Logger.printDebug('Church data seeding finished.');
 }
 
@@ -354,10 +360,12 @@ Future<void> fillWithChurchCategories() async {
     CategoryInDB(
       id: 'c_diezmo',
       name: 'Diezmo',
-      iconId: 'volunteer_activism', 
+      iconId: 'volunteer_activism',
       color: '4C9141', // Green
       displayOrder: 1,
       type: CategoryType.I,
+      calcTithe: true,
+      subFundPercent: 0,
     ),
     CategoryInDB(
       id: 'c_ofrenda',
@@ -366,6 +374,8 @@ Future<void> fillWithChurchCategories() async {
       color: 'F4A900', // Gold
       displayOrder: 2,
       type: CategoryType.I,
+      calcTithe: false,
+      subFundPercent: 0,
     ),
     CategoryInDB(
       id: 'c_protemplo',
@@ -374,6 +384,8 @@ Future<void> fillWithChurchCategories() async {
       color: '1E2460', // Blue
       displayOrder: 3,
       type: CategoryType.I,
+      calcTithe: false,
+      subFundPercent: 0,
     ),
     CategoryInDB(
       id: 'c_eventos_in',
@@ -382,6 +394,8 @@ Future<void> fillWithChurchCategories() async {
       color: 'FF7514', // Orange
       displayOrder: 4,
       type: CategoryType.I,
+      calcTithe: false,
+      subFundPercent: 0,
     ),
 
     // --- EGRESOS (EXPENSE) ---
@@ -392,6 +406,8 @@ Future<void> fillWithChurchCategories() async {
       color: '2A6478', // Teal
       displayOrder: 10,
       type: CategoryType.E,
+      calcTithe: true,
+      subFundPercent: 0,
     ),
     CategoryInDB(
       id: 'c_mantenimiento',
@@ -400,6 +416,8 @@ Future<void> fillWithChurchCategories() async {
       color: '4E5452', // Gray
       displayOrder: 11,
       type: CategoryType.E,
+      calcTithe: true,
+      subFundPercent: 0,
     ),
     CategoryInDB(
       id: 'c_ayuda',
@@ -408,14 +426,18 @@ Future<void> fillWithChurchCategories() async {
       color: 'CC0605', // Red
       displayOrder: 12,
       type: CategoryType.E,
+      calcTithe: true,
+      subFundPercent: 0,
     ),
-     CategoryInDB(
+    CategoryInDB(
       id: 'c_sueldos',
       name: 'Sueldos/Honorarios',
       iconId: 'work',
       color: '3D642D', // Green
       displayOrder: 13,
       type: CategoryType.E,
+      calcTithe: true,
+      subFundPercent: 0,
     ),
     CategoryInDB(
       id: 'c_insumos',
@@ -424,6 +446,8 @@ Future<void> fillWithChurchCategories() async {
       color: '84C3BE', // Light Teal
       displayOrder: 14,
       type: CategoryType.E,
+      calcTithe: true,
+      subFundPercent: 0,
     ),
     CategoryInDB(
       id: 'c_otros',
@@ -432,12 +456,18 @@ Future<void> fillWithChurchCategories() async {
       color: '403A3A', // Dark
       displayOrder: 15,
       type: CategoryType.E,
+      calcTithe: true,
+      subFundPercent: 0,
     ),
   ];
 
   await db.batch((batch) {
-    batch.insertAll(db.categories, categories, mode: InsertMode.insertOrReplace);
+    batch.insertAll(
+      db.categories,
+      categories,
+      mode: InsertMode.insertOrReplace,
+    );
   });
-  
+
   Logger.printDebug('Church Categories seeded.');
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +32,6 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../core/models/transaction/transaction_type.enum.dart';
 import '../../core/presentation/app_colors.dart';
-import 'package:monekin/app/reports/pages/settlement_report_page.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -53,17 +51,14 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
 
-    _balanceVariationStream = AccountService.instance
-        .getAccounts()
-        .switchMap(
-          (accounts) =>
-              AccountService.instance.getAccountsMoneyVariation(
-            accounts: accounts,
-            startDate: dateRangeService.startDate,
-            endDate: dateRangeService.endDate,
-            convertToPreferredCurrency: true,
-          ),
-        );
+    _balanceVariationStream = AccountService.instance.getAccounts().switchMap(
+      (accounts) => AccountService.instance.getAccountsMoneyVariation(
+        accounts: accounts,
+        startDate: dateRangeService.startDate,
+        endDate: dateRangeService.endDate,
+        convertToPreferredCurrency: true,
+      ),
+    );
 
     _totalBalanceStream = AccountService.instance.getAccountsMoney();
   }
@@ -75,26 +70,21 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   bool _isIncomeExpenseAtSameLevel(BuildContext context) {
-    return BreakPoint.of(context)
-        .isLargerOrEqualTo(BreakpointID.sm);
+    return BreakPoint.of(context).isLargerOrEqualTo(BreakpointID.sm);
   }
 
   /// Refresh data streams when user pulls down
   Future<void> _refreshData() async {
     setState(() {
-      _balanceVariationStream = AccountService.instance
-          .getAccounts()
-          .switchMap(
-            (accounts) =>
-                AccountService.instance.getAccountsMoneyVariation(
-              accounts: accounts,
-              startDate: dateRangeService.startDate,
-              endDate: dateRangeService.endDate,
-              convertToPreferredCurrency: true,
-            ),
-          );
-      _totalBalanceStream =
-          AccountService.instance.getAccountsMoney();
+      _balanceVariationStream = AccountService.instance.getAccounts().switchMap(
+        (accounts) => AccountService.instance.getAccountsMoneyVariation(
+          accounts: accounts,
+          startDate: dateRangeService.startDate,
+          endDate: dateRangeService.endDate,
+          convertToPreferredCurrency: true,
+        ),
+      );
+      _totalBalanceStream = AccountService.instance.getAccountsMoney();
     });
     await Future.delayed(const Duration(milliseconds: 300));
   }
@@ -108,14 +98,12 @@ class _DashboardPageState extends State<DashboardPage> {
       enableAppBar: false,
       appBarBackgroundColor:
           BreakPoint.of(context).isLargerOrEqualTo(BreakpointID.md)
-              ? Colors.transparent
-              : AppColors.of(context).consistentPrimary,
+          ? Colors.transparent
+          : AppColors.of(context).consistentPrimary,
       floatingActionButton: ifIsInTabs(context)
           ? null
           : NewTransactionButton(
-              key: const Key(
-                'dashboard--new-transaction-button',
-              ),
+              key: const Key('dashboard--new-transaction-button'),
               scrollController: _scrollController,
             ),
       body: RefreshIndicator(
@@ -135,12 +123,8 @@ class _DashboardPageState extends State<DashboardPage> {
 
               // ── Stats Cards ──
               Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                ),
-                child: DashboardCards(
-                  dateRangeService: dateRangeService,
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: DashboardCards(dateRangeService: dateRangeService),
               ),
 
               if (kDebugMode)
@@ -150,38 +134,12 @@ class _DashboardPageState extends State<DashboardPage> {
                   },
                   child: const Text('DEBUG PAGE'),
                 ),
-
-              // ── Church Edition: Settlement Report ──
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: FilledButton.icon(
-                  onPressed: () {
-                    RouteUtils.pushRoute(
-                      const SettlementReportPage(),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.account_balance_wallet,
-                  ),
-                  label: const Text('LIQUIDACIÓN'),
-                  style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                    backgroundColor: AppColors.of(context)
-                        .consistentPrimary,
-                    foregroundColor: AppColors.of(context)
-                        .onConsistentPrimary,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
   }
-
 
   Widget buildDashboadHeader(
     BuildContext context,
@@ -412,10 +370,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       child: Builder(
                         builder: (context) {
                           if (!snapshot.hasData) {
-                            return Text(
-                              '9999',
-                              style: TextStyle(fontSize: 22),
-                            );
+                            return Text('9999', style: TextStyle(fontSize: 22));
                           }
 
                           return CurrencyDisplayer(
@@ -425,15 +380,11 @@ class _DashboardPageState extends State<DashboardPage> {
                                   snapshot.data! >= 10000000 &&
                                       BreakPoint.of(
                                         context,
-                                      ).isSmallerOrEqualTo(
-                                        BreakpointID.xs,
-                                      )
+                                      ).isSmallerOrEqualTo(BreakpointID.xs)
                                   ? 22
                                   : 26,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.of(
-                                context,
-                              ).onConsistentPrimary,
+                              color: AppColors.of(context).onConsistentPrimary,
                             ),
                           );
                         },

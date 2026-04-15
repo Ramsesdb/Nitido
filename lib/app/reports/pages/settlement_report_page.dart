@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:monekin/app/layout/page_framework.dart';
 import 'package:monekin/core/database/services/transaction/transaction_service.dart';
+import 'package:monekin/core/extensions/color.extensions.dart';
 import 'package:monekin/core/extensions/date.extensions.dart';
 import 'package:monekin/core/models/transaction/transaction.dart';
 import 'package:monekin/core/models/transaction/transaction_type.enum.dart';
@@ -14,7 +15,10 @@ import 'package:monekin/core/presentation/app_colors.dart';
 import 'package:monekin/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
 import 'package:monekin/core/services/dolar_api_service.dart';
 import 'package:monekin/core/utils/date_time_picker.dart';
+import 'package:monekin/core/database/services/category/category_service.dart';
+import 'package:monekin/core/models/category/category.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:share_plus/share_plus.dart';
 
 /// Settlement Report ("Reporte de Liquidación")
@@ -29,8 +33,7 @@ class SettlementReportPage extends StatefulWidget {
   const SettlementReportPage({super.key});
 
   @override
-  State<SettlementReportPage> createState() =>
-      _SettlementReportPageState();
+  State<SettlementReportPage> createState() => _SettlementReportPageState();
 }
 
 class _SettlementReportPageState extends State<SettlementReportPage>
@@ -62,10 +65,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _fadeAnim = CurvedAnimation(
-      parent: _fadeCtrl,
-      curve: Curves.easeInOut,
-    );
+    _fadeAnim = CurvedAnimation(parent: _fadeCtrl, curve: Curves.easeInOut);
     _fadeCtrl.forward();
     _applyPreset('Semana');
     unawaited(_fetchRate());
@@ -84,24 +84,16 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       switch (preset) {
         case 'Hoy':
           _startDate = DateTime(now.year, now.month, now.day);
-          _endDate = DateTime(
-            now.year, now.month, now.day, 23, 59, 59,
-          );
+          _endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
           break;
         case 'Semana':
           final weekday = now.weekday;
-          _startDate = DateTime(
-            now.year, now.month, now.day - (weekday - 1),
-          );
-          _endDate = DateTime(
-            now.year, now.month, now.day, 23, 59, 59,
-          );
+          _startDate = DateTime(now.year, now.month, now.day - (weekday - 1));
+          _endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
           break;
         case 'Mes':
           _startDate = DateTime(now.year, now.month, 1);
-          _endDate = DateTime(
-            now.year, now.month, now.day, 23, 59, 59,
-          );
+          _endDate = DateTime(now.year, now.month, now.day, 23, 59, 59);
           break;
         default:
           break;
@@ -113,8 +105,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
 
   Future<void> _fetchRate() async {
     setState(() => _loadingRate = true);
-    final rates =
-        await DolarApiService.instance.fetchAllRates();
+    final rates = await DolarApiService.instance.fetchAllRates();
     if (mounted) {
       final svc = DolarApiService.instance;
       setState(() {
@@ -137,8 +128,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       if (type == _RateType.bcv && _bcvRate != null) {
         // Rate already in _bcvRate, used by _fmt via
         // _activeRate getter
-      } else if (type == _RateType.paralelo &&
-          _paraleloRate != null) {
+      } else if (type == _RateType.paralelo && _paraleloRate != null) {
         // Rate from _paraleloRate
       }
     });
@@ -171,8 +161,12 @@ class _SettlementReportPageState extends State<SettlementReportPage>
           _startDate = picked.justDay();
         } else {
           _endDate = DateTime(
-            picked.year, picked.month, picked.day,
-            23, 59, 59,
+            picked.year,
+            picked.month,
+            picked.day,
+            23,
+            59,
+            59,
           );
         }
       });
@@ -240,8 +234,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
             const SizedBox(height: 16),
             TextField(
               controller: controller,
-              keyboardType:
-                  const TextInputType.numberWithOptions(
+              keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
               decoration: const InputDecoration(
@@ -260,8 +253,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
           ),
           FilledButton(
             onPressed: () {
-              final parsed =
-                  double.tryParse(controller.text);
+              final parsed = double.tryParse(controller.text);
               if (parsed != null && parsed > 0) {
                 setState(() {
                   _bcvRate = parsed;
@@ -286,22 +278,17 @@ class _SettlementReportPageState extends State<SettlementReportPage>
     final colors = AppColors.of(context);
     final theme = Theme.of(context);
 
-    final filter = TransactionFilterSet(
-      minDate: _startDate,
-      maxDate: _endDate,
-    );
+    final filter = TransactionFilterSet(minDate: _startDate, maxDate: _endDate);
 
     return PageFramework(
-      title: 'Liquidación',
+      title: 'Reporte de Iglesia',
       appBarActions: [
         // Currency toggle badge
         Padding(
           padding: const EdgeInsets.only(right: 8),
           child: ActionChip(
             avatar: Icon(
-              _showInUsd
-                  ? Icons.attach_money
-                  : Icons.currency_exchange,
+              _showInUsd ? Icons.attach_money : Icons.currency_exchange,
               size: 18,
               color: colors.onConsistentPrimary,
             ),
@@ -322,9 +309,11 @@ class _SettlementReportPageState extends State<SettlementReportPage>
           ),
         ),
       ],
-      body: StreamBuilder<List<MoneyTransaction>>(
-        stream: TransactionService.instance.getTransactions(
-          filters: filter,
+      body: StreamBuilder<List<dynamic>>(
+        stream: Rx.combineLatest2(
+          TransactionService.instance.getTransactions(filters: filter),
+          CategoryService.instance.getCategories(),
+          (txs, cats) => [txs, cats],
         ),
         builder: (context, snapshot) {
           return SingleChildScrollView(
@@ -348,17 +337,16 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                 if (!snapshot.hasData)
                   const Padding(
                     padding: EdgeInsets.all(48),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: Center(child: CircularProgressIndicator()),
                   )
-                else if (snapshot.data!.isEmpty)
+                else if ((snapshot.data![0] as List<MoneyTransaction>).isEmpty)
                   _buildEmptyState(theme)
                 else
                   FadeTransition(
                     opacity: _fadeAnim,
                     child: _buildReport(
-                      snapshot.data!,
+                      snapshot.data![0] as List<MoneyTransaction>,
+                      snapshot.data![1] as List<Category>,
                       colors,
                       theme,
                     ),
@@ -375,28 +363,18 @@ class _SettlementReportPageState extends State<SettlementReportPage>
 
   Widget _buildFilterBanner(ThemeData theme) {
     final fmt = DateFormat('dd/MM/yyyy');
-    final days =
-        _endDate.difference(_startDate).inDays + 1;
+    final days = _endDate.difference(_startDate).inDays + 1;
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 10,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: theme.colorScheme.primaryContainer.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: theme.colorScheme.primary.withOpacity(0.2),
-        ),
+        border: Border.all(color: theme.colorScheme.primary.withOpacity(0.2)),
       ),
       child: Row(
         children: [
-          Icon(
-            Icons.filter_list,
-            size: 18,
-            color: theme.colorScheme.primary,
-          ),
+          Icon(Icons.filter_list, size: 18, color: theme.colorScheme.primary),
           const SizedBox(width: 8),
           Expanded(
             child: RichText(
@@ -407,20 +385,14 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                 children: [
                   TextSpan(
                     text: fmt.format(_startDate),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   const TextSpan(text: '  →  '),
                   TextSpan(
                     text: fmt.format(_endDate),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  TextSpan(
-                    text: '  ($days días)',
-                  ),
+                  TextSpan(text: '  ($days días)'),
                 ],
               ),
             ),
@@ -432,10 +404,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
 
   // ─── Rate Status Indicator ────────────────────────────
 
-  Widget _buildRateSelector(
-    AppColors colors,
-    ThemeData theme,
-  ) {
+  Widget _buildRateSelector(AppColors colors, ThemeData theme) {
     final rate = _activeRate;
     // Status line text
     String statusText;
@@ -460,17 +429,15 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       final typeLabel = _rateType == _RateType.bcv
           ? 'BCV'
           : _rateType == _RateType.paralelo
-              ? 'Paralelo'
-              : 'Manual';
+          ? 'Paralelo'
+          : 'Manual';
       statusText =
           'Tasa $typeLabel: ${rate.toStringAsFixed(2)}'
           ' Bs/\$';
       statusColor = _isManualRate
           ? Colors.amber.shade700
           : Colors.green.shade700;
-      statusIcon = _isManualRate
-          ? Icons.edit
-          : Icons.check_circle_outline;
+      statusIcon = _isManualRate ? Icons.edit : Icons.check_circle_outline;
     }
 
     return Column(
@@ -490,9 +457,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                     ? '${_bcvRate!.toStringAsFixed(2)}'
                     : '—',
                 selected: _rateType == _RateType.bcv,
-                onTap: () => _applyRateType(
-                  _RateType.bcv,
-                ),
+                onTap: () => _applyRateType(_RateType.bcv),
                 theme: theme,
                 colors: colors,
               ),
@@ -501,11 +466,8 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                 subtitle: _paraleloRate != null
                     ? '${_paraleloRate!.toStringAsFixed(2)}'
                     : '—',
-                selected:
-                    _rateType == _RateType.paralelo,
-                onTap: () => _applyRateType(
-                  _RateType.paralelo,
-                ),
+                selected: _rateType == _RateType.paralelo,
+                onTap: () => _applyRateType(_RateType.paralelo),
                 theme: theme,
                 colors: colors,
               ),
@@ -514,8 +476,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                 subtitle: _isManualRate
                     ? '${_bcvRate?.toStringAsFixed(2)}'
                     : '✎',
-                selected:
-                    _rateType == _RateType.manual,
+                selected: _rateType == _RateType.manual,
                 onTap: _showManualRateDialog,
                 theme: theme,
                 colors: colors,
@@ -544,11 +505,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
               borderRadius: BorderRadius.circular(16),
               child: Padding(
                 padding: const EdgeInsets.all(4),
-                child: Icon(
-                  Icons.refresh,
-                  size: 16,
-                  color: statusColor,
-                ),
+                child: Icon(Icons.refresh, size: 16, color: statusColor),
               ),
             ),
           ],
@@ -570,14 +527,9 @@ class _SettlementReportPageState extends State<SettlementReportPage>
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(
-            vertical: 10,
-            horizontal: 8,
-          ),
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
           decoration: BoxDecoration(
-            color: selected
-                ? colors.consistentPrimary
-                : Colors.transparent,
+            color: selected ? colors.consistentPrimary : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -589,8 +541,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                   fontWeight: FontWeight.bold,
                   color: selected
                       ? colors.onConsistentPrimary
-                      : theme.colorScheme.onSurface
-                          .withOpacity(0.6),
+                      : theme.colorScheme.onSurface.withOpacity(0.6),
                 ),
               ),
               const SizedBox(height: 2),
@@ -599,10 +550,8 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                 style: TextStyle(
                   fontSize: 11,
                   color: selected
-                      ? colors.onConsistentPrimary
-                          .withOpacity(0.8)
-                      : theme.colorScheme.onSurface
-                          .withOpacity(0.4),
+                      ? colors.onConsistentPrimary.withOpacity(0.8)
+                      : theme.colorScheme.onSurface.withOpacity(0.4),
                 ),
               ),
             ],
@@ -614,10 +563,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
 
   // ─── Date Range Selector ──────────────────────────────
 
-  Widget _buildDateRangeSelector(
-    AppColors colors,
-    ThemeData theme,
-  ) {
+  Widget _buildDateRangeSelector(AppColors colors, ThemeData theme) {
     final dateFormat = DateFormat('dd MMM yyyy');
 
     return Card(
@@ -625,8 +571,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color:
-              theme.colorScheme.outlineVariant.withOpacity(0.5),
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
         ),
       ),
       child: Padding(
@@ -658,9 +603,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                 final isActive = _activePreset == preset;
                 return Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 3,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
                     child: ChoiceChip(
                       label: Text(
                         preset,
@@ -675,9 +618,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                       showCheckmark: false,
                       selectedColor: colors.consistentPrimary,
                       labelStyle: TextStyle(
-                        color: isActive
-                            ? colors.onConsistentPrimary
-                            : null,
+                        color: isActive ? colors.onConsistentPrimary : null,
                       ),
                       onSelected: (_) {
                         if (preset == 'Otro') {
@@ -706,14 +647,11 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Icon(
                     Icons.arrow_forward_rounded,
                     size: 18,
-                    color: theme.colorScheme.onSurface
-                        .withOpacity(0.4),
+                    color: theme.colorScheme.onSurface.withOpacity(0.4),
                   ),
                 ),
                 Expanded(
@@ -742,14 +680,10 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 10,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: theme.colorScheme.surfaceContainerHighest
-              .withOpacity(0.5),
+          color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -757,8 +691,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
             Text(
               label,
               style: theme.textTheme.labelSmall!.copyWith(
-                color: theme.colorScheme.onSurface
-                    .withOpacity(0.5),
+                color: theme.colorScheme.onSurface.withOpacity(0.5),
               ),
             ),
             const SizedBox(height: 2),
@@ -776,17 +709,13 @@ class _SettlementReportPageState extends State<SettlementReportPage>
 
   // ─── Percentage Slider ────────────────────────────────
 
-  Widget _buildPercentageSlider(
-    AppColors colors,
-    ThemeData theme,
-  ) {
+  Widget _buildPercentageSlider(AppColors colors, ThemeData theme) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(
-          color:
-              theme.colorScheme.outlineVariant.withOpacity(0.5),
+          color: theme.colorScheme.outlineVariant.withOpacity(0.5),
         ),
       ),
       child: Padding(
@@ -807,8 +736,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                     const SizedBox(width: 8),
                     Text(
                       'Porcentaje Pastoral',
-                      style:
-                          theme.textTheme.titleSmall!.copyWith(
+                      style: theme.textTheme.titleSmall!.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -839,10 +767,8 @@ class _SettlementReportPageState extends State<SettlementReportPage>
               data: SliderThemeData(
                 activeTrackColor: colors.consistentPrimary,
                 thumbColor: colors.consistentPrimary,
-                inactiveTrackColor:
-                    colors.consistentPrimary.withOpacity(0.2),
-                overlayColor:
-                    colors.consistentPrimary.withOpacity(0.1),
+                inactiveTrackColor: colors.consistentPrimary.withOpacity(0.2),
+                overlayColor: colors.consistentPrimary.withOpacity(0.1),
                 trackHeight: 6,
               ),
               child: Slider(
@@ -850,8 +776,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                 min: 0,
                 max: 100,
                 divisions: 20,
-                label:
-                    '${_percentage.toStringAsFixed(0)}%',
+                label: '${_percentage.toStringAsFixed(0)}%',
                 onChanged: (val) {
                   HapticFeedback.selectionClick();
                   setState(() => _percentage = val);
@@ -868,50 +793,96 @@ class _SettlementReportPageState extends State<SettlementReportPage>
 
   Widget _buildReport(
     List<MoneyTransaction> transactions,
+    List<Category> categories,
     AppColors colors,
     ThemeData theme,
   ) {
-    // Only INCOME — transfers are excluded
+    // Determine INCOMES and EXPENSES accurately for tithe logic
     final incomes = transactions
         .where((tx) => tx.type == TransactionType.income)
         .toList();
+    final expenses = transactions
+        .where((tx) => tx.type == TransactionType.expense)
+        .toList();
 
     double totalIncome = 0;
+    double titheableIncome = 0;
+    double nonTitheableIncome = 0;
+
+    Map<String, double> directIncomesByCategory = {};
+    Map<String, double> expensesByCategory = {};
+
     for (final tx in incomes) {
-      totalIncome += tx.currentValueInPreferredCurrency.abs();
+      final val = tx.currentValueInPreferredCurrency.abs();
+      totalIncome += val;
+      
+      if (tx.calcTithe) {
+        titheableIncome += val;
+      } else {
+        nonTitheableIncome += val;
+      }
+
+      if (tx.category != null) {
+        directIncomesByCategory[tx.category!.id] =
+            (directIncomesByCategory[tx.category!.id] ?? 0) + val;
+      }
+    }
+    
+    for (final tx in expenses) {
+      final val = tx.currentValueInPreferredCurrency.abs();
+      if (tx.category != null) {
+        expensesByCategory[tx.category!.id] =
+            (expensesByCategory[tx.category!.id] ?? 0) + val;
+      }
     }
 
-    final pastoralShare =
-        totalIncome * (_percentage / 100);
+    final pastoralShare = titheableIncome * (_percentage / 100);
     final churchRetains = totalIncome - pastoralShare;
 
+    // Calculate Sub-funds
+    final List<_SubFundBalance> subFundBalances = [];
+    for (final cat in categories) {
+      if (cat.subFundPercent > 0 ||
+          directIncomesByCategory.containsKey(cat.id) ||
+          expensesByCategory.containsKey(cat.id)) {
+        final initialAllocation = totalIncome * (cat.subFundPercent / 100);
+        final directInc = directIncomesByCategory[cat.id] ?? 0.0;
+        final totalExp = expensesByCategory[cat.id] ?? 0.0;
+        
+        subFundBalances.add(_SubFundBalance(
+            category: cat,
+            initialAllocation: initialAllocation,
+            directIncome: directInc,
+            totalExpenses: totalExp,
+        ));
+      }
+    }
+
     // Group by Account for proportional breakdown
-    final grouped = groupBy(
-      incomes,
-      (MoneyTransaction tx) => tx.account.name,
-    );
+    final grouped = groupBy(incomes, (MoneyTransaction tx) => tx.account.name);
 
     final breakdownEntries = <_BreakdownEntry>[];
     for (final entry in grouped.entries) {
       double accIncome = 0;
+      double accTitheable = 0;
       for (final tx in entry.value) {
-        accIncome +=
-            tx.currentValueInPreferredCurrency.abs();
+        final val = tx.currentValueInPreferredCurrency.abs();
+        accIncome += val;
+        if (tx.calcTithe) accTitheable += val;
       }
-      final proportion =
-          totalIncome > 0 ? accIncome / totalIncome : 0.0;
-      breakdownEntries.add(_BreakdownEntry(
-        accountName: entry.key,
-        totalIncome: accIncome,
-        shareAmount: pastoralShare * proportion,
-        transactionCount: entry.value.length,
-        proportion: proportion,
-      ));
+      final proportion = titheableIncome > 0 ? accTitheable / titheableIncome : 0.0;
+      breakdownEntries.add(
+        _BreakdownEntry(
+          accountName: entry.key,
+          totalIncome: accIncome,
+          shareAmount: pastoralShare * proportion,
+          transactionCount: entry.value.length,
+          proportion: proportion,
+        ),
+      );
     }
 
-    breakdownEntries.sort(
-      (a, b) => b.totalIncome.compareTo(a.totalIncome),
-    );
+    breakdownEntries.sort((a, b) => b.totalIncome.compareTo(a.totalIncome));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -933,35 +904,49 @@ class _SettlementReportPageState extends State<SettlementReportPage>
           child: Column(
             children: [
               Text(
-                'Total Ingresos',
+                'Resumen de Diezmos y Aportes',
                 style: TextStyle(
-                  color: colors.onConsistentPrimary
-                      .withOpacity(0.8),
-                  fontSize: 14,
+                  color: colors.onConsistentPrimary.withOpacity(0.8),
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Ingreso General Total', style: TextStyle(color: colors.onConsistentPrimary.withOpacity(0.8))),
+                  Text(_fmt(totalIncome), style: TextStyle(color: colors.onConsistentPrimary, fontWeight: FontWeight.bold)),
+                ],
+              ),
               const SizedBox(height: 4),
-              Text(
-                _fmt(totalIncome),
-                style: TextStyle(
-                  color: colors.onConsistentPrimary,
-                  fontSize: 34,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Ingreso Diezmable (Base)', style: TextStyle(color: colors.onConsistentPrimary.withOpacity(0.8))),
+                  Text(_fmt(titheableIncome), style: TextStyle(color: Colors.greenAccent[100], fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Ingreso No Diezmable', style: TextStyle(color: colors.onConsistentPrimary.withOpacity(0.8))),
+                  Text(_fmt(nonTitheableIncome), style: TextStyle(color: colors.onConsistentPrimary.withOpacity(0.7), fontWeight: FontWeight.bold)),
+                ],
               ),
               const SizedBox(height: 16),
               Container(
                 height: 1,
-                color: colors.onConsistentPrimary
-                    .withOpacity(0.2),
+                color: colors.onConsistentPrimary.withOpacity(0.2),
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: _buildHeroSplit(
-                      label: 'Pastor '
+                      label:
+                          'Pastor '
                           '(${_percentage.toStringAsFixed(0)}%)',
                       amount: pastoralShare,
                       icon: Icons.person,
@@ -971,8 +956,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                   Container(
                     width: 1,
                     height: 40,
-                    color: colors.onConsistentPrimary
-                        .withOpacity(0.2),
+                    color: colors.onConsistentPrimary.withOpacity(0.2),
                   ),
                   Expanded(
                     child: _buildHeroSplit(
@@ -1012,16 +996,12 @@ class _SettlementReportPageState extends State<SettlementReportPage>
           'Distribución proporcional del '
           'porcentaje pastoral',
           style: theme.textTheme.bodySmall!.copyWith(
-            color: theme.colorScheme.onSurface
-                .withOpacity(0.5),
+            color: theme.colorScheme.onSurface.withOpacity(0.5),
           ),
         ),
         const SizedBox(height: 12),
 
-        ...breakdownEntries
-            .asMap()
-            .entries
-            .map((mapEntry) {
+        ...breakdownEntries.asMap().entries.map((mapEntry) {
           final idx = mapEntry.key;
           final entry = mapEntry.value;
           final tintColors = [
@@ -1038,14 +1018,12 @@ class _SettlementReportPageState extends State<SettlementReportPage>
             margin: const EdgeInsets.only(bottom: 8),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(14),
-              side:
-                  BorderSide(color: tint.withOpacity(0.2)),
+              side: BorderSide(color: tint.withOpacity(0.2)),
             ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     children: [
@@ -1061,23 +1039,19 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                       Expanded(
                         child: Text(
                           entry.accountName,
-                          style: theme
-                              .textTheme.titleSmall!
-                              .copyWith(
+                          style: theme.textTheme.titleSmall!.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
                       Container(
-                        padding:
-                            const EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 8,
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
                           color: tint.withOpacity(0.1),
-                          borderRadius:
-                              BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           '${entry.transactionCount} mov.',
@@ -1092,21 +1066,17 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                   ),
                   const SizedBox(height: 10),
                   ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(4),
                     child: LinearProgressIndicator(
                       value: entry.proportion,
                       minHeight: 6,
-                      backgroundColor:
-                          tint.withOpacity(0.1),
-                      valueColor:
-                          AlwaysStoppedAnimation(tint),
+                      backgroundColor: tint.withOpacity(0.1),
+                      valueColor: AlwaysStoppedAnimation(tint),
                     ),
                   ),
                   const SizedBox(height: 10),
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Total: ${_fmt(entry.totalIncome)}',
@@ -1134,25 +1104,108 @@ class _SettlementReportPageState extends State<SettlementReportPage>
         // Footer
         Center(
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 8,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: theme
-                  .colorScheme.surfaceContainerHighest
-                  .withOpacity(0.5),
+              color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
               '${incomes.length} ingresos en este periodo',
               style: theme.textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onSurface
-                    .withOpacity(0.5),
+                color: theme.colorScheme.onSurface.withOpacity(0.5),
               ),
             ),
           ),
         ),
+
+        const SizedBox(height: 24),
+
+        // ── Sub-Funds Section ───
+        Row(
+          children: [
+            Icon(
+              Icons.account_tree_outlined,
+              size: 20,
+              color: colors.consistentPrimary,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              'Apartados (Sub-Fondos)',
+              style: theme.textTheme.titleSmall!.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (subFundBalances.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: Center(
+              child: Text(
+                'No hay categorías configuradas como apartados con porcentaje asignado o con movimientos directos.',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                ),
+              ),
+            ),
+          )
+        else
+          ...subFundBalances.map((subFund) {
+            final catColor = ColorHex.get(subFund.category.color);
+            return Card(
+              elevation: 0,
+              margin: const EdgeInsets.symmetric(vertical: 6.0),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+                side: BorderSide(color: catColor.withOpacity(0.2)),
+              ),
+              child: ExpansionTile(
+                leading: subFund.category.icon.display(color: catColor, size: 32),
+                title: Text(
+                  subFund.category.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  'Disponible: ${_fmt(subFund.totalAvailable)}',
+                  style: TextStyle(color: catColor, fontWeight: FontWeight.w600),
+                ),
+                childrenPadding: const EdgeInsets.all(16),
+                expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Asignación (${subFund.category.subFundPercent}%)', style: theme.textTheme.bodyMedium),
+                      Text(_fmt(subFund.initialAllocation), style: const TextStyle(fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                  if (subFund.directIncome > 0)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Ingresos Directos', style: theme.textTheme.bodyMedium),
+                          Text(_fmt(subFund.directIncome), style: const TextStyle(fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                    ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Gastos Realizados', style: theme.textTheme.bodyMedium),
+                          Text(_fmt(subFund.totalExpenses), style: const TextStyle(fontWeight: FontWeight.w500)),
+                        ],
+                      ),
+                  ),
+                ],
+              ),
+            );
+          }),
 
         const SizedBox(height: 24),
 
@@ -1192,16 +1245,11 @@ class _SettlementReportPageState extends State<SettlementReportPage>
         children: [
           Row(
             children: [
-              Icon(
-                Icons.share,
-                size: 18,
-                color: colors.consistentPrimary,
-              ),
+              Icon(Icons.share, size: 18, color: colors.consistentPrimary),
               const SizedBox(width: 8),
               Text(
                 'Exportar Corte',
-                style: theme.textTheme.titleSmall
-                    ?.copyWith(
+                style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -1211,8 +1259,7 @@ class _SettlementReportPageState extends State<SettlementReportPage>
           Text(
             'Genera un archivo CSV para compartir',
             style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurface
-                  .withOpacity(0.5),
+              color: theme.colorScheme.onSurface.withOpacity(0.5),
             ),
           ),
           const SizedBox(height: 12),
@@ -1228,18 +1275,11 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                     churchRetains: churchRetains,
                     breakdown: breakdownEntries,
                   ),
-                  icon: const Icon(
-                    Icons.summarize,
-                    size: 18,
-                  ),
+                  icon: const Icon(Icons.summarize, size: 18),
                   label: const Text('Excel Resumen'),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                    ),
-                    side: BorderSide(
-                      color: colors.consistentPrimary,
-                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    side: BorderSide(color: colors.consistentPrimary),
                   ),
                 ),
               ),
@@ -1254,19 +1294,12 @@ class _SettlementReportPageState extends State<SettlementReportPage>
                     churchRetains: churchRetains,
                     breakdown: breakdownEntries,
                   ),
-                  icon: const Icon(
-                    Icons.table_chart,
-                    size: 18,
-                  ),
+                  icon: const Icon(Icons.table_chart, size: 18),
                   label: const Text('Excel Detallado'),
                   style: FilledButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                    ),
-                    backgroundColor:
-                        colors.consistentPrimary,
-                    foregroundColor:
-                        colors.onConsistentPrimary,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    backgroundColor: colors.consistentPrimary,
+                    foregroundColor: colors.onConsistentPrimary,
                   ),
                 ),
               ),
@@ -1293,11 +1326,9 @@ class _SettlementReportPageState extends State<SettlementReportPage>
     final rateLabel = _rateType == _RateType.bcv
         ? 'BCV'
         : _rateType == _RateType.paralelo
-            ? 'Paralelo'
-            : 'Manual';
-    final rateStr = rate != null
-        ? '${rate.toStringAsFixed(2)} Bs/\$'
-        : 'N/A';
+        ? 'Paralelo'
+        : 'Manual';
+    final rateStr = rate != null ? '${rate.toStringAsFixed(2)} Bs/\$' : 'N/A';
 
     final excel = xl.Excel.createExcel();
     final summarySheet = excel['Resumen'];
@@ -1327,20 +1358,14 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       if (style != null) {
         for (var col = 0; col < values.length; col++) {
           final cell = sheet.cell(
-            xl.CellIndex.indexByColumnRow(
-              columnIndex: col,
-              rowIndex: rowIndex,
-            ),
+            xl.CellIndex.indexByColumnRow(columnIndex: col, rowIndex: rowIndex),
           );
           cell.cellStyle = style;
         }
       }
       if (mergeToColumn != null && mergeToColumn > 0) {
         sheet.merge(
-          xl.CellIndex.indexByColumnRow(
-            columnIndex: 0,
-            rowIndex: rowIndex,
-          ),
+          xl.CellIndex.indexByColumnRow(columnIndex: 0, rowIndex: rowIndex),
           xl.CellIndex.indexByColumnRow(
             columnIndex: mergeToColumn,
             rowIndex: rowIndex,
@@ -1364,69 +1389,41 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       style: titleStyle,
       mergeToColumn: 6,
     );
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Periodo'),
-        xl.TextCellValue(from),
-        xl.TextCellValue('\u2192'),
-        xl.TextCellValue(to),
-      ],
-      style: labelStyle,
-    );
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Moneda'),
-        xl.TextCellValue(_exportCurrencyCode),
-      ],
-      style: labelStyle,
-    );
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Tasa ($rateLabel)'),
-        xl.TextCellValue(rateStr),
-      ],
-      style: labelStyle,
-    );
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Porcentaje Pastoral'),
-        xl.TextCellValue('${_percentage.toStringAsFixed(0)}%'),
-      ],
-      style: labelStyle,
-    );
+    appendRow(summarySheet, [
+      xl.TextCellValue('Periodo'),
+      xl.TextCellValue(from),
+      xl.TextCellValue('\u2192'),
+      xl.TextCellValue(to),
+    ], style: labelStyle);
+    appendRow(summarySheet, [
+      xl.TextCellValue('Moneda'),
+      xl.TextCellValue(_exportCurrencyCode),
+    ], style: labelStyle);
+    appendRow(summarySheet, [
+      xl.TextCellValue('Tasa ($rateLabel)'),
+      xl.TextCellValue(rateStr),
+    ], style: labelStyle);
+    appendRow(summarySheet, [
+      xl.TextCellValue('Porcentaje Pastoral'),
+      xl.TextCellValue('${_percentage.toStringAsFixed(0)}%'),
+    ], style: labelStyle);
     appendRow(summarySheet, [xl.TextCellValue('')]);
 
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Total Ingresos'),
-        xl.TextCellValue(_fmtNumber(totalIncome)),
-        xl.TextCellValue(_exportCurrencyCode),
-      ],
-      style: labelStyle,
-    );
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Pastor (${_percentage.toStringAsFixed(0)}%)'),
-        xl.TextCellValue(_fmtNumber(pastoralShare)),
-        xl.TextCellValue(_exportCurrencyCode),
-      ],
-      style: labelStyle,
-    );
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Iglesia'),
-        xl.TextCellValue(_fmtNumber(churchRetains)),
-        xl.TextCellValue(_exportCurrencyCode),
-      ],
-      style: labelStyle,
-    );
+    appendRow(summarySheet, [
+      xl.TextCellValue('Total Ingresos'),
+      xl.TextCellValue(_fmtNumber(totalIncome)),
+      xl.TextCellValue(_exportCurrencyCode),
+    ], style: labelStyle);
+    appendRow(summarySheet, [
+      xl.TextCellValue('Pastor (${_percentage.toStringAsFixed(0)}%)'),
+      xl.TextCellValue(_fmtNumber(pastoralShare)),
+      xl.TextCellValue(_exportCurrencyCode),
+    ], style: labelStyle);
+    appendRow(summarySheet, [
+      xl.TextCellValue('Iglesia'),
+      xl.TextCellValue(_fmtNumber(churchRetains)),
+      xl.TextCellValue(_exportCurrencyCode),
+    ], style: labelStyle);
     appendRow(summarySheet, [xl.TextCellValue('')]);
 
     appendRow(
@@ -1435,32 +1432,25 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       style: headerStyle,
       mergeToColumn: 6,
     );
-    appendRow(
-      summarySheet,
-      [
-        xl.TextCellValue('Cuenta'),
-        xl.TextCellValue('Monto'),
-        xl.TextCellValue('Moneda'),
-        xl.TextCellValue('Participaci\u00f3n'),
-        xl.TextCellValue('Part. Pastor'),
-        xl.TextCellValue('Moneda'),
-        xl.TextCellValue('Movimientos'),
-      ],
-      style: headerStyle,
-    );
+    appendRow(summarySheet, [
+      xl.TextCellValue('Cuenta'),
+      xl.TextCellValue('Monto'),
+      xl.TextCellValue('Moneda'),
+      xl.TextCellValue('Participaci\u00f3n'),
+      xl.TextCellValue('Part. Pastor'),
+      xl.TextCellValue('Moneda'),
+      xl.TextCellValue('Movimientos'),
+    ], style: headerStyle);
     for (final e in breakdown) {
-      appendRow(
-        summarySheet,
-        [
-          xl.TextCellValue(e.accountName),
-          xl.TextCellValue(_fmtNumber(e.totalIncome)),
-          xl.TextCellValue(_exportCurrencyCode),
-          xl.TextCellValue('${(e.proportion * 100).toStringAsFixed(1)}%'),
-          xl.TextCellValue(_fmtNumber(e.shareAmount)),
-          xl.TextCellValue(_exportCurrencyCode),
-          xl.TextCellValue('${e.transactionCount}'),
-        ],
-      );
+      appendRow(summarySheet, [
+        xl.TextCellValue(e.accountName),
+        xl.TextCellValue(_fmtNumber(e.totalIncome)),
+        xl.TextCellValue(_exportCurrencyCode),
+        xl.TextCellValue('${(e.proportion * 100).toStringAsFixed(1)}%'),
+        xl.TextCellValue(_fmtNumber(e.shareAmount)),
+        xl.TextCellValue(_exportCurrencyCode),
+        xl.TextCellValue('${e.transactionCount}'),
+      ]);
     }
 
     if (detailed) {
@@ -1478,50 +1468,40 @@ class _SettlementReportPageState extends State<SettlementReportPage>
         style: titleStyle,
         mergeToColumn: 5,
       );
-      appendRow(
-        detailSheet,
-        [
-          xl.TextCellValue('Fecha'),
-          xl.TextCellValue('Cuenta'),
-          xl.TextCellValue('Categor\u00eda'),
-          xl.TextCellValue('Monto'),
-          xl.TextCellValue('Moneda'),
-          xl.TextCellValue('Nota'),
-        ],
-        style: headerStyle,
-      );
+      appendRow(detailSheet, [
+        xl.TextCellValue('Fecha'),
+        xl.TextCellValue('Cuenta'),
+        xl.TextCellValue('Categor\u00eda'),
+        xl.TextCellValue('Monto'),
+        xl.TextCellValue('Moneda'),
+        xl.TextCellValue('Nota'),
+      ], style: headerStyle);
       for (final tx in incomes) {
         final txDate = dateFmt.format(tx.date);
         final txAccount = tx.account.name;
         final txCategory = tx.category?.name ?? '';
-        final txAmount = _fmtNumber(
-          tx.currentValueInPreferredCurrency.abs(),
-        );
+        final txAmount = _fmtNumber(tx.currentValueInPreferredCurrency.abs());
         final txNote = tx.notes ?? '';
-        appendRow(
-          detailSheet,
-          [
-            xl.TextCellValue(txDate),
-            xl.TextCellValue(txAccount),
-            xl.TextCellValue(txCategory),
-            xl.TextCellValue(txAmount),
-            xl.TextCellValue(_exportCurrencyCode),
-            xl.TextCellValue(txNote),
-          ],
-        );
+        appendRow(detailSheet, [
+          xl.TextCellValue(txDate),
+          xl.TextCellValue(txAccount),
+          xl.TextCellValue(txCategory),
+          xl.TextCellValue(txAmount),
+          xl.TextCellValue(_exportCurrencyCode),
+          xl.TextCellValue(txNote),
+        ]);
       }
     }
 
     try {
       final dir = await getTemporaryDirectory();
       final type = detailed ? 'detallado' : 'resumen';
-      
+
       final filenameFmt = DateFormat('dd-MM-yyyy');
       final fromFile = filenameFmt.format(_startDate);
       final toFile = filenameFmt.format(_endDate);
-      
-      final fileName =
-          'liquidacion_${type}_$fromFile\_$toFile.xlsx';
+
+      final fileName = 'liquidacion_${type}_$fromFile\_$toFile.xlsx';
       final file = File('${dir.path}/$fileName');
       final bytes = excel.encode();
       if (bytes == null) {
@@ -1532,17 +1512,16 @@ class _SettlementReportPageState extends State<SettlementReportPage>
       await SharePlus.instance.share(
         ShareParams(
           files: [XFile(file.path)],
-            subject: 'Liquidaci\u00f3n $from \u2192 $to '
+          subject:
+              'Liquidaci\u00f3n $from \u2192 $to '
               '($type)',
         ),
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error al exportar: $e'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error al exportar: $e')));
       }
     }
   }
@@ -1558,15 +1537,13 @@ class _SettlementReportPageState extends State<SettlementReportPage>
         Icon(
           icon,
           size: 18,
-          color: colors.onConsistentPrimary
-              .withOpacity(0.7),
+          color: colors.onConsistentPrimary.withOpacity(0.7),
         ),
         const SizedBox(height: 4),
         Text(
           label,
           style: TextStyle(
-            color: colors.onConsistentPrimary
-                .withOpacity(0.7),
+            color: colors.onConsistentPrimary.withOpacity(0.7),
             fontSize: 11,
           ),
           textAlign: TextAlign.center,
@@ -1597,23 +1574,20 @@ class _SettlementReportPageState extends State<SettlementReportPage>
             Icon(
               Icons.inbox_rounded,
               size: 64,
-              color: theme.colorScheme.onSurface
-                  .withOpacity(0.2),
+              color: theme.colorScheme.onSurface.withOpacity(0.2),
             ),
             const SizedBox(height: 16),
             Text(
               'Sin movimientos en este periodo',
               style: theme.textTheme.bodyLarge!.copyWith(
-                color: theme.colorScheme.onSurface
-                    .withOpacity(0.4),
+                color: theme.colorScheme.onSurface.withOpacity(0.4),
               ),
             ),
             const SizedBox(height: 8),
             Text(
               'Selecciona otro rango de fechas',
               style: theme.textTheme.bodySmall!.copyWith(
-                color: theme.colorScheme.onSurface
-                    .withOpacity(0.3),
+                color: theme.colorScheme.onSurface.withOpacity(0.3),
               ),
             ),
           ],
@@ -1637,6 +1611,22 @@ class _BreakdownEntry {
     required this.shareAmount,
     required this.transactionCount,
     required this.proportion,
+  });
+}
+
+class _SubFundBalance {
+  final Category category;
+  final double initialAllocation;
+  final double directIncome;
+  final double totalExpenses;
+
+  double get totalAvailable => initialAllocation + directIncome - totalExpenses;
+
+  _SubFundBalance({
+    required this.category,
+    required this.initialAllocation,
+    required this.directIncome,
+    required this.totalExpenses,
   });
 }
 

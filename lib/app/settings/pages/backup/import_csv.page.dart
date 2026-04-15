@@ -299,6 +299,7 @@ class _ImportCSVPageState extends State<ImportCSVPage> {
             title: titleColumn == null || row[titleColumn!].toString().isEmpty
                 ? null
                 : row[titleColumn!].toString(),
+            calcTithe: true,
             createdAt: DateTime.now(),
           ),
         );

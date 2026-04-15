@@ -118,25 +118,18 @@ class _ExportDataPageState extends State<ExportDataPage> {
       } catch (e) {
         // Platform doesn't support directory picker,
         // use documents directory as fallback
-        path = (await getApplicationDocumentsDirectory())
-            .path;
+        path = (await getApplicationDocumentsDirectory()).path;
       }
 
       if (path == null) {
-        MonekinSnackbar.info(
-          SnackbarParams(t.backup.no_directory_selected),
-        );
+        MonekinSnackbar.info(SnackbarParams(t.backup.no_directory_selected));
         return;
       }
 
       try {
         final file = await _generateExportFile(path);
         MonekinSnackbar.success(
-          SnackbarParams(
-            t.backup.export.success(
-              x: file.parent.path,
-            ),
-          ),
+          SnackbarParams(t.backup.export.success(x: file.parent.path)),
         );
       } on PathAccessException catch (_) {
         // Android scoped storage blocks external dirs.
@@ -161,10 +154,9 @@ class _ExportDataPageState extends State<ExportDataPage> {
   Future<void> _fallbackShareExport() async {
     final dir = await getTemporaryDirectory();
     final file = await _generateExportFile(dir.path);
-    final mimeType =
-        selectedExportFormat == _ExportFormats.csv
-            ? 'text/csv'
-            : null;
+    final mimeType = selectedExportFormat == _ExportFormats.csv
+        ? 'text/csv'
+        : null;
 
     await SharePlus.instance.share(
       ShareParams(

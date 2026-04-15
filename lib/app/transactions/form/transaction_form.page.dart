@@ -87,6 +87,8 @@ class _TransactionFormPageState extends State<TransactionFormPage>
 
   // --- End Form Fields ---
 
+  bool _calcTithe = true;
+
   bool _isSaving = false;
 
   bool get isEditMode => widget.transactionToEdit != null;
@@ -212,6 +214,9 @@ class _TransactionFormPageState extends State<TransactionFormPage>
       selectedCategory = await CategoryService.instance
           .getCategoryById(categoryIdToLoad)
           .first;
+      if (selectedCategory != null) {
+        _calcTithe = selectedCategory!.calcTithe;
+      }
     }
 
     // 3. Status
@@ -300,7 +305,8 @@ class _TransactionFormPageState extends State<TransactionFormPage>
       isHidden: false,
       status: date.compareTo(DateTime.now()) > 0
           ? TransactionStatus.pending
-          : (status ?? TransactionStatus.reconciled), // Default to reconciled if null
+          : (status ??
+                TransactionStatus.reconciled), // Default to reconciled if null
       notes: notesController.text.isEmpty ? null : notesController.text,
       title: titleController.text.isEmpty ? null : titleController.text,
       intervalEach: recurrentRule.intervalEach,
@@ -311,6 +317,7 @@ class _TransactionFormPageState extends State<TransactionFormPage>
       valueInDestiny: transactionType.isTransfer
           ? valueInDestinyToNumber
           : null,
+      calcTithe: _calcTithe,
       categoryID: transactionType.isIncomeOrExpense
           ? selectedCategory?.id
           : null,
@@ -389,8 +396,6 @@ class _TransactionFormPageState extends State<TransactionFormPage>
             // Delay to show Snackbar, then navigate
             await Future.delayed(const Duration(milliseconds: 800));
             RouteUtils.popRoute();
-
-
           } catch (error) {
             if (mounted) {
               setState(() => _isSaving = false);
@@ -431,6 +436,7 @@ class _TransactionFormPageState extends State<TransactionFormPage>
     if (modalRes != null) {
       setState(() {
         selectedCategory = modalRes;
+        _calcTithe = modalRes.calcTithe;
       });
     }
   }
@@ -448,6 +454,7 @@ class _TransactionFormPageState extends State<TransactionFormPage>
     titleController.text = transaction.title ?? '';
     transactionValue = transaction.value;
     transactionType = transaction.type;
+    _calcTithe = transaction.calcTithe;
 
     if (transactionType == TransactionType.expense) {
       transactionValue = transactionValue * -1;
@@ -562,6 +569,22 @@ class _TransactionFormPageState extends State<TransactionFormPage>
       //   ),
       //   const Divider(),
       // ],
+      if (transactionType == TransactionType.income) ...[
+        SwitchListTile(
+          title: const Text('Diezmable'),
+          subtitle: const Text(
+            'Indica si este ingreso cuenta para el diezmo pastoral',
+          ),
+          value: _calcTithe,
+          onChanged: (bool value) {
+            setState(() {
+              _calcTithe = value;
+            });
+          },
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+        ),
+        const Divider(),
+      ],
       TransactionDescriptionField(controller: notesController),
       const Divider(),
     ];
@@ -598,22 +621,24 @@ class _TransactionFormPageState extends State<TransactionFormPage>
         persistentFooterButtons: [
           PersistentFooterButton(
             child: FilledButton.icon(
-              onPressed: _isSaving ? null : () {
-                if (_formKey.currentState!.validate()) {
-                  _formKey.currentState!.save();
+              onPressed: _isSaving
+                  ? null
+                  : () {
+                      if (_formKey.currentState!.validate()) {
+                        _formKey.currentState!.save();
 
-                  submitForm();
-                } else {
-                  MonekinSnackbar.error(
-                    SnackbarParams(t.general.validations.form_error),
-                  );
-                }
-              },
+                        submitForm();
+                      } else {
+                        MonekinSnackbar.error(
+                          SnackbarParams(t.general.validations.form_error),
+                        );
+                      }
+                    },
               icon: _isSaving
                   ? const SizedBox(
                       height: 20,
                       width: 20,
-                      child: CircularProgressIndicator(strokeWidth: 2)
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.save),
               label: Text(

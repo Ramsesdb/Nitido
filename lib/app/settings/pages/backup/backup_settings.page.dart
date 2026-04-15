@@ -153,11 +153,13 @@ class _BackupSettingsPageState extends State<BackupSettingsPage> {
                 subtitle: const Text('Crear cuentas por defecto si faltan'),
                 leading: const Icon(Icons.build_rounded, color: Colors.orange),
                 onTap: () async {
-                   final confirmed = await showDialog<bool>(
+                  final confirmed = await showDialog<bool>(
                     context: context,
                     builder: (context) => AlertDialog(
                       title: const Text('¿Reparar datos?'),
-                      content: const Text('Esto intentará crear las cuentas predeterminadas nuevamente. No borrará tus datos actuales.'),
+                      content: const Text(
+                        'Esto intentará crear las cuentas predeterminadas nuevamente. No borrará tus datos actuales.',
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.of(context).pop(false),
@@ -178,12 +180,14 @@ class _BackupSettingsPageState extends State<BackupSettingsPage> {
 
                       if (context.mounted) {
                         MonekinSnackbar.success(
-                          SnackbarParams('Datos reparados exitosamente. Reinicia la app.'),
+                          SnackbarParams(
+                            'Datos reparados exitosamente. Reinicia la app.',
+                          ),
                         );
                       }
                     } catch (e) {
                       if (context.mounted) {
-                         MonekinSnackbar.error(SnackbarParams('Error: $e'));
+                        MonekinSnackbar.error(SnackbarParams('Error: $e'));
                       }
                     }
                   }
@@ -269,18 +273,19 @@ class _BackupSettingsPageState extends State<BackupSettingsPage> {
 
                   if (confirmed == true) {
                     try {
-                      final result =
-                          await FirebaseSyncService.instance.pullAllData();
+                      final result = await FirebaseSyncService.instance
+                          .pullAllData();
 
                       if (context.mounted) {
                         final errors = result['errors'] as int? ?? 0;
                         final firstErr = result['firstError'] as String? ?? '';
-                        final msg = 'Descargados: '
-                            '${result['accounts']} cuentas, '
-                            '${result['categories']} categorías, '
-                            '${result['transactions']} transacciones. '
-                            '${errors > 0 ? 'Errores: $errors. $firstErr' : ''}'
-                            .trim();
+                        final msg =
+                            'Descargados: '
+                                    '${result['accounts']} cuentas, '
+                                    '${result['categories']} categorías, '
+                                    '${result['transactions']} transacciones. '
+                                    '${errors > 0 ? 'Errores: $errors. $firstErr' : ''}'
+                                .trim();
                         if (errors > 0) {
                           MonekinSnackbar.error(SnackbarParams(msg));
                         } else {

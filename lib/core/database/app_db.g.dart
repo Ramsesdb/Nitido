@@ -1277,6 +1277,30 @@ class Categories extends Table with TableInfo<Categories, CategoryInDB> {
     $customConstraints:
         'REFERENCES categories(id)ON UPDATE CASCADE ON DELETE CASCADE',
   );
+  static const VerificationMeta _calcTitheMeta = const VerificationMeta(
+    'calcTithe',
+  );
+  late final GeneratedColumn<bool> calcTithe = GeneratedColumn<bool>(
+    'calcTithe',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT 1',
+    defaultValue: const CustomExpression('1'),
+  );
+  static const VerificationMeta _subFundPercentMeta = const VerificationMeta(
+    'subFundPercent',
+  );
+  late final GeneratedColumn<double> subFundPercent = GeneratedColumn<double>(
+    'subFundPercent',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT 0',
+    defaultValue: const CustomExpression('0'),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -1286,6 +1310,8 @@ class Categories extends Table with TableInfo<Categories, CategoryInDB> {
     displayOrder,
     type,
     parentCategoryID,
+    calcTithe,
+    subFundPercent,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1346,6 +1372,21 @@ class Categories extends Table with TableInfo<Categories, CategoryInDB> {
         ),
       );
     }
+    if (data.containsKey('calcTithe')) {
+      context.handle(
+        _calcTitheMeta,
+        calcTithe.isAcceptableOrUnknown(data['calcTithe']!, _calcTitheMeta),
+      );
+    }
+    if (data.containsKey('subFundPercent')) {
+      context.handle(
+        _subFundPercentMeta,
+        subFundPercent.isAcceptableOrUnknown(
+          data['subFundPercent']!,
+          _subFundPercentMeta,
+        ),
+      );
+    }
     return context;
   }
 
@@ -1385,6 +1426,14 @@ class Categories extends Table with TableInfo<Categories, CategoryInDB> {
         DriftSqlType.string,
         data['${effectivePrefix}parentCategoryID'],
       ),
+      calcTithe: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}calcTithe'],
+      )!,
+      subFundPercent: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}subFundPercent'],
+      )!,
     );
   }
 
@@ -1426,6 +1475,12 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
 
   /// Parent category of this category (if any)
   final String? parentCategoryID;
+
+  /// Indicates if incomes in this category should be included in the pastoral tithe calculation
+  final bool calcTithe;
+
+  /// The percentage of the income that should be allocated to the sub-fund representing this category
+  final double subFundPercent;
   const CategoryInDB({
     required this.id,
     required this.name,
@@ -1434,6 +1489,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
     required this.displayOrder,
     this.type,
     this.parentCategoryID,
+    required this.calcTithe,
+    required this.subFundPercent,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -1451,6 +1508,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
     if (!nullToAbsent || parentCategoryID != null) {
       map['parentCategoryID'] = Variable<String>(parentCategoryID);
     }
+    map['calcTithe'] = Variable<bool>(calcTithe);
+    map['subFundPercent'] = Variable<double>(subFundPercent);
     return map;
   }
 
@@ -1467,6 +1526,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
       parentCategoryID: parentCategoryID == null && nullToAbsent
           ? const Value.absent()
           : Value(parentCategoryID),
+      calcTithe: Value(calcTithe),
+      subFundPercent: Value(subFundPercent),
     );
   }
 
@@ -1485,6 +1546,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
         serializer.fromJson<String?>(json['type']),
       ),
       parentCategoryID: serializer.fromJson<String?>(json['parentCategoryID']),
+      calcTithe: serializer.fromJson<bool>(json['calcTithe']),
+      subFundPercent: serializer.fromJson<double>(json['subFundPercent']),
     );
   }
   @override
@@ -1500,6 +1563,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
         Categories.$convertertypen.toJson(type),
       ),
       'parentCategoryID': serializer.toJson<String?>(parentCategoryID),
+      'calcTithe': serializer.toJson<bool>(calcTithe),
+      'subFundPercent': serializer.toJson<double>(subFundPercent),
     };
   }
 
@@ -1511,6 +1576,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
     int? displayOrder,
     Value<CategoryType?> type = const Value.absent(),
     Value<String?> parentCategoryID = const Value.absent(),
+    bool? calcTithe,
+    double? subFundPercent,
   }) => CategoryInDB(
     id: id ?? this.id,
     name: name ?? this.name,
@@ -1521,6 +1588,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
     parentCategoryID: parentCategoryID.present
         ? parentCategoryID.value
         : this.parentCategoryID,
+    calcTithe: calcTithe ?? this.calcTithe,
+    subFundPercent: subFundPercent ?? this.subFundPercent,
   );
   CategoryInDB copyWithCompanion(CategoriesCompanion data) {
     return CategoryInDB(
@@ -1535,6 +1604,10 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
       parentCategoryID: data.parentCategoryID.present
           ? data.parentCategoryID.value
           : this.parentCategoryID,
+      calcTithe: data.calcTithe.present ? data.calcTithe.value : this.calcTithe,
+      subFundPercent: data.subFundPercent.present
+          ? data.subFundPercent.value
+          : this.subFundPercent,
     );
   }
 
@@ -1547,7 +1620,9 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
           ..write('color: $color, ')
           ..write('displayOrder: $displayOrder, ')
           ..write('type: $type, ')
-          ..write('parentCategoryID: $parentCategoryID')
+          ..write('parentCategoryID: $parentCategoryID, ')
+          ..write('calcTithe: $calcTithe, ')
+          ..write('subFundPercent: $subFundPercent')
           ..write(')'))
         .toString();
   }
@@ -1561,6 +1636,8 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
     displayOrder,
     type,
     parentCategoryID,
+    calcTithe,
+    subFundPercent,
   );
   @override
   bool operator ==(Object other) =>
@@ -1572,7 +1649,9 @@ class CategoryInDB extends DataClass implements Insertable<CategoryInDB> {
           other.color == this.color &&
           other.displayOrder == this.displayOrder &&
           other.type == this.type &&
-          other.parentCategoryID == this.parentCategoryID);
+          other.parentCategoryID == this.parentCategoryID &&
+          other.calcTithe == this.calcTithe &&
+          other.subFundPercent == this.subFundPercent);
 }
 
 class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
@@ -1583,6 +1662,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
   final Value<int> displayOrder;
   final Value<CategoryType?> type;
   final Value<String?> parentCategoryID;
+  final Value<bool> calcTithe;
+  final Value<double> subFundPercent;
   final Value<int> rowid;
   const CategoriesCompanion({
     this.id = const Value.absent(),
@@ -1592,6 +1673,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
     this.displayOrder = const Value.absent(),
     this.type = const Value.absent(),
     this.parentCategoryID = const Value.absent(),
+    this.calcTithe = const Value.absent(),
+    this.subFundPercent = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   CategoriesCompanion.insert({
@@ -1602,6 +1685,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
     required int displayOrder,
     this.type = const Value.absent(),
     this.parentCategoryID = const Value.absent(),
+    this.calcTithe = const Value.absent(),
+    this.subFundPercent = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        name = Value(name),
@@ -1615,6 +1700,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
     Expression<int>? displayOrder,
     Expression<String>? type,
     Expression<String>? parentCategoryID,
+    Expression<bool>? calcTithe,
+    Expression<double>? subFundPercent,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1625,6 +1712,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
       if (displayOrder != null) 'displayOrder': displayOrder,
       if (type != null) 'type': type,
       if (parentCategoryID != null) 'parentCategoryID': parentCategoryID,
+      if (calcTithe != null) 'calcTithe': calcTithe,
+      if (subFundPercent != null) 'subFundPercent': subFundPercent,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1637,6 +1726,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
     Value<int>? displayOrder,
     Value<CategoryType?>? type,
     Value<String?>? parentCategoryID,
+    Value<bool>? calcTithe,
+    Value<double>? subFundPercent,
     Value<int>? rowid,
   }) {
     return CategoriesCompanion(
@@ -1647,6 +1738,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
       displayOrder: displayOrder ?? this.displayOrder,
       type: type ?? this.type,
       parentCategoryID: parentCategoryID ?? this.parentCategoryID,
+      calcTithe: calcTithe ?? this.calcTithe,
+      subFundPercent: subFundPercent ?? this.subFundPercent,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1677,6 +1770,12 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
     if (parentCategoryID.present) {
       map['parentCategoryID'] = Variable<String>(parentCategoryID.value);
     }
+    if (calcTithe.present) {
+      map['calcTithe'] = Variable<bool>(calcTithe.value);
+    }
+    if (subFundPercent.present) {
+      map['subFundPercent'] = Variable<double>(subFundPercent.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1693,6 +1792,8 @@ class CategoriesCompanion extends UpdateCompanion<CategoryInDB> {
           ..write('displayOrder: $displayOrder, ')
           ..write('type: $type, ')
           ..write('parentCategoryID: $parentCategoryID, ')
+          ..write('calcTithe: $calcTithe, ')
+          ..write('subFundPercent: $subFundPercent, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -2249,6 +2350,18 @@ class Transactions extends Table with TableInfo<Transactions, TransactionInDB> {
     $customConstraints: 'NOT NULL DEFAULT 0',
     defaultValue: const CustomExpression('0'),
   );
+  static const VerificationMeta _calcTitheMeta = const VerificationMeta(
+    'calcTithe',
+  );
+  late final GeneratedColumn<bool> calcTithe = GeneratedColumn<bool>(
+    'calcTithe',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    $customConstraints: 'NOT NULL DEFAULT 1',
+    defaultValue: const CustomExpression('1'),
+  );
   static const VerificationMeta _createdByMeta = const VerificationMeta(
     'createdBy',
   );
@@ -2385,6 +2498,7 @@ class Transactions extends Table with TableInfo<Transactions, TransactionInDB> {
     valueInDestiny,
     receivingAccountID,
     isHidden,
+    calcTithe,
     createdBy,
     modifiedBy,
     createdAt,
@@ -2478,6 +2592,12 @@ class Transactions extends Table with TableInfo<Transactions, TransactionInDB> {
       context.handle(
         _isHiddenMeta,
         isHidden.isAcceptableOrUnknown(data['isHidden']!, _isHiddenMeta),
+      );
+    }
+    if (data.containsKey('calcTithe')) {
+      context.handle(
+        _calcTitheMeta,
+        calcTithe.isAcceptableOrUnknown(data['calcTithe']!, _calcTitheMeta),
       );
     }
     if (data.containsKey('createdBy')) {
@@ -2613,6 +2733,10 @@ class Transactions extends Table with TableInfo<Transactions, TransactionInDB> {
         DriftSqlType.bool,
         data['${effectivePrefix}isHidden'],
       )!,
+      calcTithe: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}calcTithe'],
+      )!,
       createdBy: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}createdBy'],
@@ -2719,6 +2843,9 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
   final String? receivingAccountID;
   final bool isHidden;
 
+  /// Allows overriding the category's titheable status on a per-transaction basis
+  final bool calcTithe;
+
   ///--------- Audit data --------------
   /// User who created this transaction (Firebase UID)
   final String? createdBy;
@@ -2767,6 +2894,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
     this.valueInDestiny,
     this.receivingAccountID,
     required this.isHidden,
+    required this.calcTithe,
     this.createdBy,
     this.modifiedBy,
     required this.createdAt,
@@ -2810,6 +2938,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
       map['receivingAccountID'] = Variable<String>(receivingAccountID);
     }
     map['isHidden'] = Variable<bool>(isHidden);
+    map['calcTithe'] = Variable<bool>(calcTithe);
     if (!nullToAbsent || createdBy != null) {
       map['createdBy'] = Variable<String>(createdBy);
     }
@@ -2872,6 +3001,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
           ? const Value.absent()
           : Value(receivingAccountID),
       isHidden: Value(isHidden),
+      calcTithe: Value(calcTithe),
       createdBy: createdBy == null && nullToAbsent
           ? const Value.absent()
           : Value(createdBy),
@@ -2926,6 +3056,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
         json['receivingAccountID'],
       ),
       isHidden: serializer.fromJson<bool>(json['isHidden']),
+      calcTithe: serializer.fromJson<bool>(json['calcTithe']),
       createdBy: serializer.fromJson<String?>(json['createdBy']),
       modifiedBy: serializer.fromJson<String?>(json['modifiedBy']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -2959,6 +3090,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
       'valueInDestiny': serializer.toJson<double?>(valueInDestiny),
       'receivingAccountID': serializer.toJson<String?>(receivingAccountID),
       'isHidden': serializer.toJson<bool>(isHidden),
+      'calcTithe': serializer.toJson<bool>(calcTithe),
       'createdBy': serializer.toJson<String?>(createdBy),
       'modifiedBy': serializer.toJson<String?>(modifiedBy),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -2988,6 +3120,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
     Value<double?> valueInDestiny = const Value.absent(),
     Value<String?> receivingAccountID = const Value.absent(),
     bool? isHidden,
+    bool? calcTithe,
     Value<String?> createdBy = const Value.absent(),
     Value<String?> modifiedBy = const Value.absent(),
     DateTime? createdAt,
@@ -3016,6 +3149,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
         ? receivingAccountID.value
         : this.receivingAccountID,
     isHidden: isHidden ?? this.isHidden,
+    calcTithe: calcTithe ?? this.calcTithe,
     createdBy: createdBy.present ? createdBy.value : this.createdBy,
     modifiedBy: modifiedBy.present ? modifiedBy.value : this.modifiedBy,
     createdAt: createdAt ?? this.createdAt,
@@ -3052,6 +3186,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
           ? data.receivingAccountID.value
           : this.receivingAccountID,
       isHidden: data.isHidden.present ? data.isHidden.value : this.isHidden,
+      calcTithe: data.calcTithe.present ? data.calcTithe.value : this.calcTithe,
       createdBy: data.createdBy.present ? data.createdBy.value : this.createdBy,
       modifiedBy: data.modifiedBy.present
           ? data.modifiedBy.value
@@ -3097,6 +3232,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
           ..write('valueInDestiny: $valueInDestiny, ')
           ..write('receivingAccountID: $receivingAccountID, ')
           ..write('isHidden: $isHidden, ')
+          ..write('calcTithe: $calcTithe, ')
           ..write('createdBy: $createdBy, ')
           ..write('modifiedBy: $modifiedBy, ')
           ..write('createdAt: $createdAt, ')
@@ -3126,6 +3262,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
     valueInDestiny,
     receivingAccountID,
     isHidden,
+    calcTithe,
     createdBy,
     modifiedBy,
     createdAt,
@@ -3154,6 +3291,7 @@ class TransactionInDB extends DataClass implements Insertable<TransactionInDB> {
           other.valueInDestiny == this.valueInDestiny &&
           other.receivingAccountID == this.receivingAccountID &&
           other.isHidden == this.isHidden &&
+          other.calcTithe == this.calcTithe &&
           other.createdBy == this.createdBy &&
           other.modifiedBy == this.modifiedBy &&
           other.createdAt == this.createdAt &&
@@ -3180,6 +3318,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
   final Value<double?> valueInDestiny;
   final Value<String?> receivingAccountID;
   final Value<bool> isHidden;
+  final Value<bool> calcTithe;
   final Value<String?> createdBy;
   final Value<String?> modifiedBy;
   final Value<DateTime> createdAt;
@@ -3205,6 +3344,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
     this.valueInDestiny = const Value.absent(),
     this.receivingAccountID = const Value.absent(),
     this.isHidden = const Value.absent(),
+    this.calcTithe = const Value.absent(),
     this.createdBy = const Value.absent(),
     this.modifiedBy = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -3231,6 +3371,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
     this.valueInDestiny = const Value.absent(),
     this.receivingAccountID = const Value.absent(),
     this.isHidden = const Value.absent(),
+    this.calcTithe = const Value.absent(),
     this.createdBy = const Value.absent(),
     this.modifiedBy = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -3261,6 +3402,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
     Expression<double>? valueInDestiny,
     Expression<String>? receivingAccountID,
     Expression<bool>? isHidden,
+    Expression<bool>? calcTithe,
     Expression<String>? createdBy,
     Expression<String>? modifiedBy,
     Expression<DateTime>? createdAt,
@@ -3287,6 +3429,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
       if (valueInDestiny != null) 'valueInDestiny': valueInDestiny,
       if (receivingAccountID != null) 'receivingAccountID': receivingAccountID,
       if (isHidden != null) 'isHidden': isHidden,
+      if (calcTithe != null) 'calcTithe': calcTithe,
       if (createdBy != null) 'createdBy': createdBy,
       if (modifiedBy != null) 'modifiedBy': modifiedBy,
       if (createdAt != null) 'createdAt': createdAt,
@@ -3316,6 +3459,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
     Value<double?>? valueInDestiny,
     Value<String?>? receivingAccountID,
     Value<bool>? isHidden,
+    Value<bool>? calcTithe,
     Value<String?>? createdBy,
     Value<String?>? modifiedBy,
     Value<DateTime>? createdAt,
@@ -3342,6 +3486,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
       valueInDestiny: valueInDestiny ?? this.valueInDestiny,
       receivingAccountID: receivingAccountID ?? this.receivingAccountID,
       isHidden: isHidden ?? this.isHidden,
+      calcTithe: calcTithe ?? this.calcTithe,
       createdBy: createdBy ?? this.createdBy,
       modifiedBy: modifiedBy ?? this.modifiedBy,
       createdAt: createdAt ?? this.createdAt,
@@ -3401,6 +3546,9 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
     if (isHidden.present) {
       map['isHidden'] = Variable<bool>(isHidden.value);
     }
+    if (calcTithe.present) {
+      map['calcTithe'] = Variable<bool>(calcTithe.value);
+    }
     if (createdBy.present) {
       map['createdBy'] = Variable<String>(createdBy.value);
     }
@@ -3457,6 +3605,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionInDB> {
           ..write('valueInDestiny: $valueInDestiny, ')
           ..write('receivingAccountID: $receivingAccountID, ')
           ..write('isHidden: $isHidden, ')
+          ..write('calcTithe: $calcTithe, ')
           ..write('createdBy: $createdBy, ')
           ..write('modifiedBy: $modifiedBy, ')
           ..write('createdAt: $createdAt, ')
@@ -7661,7 +7810,7 @@ abstract class _$AppDB extends GeneratedDatabase {
     );
     $arrayStartIndex += generatedlimit.amountOfVariables;
     return customSelect(
-      'SELECT t.*,"a"."id" AS "nested_0.id", "a"."name" AS "nested_0.name", "a"."iniValue" AS "nested_0.iniValue", "a"."date" AS "nested_0.date", "a"."description" AS "nested_0.description", "a"."type" AS "nested_0.type", "a"."iconId" AS "nested_0.iconId", "a"."displayOrder" AS "nested_0.displayOrder", "a"."color" AS "nested_0.color", "a"."closingDate" AS "nested_0.closingDate", "a"."currencyId" AS "nested_0.currencyId", "a"."iban" AS "nested_0.iban", "a"."swift" AS "nested_0.swift","accountCurrency"."code" AS "nested_1.code", "accountCurrency"."symbol" AS "nested_1.symbol", "accountCurrency"."name" AS "nested_1.name", "accountCurrency"."decimalPlaces" AS "nested_1.decimalPlaces", "accountCurrency"."isDefault" AS "nested_1.isDefault", "accountCurrency"."type" AS "nested_1.type","receivingAccountCurrency"."code" AS "nested_2.code", "receivingAccountCurrency"."symbol" AS "nested_2.symbol", "receivingAccountCurrency"."name" AS "nested_2.name", "receivingAccountCurrency"."decimalPlaces" AS "nested_2.decimalPlaces", "receivingAccountCurrency"."isDefault" AS "nested_2.isDefault", "receivingAccountCurrency"."type" AS "nested_2.type","ra"."id" AS "nested_3.id", "ra"."name" AS "nested_3.name", "ra"."iniValue" AS "nested_3.iniValue", "ra"."date" AS "nested_3.date", "ra"."description" AS "nested_3.description", "ra"."type" AS "nested_3.type", "ra"."iconId" AS "nested_3.iconId", "ra"."displayOrder" AS "nested_3.displayOrder", "ra"."color" AS "nested_3.color", "ra"."closingDate" AS "nested_3.closingDate", "ra"."currencyId" AS "nested_3.currencyId", "ra"."iban" AS "nested_3.iban", "ra"."swift" AS "nested_3.swift","c"."id" AS "nested_4.id", "c"."name" AS "nested_4.name", "c"."iconId" AS "nested_4.iconId", "c"."color" AS "nested_4.color", "c"."displayOrder" AS "nested_4.displayOrder", "c"."type" AS "nested_4.type", "c"."parentCategoryID" AS "nested_4.parentCategoryID","pc"."id" AS "nested_5.id", "pc"."name" AS "nested_5.name", "pc"."iconId" AS "nested_5.iconId", "pc"."color" AS "nested_5.color", "pc"."displayOrder" AS "nested_5.displayOrder", "pc"."type" AS "nested_5.type", "pc"."parentCategoryID" AS "nested_5.parentCategoryID", t.value * COALESCE(excRate.exchangeRate, 1) AS currentValueInPreferredCurrency, t.valueInDestiny * COALESCE(excRateOfDestiny.exchangeRate, 1) AS currentValueInDestinyInPreferredCurrency, t.id AS "\$n_0" FROM transactions AS t INNER JOIN accounts AS a ON t.accountID = a.id INNER JOIN currencies AS accountCurrency ON a.currencyId = accountCurrency.code LEFT JOIN accounts AS ra ON t.receivingAccountID = ra.id LEFT JOIN currencies AS receivingAccountCurrency ON ra.currencyId = receivingAccountCurrency.code LEFT JOIN categories AS c ON t.categoryID = c.id LEFT JOIN categories AS pc ON c.parentCategoryID = pc.id LEFT JOIN (SELECT currencyCode, exchangeRate FROM exchangeRates AS er WHERE date = (SELECT MAX(date) FROM exchangeRates WHERE currencyCode = er.currencyCode AND DATE <= DATE(\'now\')) ORDER BY currencyCode) AS excRate ON a.currencyId = excRate.currencyCode LEFT JOIN (SELECT currencyCode, exchangeRate FROM exchangeRates AS er WHERE date = (SELECT MAX(date) FROM exchangeRates WHERE currencyCode = er.currencyCode AND DATE <= DATE(\'now\')) ORDER BY currencyCode) AS excRateOfDestiny ON ra.currencyId = excRateOfDestiny.currencyCode WHERE ${generatedpredicate.sql} ${generatedorderBy.sql} ${generatedlimit.sql}',
+      'SELECT t.*,"a"."id" AS "nested_0.id", "a"."name" AS "nested_0.name", "a"."iniValue" AS "nested_0.iniValue", "a"."date" AS "nested_0.date", "a"."description" AS "nested_0.description", "a"."type" AS "nested_0.type", "a"."iconId" AS "nested_0.iconId", "a"."displayOrder" AS "nested_0.displayOrder", "a"."color" AS "nested_0.color", "a"."closingDate" AS "nested_0.closingDate", "a"."currencyId" AS "nested_0.currencyId", "a"."iban" AS "nested_0.iban", "a"."swift" AS "nested_0.swift","accountCurrency"."code" AS "nested_1.code", "accountCurrency"."symbol" AS "nested_1.symbol", "accountCurrency"."name" AS "nested_1.name", "accountCurrency"."decimalPlaces" AS "nested_1.decimalPlaces", "accountCurrency"."isDefault" AS "nested_1.isDefault", "accountCurrency"."type" AS "nested_1.type","receivingAccountCurrency"."code" AS "nested_2.code", "receivingAccountCurrency"."symbol" AS "nested_2.symbol", "receivingAccountCurrency"."name" AS "nested_2.name", "receivingAccountCurrency"."decimalPlaces" AS "nested_2.decimalPlaces", "receivingAccountCurrency"."isDefault" AS "nested_2.isDefault", "receivingAccountCurrency"."type" AS "nested_2.type","ra"."id" AS "nested_3.id", "ra"."name" AS "nested_3.name", "ra"."iniValue" AS "nested_3.iniValue", "ra"."date" AS "nested_3.date", "ra"."description" AS "nested_3.description", "ra"."type" AS "nested_3.type", "ra"."iconId" AS "nested_3.iconId", "ra"."displayOrder" AS "nested_3.displayOrder", "ra"."color" AS "nested_3.color", "ra"."closingDate" AS "nested_3.closingDate", "ra"."currencyId" AS "nested_3.currencyId", "ra"."iban" AS "nested_3.iban", "ra"."swift" AS "nested_3.swift","c"."id" AS "nested_4.id", "c"."name" AS "nested_4.name", "c"."iconId" AS "nested_4.iconId", "c"."color" AS "nested_4.color", "c"."displayOrder" AS "nested_4.displayOrder", "c"."type" AS "nested_4.type", "c"."parentCategoryID" AS "nested_4.parentCategoryID", "c"."calcTithe" AS "nested_4.calcTithe", "c"."subFundPercent" AS "nested_4.subFundPercent","pc"."id" AS "nested_5.id", "pc"."name" AS "nested_5.name", "pc"."iconId" AS "nested_5.iconId", "pc"."color" AS "nested_5.color", "pc"."displayOrder" AS "nested_5.displayOrder", "pc"."type" AS "nested_5.type", "pc"."parentCategoryID" AS "nested_5.parentCategoryID", "pc"."calcTithe" AS "nested_5.calcTithe", "pc"."subFundPercent" AS "nested_5.subFundPercent", t.value * COALESCE(excRate.exchangeRate, 1) AS currentValueInPreferredCurrency, t.valueInDestiny * COALESCE(excRateOfDestiny.exchangeRate, 1) AS currentValueInDestinyInPreferredCurrency, t.id AS "\$n_0" FROM transactions AS t INNER JOIN accounts AS a ON t.accountID = a.id INNER JOIN currencies AS accountCurrency ON a.currencyId = accountCurrency.code LEFT JOIN accounts AS ra ON t.receivingAccountID = ra.id LEFT JOIN currencies AS receivingAccountCurrency ON ra.currencyId = receivingAccountCurrency.code LEFT JOIN categories AS c ON t.categoryID = c.id LEFT JOIN categories AS pc ON c.parentCategoryID = pc.id LEFT JOIN (SELECT currencyCode, exchangeRate FROM exchangeRates AS er WHERE date = (SELECT MAX(date) FROM exchangeRates WHERE currencyCode = er.currencyCode AND DATE <= DATE(\'now\')) ORDER BY currencyCode) AS excRate ON a.currencyId = excRate.currencyCode LEFT JOIN (SELECT currencyCode, exchangeRate FROM exchangeRates AS er WHERE date = (SELECT MAX(date) FROM exchangeRates WHERE currencyCode = er.currencyCode AND DATE <= DATE(\'now\')) ORDER BY currencyCode) AS excRateOfDestiny ON ra.currencyId = excRateOfDestiny.currencyCode WHERE ${generatedpredicate.sql} ${generatedorderBy.sql} ${generatedlimit.sql}',
       variables: [
         ...generatedpredicate.introducedVariables,
         ...generatedorderBy.introducedVariables,
@@ -7735,6 +7884,7 @@ abstract class _$AppDB extends GeneratedDatabase {
           row.readNullable<String>('intervalPeriod'),
         ),
         remainingTransactions: row.readNullable<int>('remainingTransactions'),
+        calcTithe: row.read<bool>('calcTithe'),
       ),
     );
   }
@@ -7813,7 +7963,7 @@ abstract class _$AppDB extends GeneratedDatabase {
     );
     $arrayStartIndex += generatedorderBy.amountOfVariables;
     return customSelect(
-      'SELECT a.*,"parentCategory"."id" AS "nested_0.id", "parentCategory"."name" AS "nested_0.name", "parentCategory"."iconId" AS "nested_0.iconId", "parentCategory"."color" AS "nested_0.color", "parentCategory"."displayOrder" AS "nested_0.displayOrder", "parentCategory"."type" AS "nested_0.type", "parentCategory"."parentCategoryID" AS "nested_0.parentCategoryID" FROM categories AS a LEFT JOIN categories AS parentCategory ON a.parentCategoryID = parentCategory.id WHERE ${generatedpredicate.sql} ${generatedorderBy.sql} LIMIT ?1',
+      'SELECT a.*,"parentCategory"."id" AS "nested_0.id", "parentCategory"."name" AS "nested_0.name", "parentCategory"."iconId" AS "nested_0.iconId", "parentCategory"."color" AS "nested_0.color", "parentCategory"."displayOrder" AS "nested_0.displayOrder", "parentCategory"."type" AS "nested_0.type", "parentCategory"."parentCategoryID" AS "nested_0.parentCategoryID", "parentCategory"."calcTithe" AS "nested_0.calcTithe", "parentCategory"."subFundPercent" AS "nested_0.subFundPercent" FROM categories AS a LEFT JOIN categories AS parentCategory ON a.parentCategoryID = parentCategory.id WHERE ${generatedpredicate.sql} ${generatedorderBy.sql} LIMIT ?1',
       variables: [
         Variable<double>(limit),
         ...generatedpredicate.introducedVariables,
@@ -7839,6 +7989,8 @@ abstract class _$AppDB extends GeneratedDatabase {
           row,
           tablePrefix: 'nested_0',
         ),
+        calcTithe: row.read<bool>('calcTithe'),
+        subFundPercent: row.read<double>('subFundPercent'),
       ),
     );
   }
@@ -9177,6 +9329,8 @@ typedef $CategoriesCreateCompanionBuilder =
       required int displayOrder,
       Value<CategoryType?> type,
       Value<String?> parentCategoryID,
+      Value<bool> calcTithe,
+      Value<double> subFundPercent,
       Value<int> rowid,
     });
 typedef $CategoriesUpdateCompanionBuilder =
@@ -9188,6 +9342,8 @@ typedef $CategoriesUpdateCompanionBuilder =
       Value<int> displayOrder,
       Value<CategoryType?> type,
       Value<String?> parentCategoryID,
+      Value<bool> calcTithe,
+      Value<double> subFundPercent,
       Value<int> rowid,
     });
 
@@ -9261,6 +9417,16 @@ class $CategoriesFilterComposer extends Composer<_$AppDB, Categories> {
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get calcTithe => $composableBuilder(
+    column: $table.calcTithe,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get subFundPercent => $composableBuilder(
+    column: $table.subFundPercent,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> transactionsRefs(
     Expression<bool> Function($TransactionsFilterComposer f) f,
   ) {
@@ -9329,6 +9495,16 @@ class $CategoriesOrderingComposer extends Composer<_$AppDB, Categories> {
     column: $table.parentCategoryID,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get calcTithe => $composableBuilder(
+    column: $table.calcTithe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get subFundPercent => $composableBuilder(
+    column: $table.subFundPercent,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $CategoriesAnnotationComposer extends Composer<_$AppDB, Categories> {
@@ -9361,6 +9537,14 @@ class $CategoriesAnnotationComposer extends Composer<_$AppDB, Categories> {
 
   GeneratedColumn<String> get parentCategoryID => $composableBuilder(
     column: $table.parentCategoryID,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get calcTithe =>
+      $composableBuilder(column: $table.calcTithe, builder: (column) => column);
+
+  GeneratedColumn<double> get subFundPercent => $composableBuilder(
+    column: $table.subFundPercent,
     builder: (column) => column,
   );
 
@@ -9425,6 +9609,8 @@ class $CategoriesTableManager
                 Value<int> displayOrder = const Value.absent(),
                 Value<CategoryType?> type = const Value.absent(),
                 Value<String?> parentCategoryID = const Value.absent(),
+                Value<bool> calcTithe = const Value.absent(),
+                Value<double> subFundPercent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CategoriesCompanion(
                 id: id,
@@ -9434,6 +9620,8 @@ class $CategoriesTableManager
                 displayOrder: displayOrder,
                 type: type,
                 parentCategoryID: parentCategoryID,
+                calcTithe: calcTithe,
+                subFundPercent: subFundPercent,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -9445,6 +9633,8 @@ class $CategoriesTableManager
                 required int displayOrder,
                 Value<CategoryType?> type = const Value.absent(),
                 Value<String?> parentCategoryID = const Value.absent(),
+                Value<bool> calcTithe = const Value.absent(),
+                Value<double> subFundPercent = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CategoriesCompanion.insert(
                 id: id,
@@ -9454,6 +9644,8 @@ class $CategoriesTableManager
                 displayOrder: displayOrder,
                 type: type,
                 parentCategoryID: parentCategoryID,
+                calcTithe: calcTithe,
+                subFundPercent: subFundPercent,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -9732,6 +9924,7 @@ typedef $TransactionsCreateCompanionBuilder =
       Value<double?> valueInDestiny,
       Value<String?> receivingAccountID,
       Value<bool> isHidden,
+      Value<bool> calcTithe,
       Value<String?> createdBy,
       Value<String?> modifiedBy,
       Value<DateTime> createdAt,
@@ -9759,6 +9952,7 @@ typedef $TransactionsUpdateCompanionBuilder =
       Value<double?> valueInDestiny,
       Value<String?> receivingAccountID,
       Value<bool> isHidden,
+      Value<bool> calcTithe,
       Value<String?> createdBy,
       Value<String?> modifiedBy,
       Value<DateTime> createdAt,
@@ -9947,6 +10141,11 @@ class $TransactionsFilterComposer extends Composer<_$AppDB, Transactions> {
 
   ColumnFilters<bool> get isHidden => $composableBuilder(
     column: $table.isHidden,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get calcTithe => $composableBuilder(
+    column: $table.calcTithe,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10190,6 +10389,11 @@ class $TransactionsOrderingComposer extends Composer<_$AppDB, Transactions> {
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get calcTithe => $composableBuilder(
+    column: $table.calcTithe,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -10387,6 +10591,9 @@ class $TransactionsAnnotationComposer extends Composer<_$AppDB, Transactions> {
 
   GeneratedColumn<bool> get isHidden =>
       $composableBuilder(column: $table.isHidden, builder: (column) => column);
+
+  GeneratedColumn<bool> get calcTithe =>
+      $composableBuilder(column: $table.calcTithe, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -10618,6 +10825,7 @@ class $TransactionsTableManager
                 Value<double?> valueInDestiny = const Value.absent(),
                 Value<String?> receivingAccountID = const Value.absent(),
                 Value<bool> isHidden = const Value.absent(),
+                Value<bool> calcTithe = const Value.absent(),
                 Value<String?> createdBy = const Value.absent(),
                 Value<String?> modifiedBy = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -10643,6 +10851,7 @@ class $TransactionsTableManager
                 valueInDestiny: valueInDestiny,
                 receivingAccountID: receivingAccountID,
                 isHidden: isHidden,
+                calcTithe: calcTithe,
                 createdBy: createdBy,
                 modifiedBy: modifiedBy,
                 createdAt: createdAt,
@@ -10670,6 +10879,7 @@ class $TransactionsTableManager
                 Value<double?> valueInDestiny = const Value.absent(),
                 Value<String?> receivingAccountID = const Value.absent(),
                 Value<bool> isHidden = const Value.absent(),
+                Value<bool> calcTithe = const Value.absent(),
                 Value<String?> createdBy = const Value.absent(),
                 Value<String?> modifiedBy = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
@@ -10695,6 +10905,7 @@ class $TransactionsTableManager
                 valueInDestiny: valueInDestiny,
                 receivingAccountID: receivingAccountID,
                 isHidden: isHidden,
+                calcTithe: calcTithe,
                 createdBy: createdBy,
                 modifiedBy: modifiedBy,
                 createdAt: createdAt,

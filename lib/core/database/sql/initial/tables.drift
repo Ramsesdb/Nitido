@@ -101,6 +101,12 @@ CREATE TABLE IF NOT EXISTS categories (
     -- Parent category of this category (if any)
     parentCategoryID TEXT REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE,
 
+    -- Indicates if incomes in this category should be included in the pastoral tithe calculation
+    calcTithe BOOLEAN NOT NULL DEFAULT 1,
+
+    -- The percentage of the income that should be allocated to the sub-fund representing this category
+    subFundPercent REAL NOT NULL DEFAULT 0,
+
     --- Color and type are not needed in child categories. They are inherited from the parent 
     CHECK ((parentCategoryID IS NULL) != (color IS NULL AND type IS NULL)),
     CHECK ((color IS NULL) == (type IS NULL))
@@ -149,6 +155,9 @@ CREATE TABLE IF NOT EXISTS transactions (
   valueInDestiny REAL,
   receivingAccountID TEXT REFERENCES accounts(id) ON DELETE CASCADE ON UPDATE CASCADE,
   isHidden BOOLEAN NOT NULL DEFAULT 0,
+
+  -- Allows overriding the category's titheable status on a per-transaction basis
+  calcTithe BOOLEAN NOT NULL DEFAULT 1,
 
   ----------- Audit data --------------
 

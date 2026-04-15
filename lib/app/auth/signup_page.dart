@@ -46,11 +46,11 @@ class _SignupPageState extends State<SignupPage> {
 
     try {
       // Create user in Firebase Auth
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-      );
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
 
       // Update display name
       await credential.user?.updateDisplayName(_nameController.text.trim());
@@ -73,12 +73,12 @@ class _SignupPageState extends State<SignupPage> {
 
       // Update app state
       await AppDataService.instance.setItem(
-        AppDataKey.introSeen, 
+        AppDataKey.introSeen,
         '1',
         updateGlobalState: true,
       );
       await UserSettingService.instance.setItem(
-        SettingKey.userName, 
+        SettingKey.userName,
         _nameController.text.trim(),
         updateGlobalState: true,
       );
@@ -91,8 +91,8 @@ class _SignupPageState extends State<SignupPage> {
       } catch (seedError) {
         Logger.printDebug('Warning: Church seeding failed: $seedError');
         // Continue anyway - user can add data manually
-      }      
-      
+      }
+
       // Show success message and navigate
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -102,7 +102,7 @@ class _SignupPageState extends State<SignupPage> {
             duration: Duration(seconds: 2),
           ),
         );
-        
+
         // Force navigation - pop back to trigger auth state rebuild
         await Future.delayed(const Duration(milliseconds: 500));
         if (mounted) {
@@ -162,8 +162,9 @@ class _SignupPageState extends State<SignupPage> {
         idToken: googleAuth.idToken,
       );
 
-      final userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
       final user = userCredential.user;
 
       Logger.printDebug('Google Sign-Up successful: ${user?.uid}');
@@ -253,7 +254,7 @@ class _SignupPageState extends State<SignupPage> {
               color: isDark ? Colors.black26 : Colors.white24,
               shape: BoxShape.circle,
             ),
-                          child: const Icon(Icons.arrow_back),
+            child: const Icon(Icons.arrow_back),
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -303,7 +304,10 @@ class _SignupPageState extends State<SignupPage> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 400),
                   child: Form(
@@ -334,7 +338,9 @@ class _SignupPageState extends State<SignupPage> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: colorScheme.errorContainer.withOpacity(0.8),
+                              color: colorScheme.errorContainer.withOpacity(
+                                0.8,
+                              ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
                                 color: colorScheme.error.withOpacity(0.5),
@@ -372,8 +378,9 @@ class _SignupPageState extends State<SignupPage> {
                             labelText: 'Nombre completo',
                             prefixIcon: const Icon(Icons.person_outline),
                             filled: true,
-                            fillColor: isDark 
-                                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                            fillColor: isDark
+                                ? colorScheme.surfaceContainerHighest
+                                      .withOpacity(0.5)
                                 : colorScheme.surfaceContainerLow,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -413,8 +420,9 @@ class _SignupPageState extends State<SignupPage> {
                             labelText: 'Correo electrónico',
                             prefixIcon: const Icon(Icons.email_outlined),
                             filled: true,
-                            fillColor: isDark 
-                                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                            fillColor: isDark
+                                ? colorScheme.surfaceContainerHighest
+                                      .withOpacity(0.5)
                                 : colorScheme.surfaceContainerLow,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -462,12 +470,15 @@ class _SignupPageState extends State<SignupPage> {
                                     : Icons.visibility_off_outlined,
                               ),
                               onPressed: () {
-                                setState(() => _obscurePassword = !_obscurePassword);
+                                setState(
+                                  () => _obscurePassword = !_obscurePassword,
+                                );
                               },
                             ),
                             filled: true,
-                            fillColor: isDark 
-                                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                            fillColor: isDark
+                                ? colorScheme.surfaceContainerHighest
+                                      .withOpacity(0.5)
                                 : colorScheme.surfaceContainerLow,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
@@ -508,7 +519,9 @@ class _SignupPageState extends State<SignupPage> {
                           style: TextStyle(fontWeight: FontWeight.w500),
                           decoration: InputDecoration(
                             labelText: 'Confirmar contraseña',
-                            prefixIcon: const Icon(Icons.lock_outline), // Different icon for clarity
+                            prefixIcon: const Icon(
+                              Icons.lock_outline,
+                            ), // Different icon for clarity
                             suffixIcon: IconButton(
                               icon: Icon(
                                 _obscureConfirmPassword
@@ -517,15 +530,15 @@ class _SignupPageState extends State<SignupPage> {
                               ),
                               onPressed: () {
                                 setState(
-                                  () =>
-                                      _obscureConfirmPassword =
-                                          !_obscureConfirmPassword,
+                                  () => _obscureConfirmPassword =
+                                      !_obscureConfirmPassword,
                                 );
                               },
                             ),
                             filled: true,
-                            fillColor: isDark 
-                                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                            fillColor: isDark
+                                ? colorScheme.surfaceContainerHighest
+                                      .withOpacity(0.5)
                                 : colorScheme.surfaceContainerLow,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),

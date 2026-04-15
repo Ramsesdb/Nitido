@@ -283,144 +283,144 @@ class _FundEvolutionLineChartState extends State<FundEvolutionLineChart> {
               children: [
                 RepaintBoundary(
                   child: LineChart(
-                  LineChartData(
-                    gridData: FlGridData(
-                      show: true,
-                      drawVerticalLine: false,
-                      getDrawingHorizontalLine: (value) =>
-                          defaultGridLine(value).copyWith(
-                            color: ultraLightBorderColor,
-                            strokeWidth: 0.5,
-                          ),
-                    ),
-                    lineTouchData: LineTouchData(
-                      enabled: snapshot.hasData,
-                      touchTooltipData: LineTouchTooltipData(
-                        fitInsideVertically: true,
-                        fitInsideHorizontally: true,
-                        getTooltipColor: (spot) =>
-                            Theme.of(context).colorScheme.surface,
-                        getTooltipItems: (touchedSpots) {
-                          return touchedSpots.map((barSpot) {
-                            final flSpot = barSpot;
-                            if (flSpot.x == 0 || flSpot.x == 6) {
-                              return null;
-                            }
-
-                            return LineTooltipItem(
-                              '${snapshot.data!.labels[flSpot.x.toInt()]} \n',
-                              const TextStyle(fontSize: 12),
-                              textAlign: TextAlign.start,
-                              children: UINumberFormatter.currency(
-                                currency: userCurrencySnapshot.data,
-                                amountToConvert:
-                                    snapshot.data!.balance[flSpot.x.toInt()],
-                                integerStyle: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ).getTextSpanList(context),
-                            );
-                          }).toList();
-                        },
+                    LineChartData(
+                      gridData: FlGridData(
+                        show: true,
+                        drawVerticalLine: false,
+                        getDrawingHorizontalLine: (value) =>
+                            defaultGridLine(value).copyWith(
+                              color: ultraLightBorderColor,
+                              strokeWidth: 0.5,
+                            ),
                       ),
-                    ),
-                    minY: snapshot.hasData
-                        ? (snapshot.data!.balance.allItemsEqual()
-                              ? snapshot.data!.balance.first - 10.2
-                              : null)
-                        : 2,
-                    maxY: snapshot.hasData
-                        ? (snapshot.data!.balance.allItemsEqual()
-                              ? snapshot.data!.balance.first + 10.2
-                              : null)
-                        : 5,
-                    titlesData: FlTitlesData(
-                      show: true,
-                      rightTitles: noAxisTitles,
-                      topTitles: noAxisTitles,
-                      bottomTitles: noAxisTitles,
-                      leftTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                          showTitles: snapshot.hasData,
-                          reservedSize: 28,
-                          getTitlesWidget: (value, meta) {
-                            if (value == meta.max || value == meta.min) {
-                              return Container();
-                            }
+                      lineTouchData: LineTouchData(
+                        enabled: snapshot.hasData,
+                        touchTooltipData: LineTouchTooltipData(
+                          fitInsideVertically: true,
+                          fitInsideHorizontally: true,
+                          getTooltipColor: (spot) =>
+                              Theme.of(context).colorScheme.surface,
+                          getTooltipItems: (touchedSpots) {
+                            return touchedSpots.map((barSpot) {
+                              final flSpot = barSpot;
+                              if (flSpot.x == 0 || flSpot.x == 6) {
+                                return null;
+                              }
 
-                            return SideTitleWidget(
-                              meta: meta,
-                              child: BlurBasedOnPrivateMode(
-                                child: Text(
-                                  meta.formattedValue,
-                                  maxLines: 1,
-                                  textAlign: TextAlign.end,
-                                  softWrap: false,
-                                  overflow: TextOverflow.visible,
-                                  style: smallAxisTitleStyle(context),
-                                ),
-                              ),
-                            );
+                              return LineTooltipItem(
+                                '${snapshot.data!.labels[flSpot.x.toInt()]} \n',
+                                const TextStyle(fontSize: 12),
+                                textAlign: TextAlign.start,
+                                children: UINumberFormatter.currency(
+                                  currency: userCurrencySnapshot.data,
+                                  amountToConvert:
+                                      snapshot.data!.balance[flSpot.x.toInt()],
+                                  integerStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ).getTextSpanList(context),
+                              );
+                            }).toList();
                           },
                         ),
                       ),
-                    ),
-                    borderData: FlBorderData(
-                      show: false,
-                      border: Border(
-                        bottom: BorderSide(color: ultraLightBorderColor),
-                        right: BorderSide(color: ultraLightBorderColor),
-                      ),
-                    ),
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: snapshot.hasData
-                            ? List.generate(
-                                snapshot.data!.balance.length,
-                                (index) => FlSpot(
-                                  index.toDouble(),
-                                  snapshot.data!.balance[index],
+                      minY: snapshot.hasData
+                          ? (snapshot.data!.balance.allItemsEqual()
+                                ? snapshot.data!.balance.first - 10.2
+                                : null)
+                          : 2,
+                      maxY: snapshot.hasData
+                          ? (snapshot.data!.balance.allItemsEqual()
+                                ? snapshot.data!.balance.first + 10.2
+                                : null)
+                          : 5,
+                      titlesData: FlTitlesData(
+                        show: true,
+                        rightTitles: noAxisTitles,
+                        topTitles: noAxisTitles,
+                        bottomTitles: noAxisTitles,
+                        leftTitles: AxisTitles(
+                          sideTitles: SideTitles(
+                            showTitles: snapshot.hasData,
+                            reservedSize: 28,
+                            getTitlesWidget: (value, meta) {
+                              if (value == meta.max || value == meta.min) {
+                                return Container();
+                              }
+
+                              return SideTitleWidget(
+                                meta: meta,
+                                child: BlurBasedOnPrivateMode(
+                                  child: Text(
+                                    meta.formattedValue,
+                                    maxLines: 1,
+                                    textAlign: TextAlign.end,
+                                    softWrap: false,
+                                    overflow: TextOverflow.visible,
+                                    style: smallAxisTitleStyle(context),
+                                  ),
                                 ),
-                              )
-                            : [
-                                const FlSpot(0, 3),
-                                const FlSpot(2.6, 2.2),
-                                const FlSpot(4.9, 4.3),
-                                const FlSpot(6.8, 3.1),
-                                const FlSpot(8, 4),
-                                const FlSpot(9.5, 3),
-                                const FlSpot(11, 4),
-                              ],
-                        isCurved: true,
-                        curveSmoothness: snapshot.hasData ? 0.025 : 0.2,
-                        color: snapshot.hasData
-                            ? lineColor
-                            : Colors.grey.withOpacity(0.2),
-                        barWidth: 3,
-                        isStrokeCapRound: true,
-                        dotData: const FlDotData(show: false),
-                        belowBarData: BarAreaData(
-                          show: true,
-                          applyCutOffY: true,
-                          cutOffY: 0,
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: snapshot.hasData
-                                ? [
-                                    lineColor.withAlpha(100),
-                                    lineColor.withAlpha(1),
-                                  ]
-                                : [Colors.grey, Colors.grey.lighten(0.3)]
-                                      .map((color) => color.withOpacity(0.15))
-                                      .toList(),
+                              );
+                            },
                           ),
                         ),
                       ),
-                    ],
+                      borderData: FlBorderData(
+                        show: false,
+                        border: Border(
+                          bottom: BorderSide(color: ultraLightBorderColor),
+                          right: BorderSide(color: ultraLightBorderColor),
+                        ),
+                      ),
+                      lineBarsData: [
+                        LineChartBarData(
+                          spots: snapshot.hasData
+                              ? List.generate(
+                                  snapshot.data!.balance.length,
+                                  (index) => FlSpot(
+                                    index.toDouble(),
+                                    snapshot.data!.balance[index],
+                                  ),
+                                )
+                              : [
+                                  const FlSpot(0, 3),
+                                  const FlSpot(2.6, 2.2),
+                                  const FlSpot(4.9, 4.3),
+                                  const FlSpot(6.8, 3.1),
+                                  const FlSpot(8, 4),
+                                  const FlSpot(9.5, 3),
+                                  const FlSpot(11, 4),
+                                ],
+                          isCurved: true,
+                          curveSmoothness: snapshot.hasData ? 0.025 : 0.2,
+                          color: snapshot.hasData
+                              ? lineColor
+                              : Colors.grey.withOpacity(0.2),
+                          barWidth: 3,
+                          isStrokeCapRound: true,
+                          dotData: const FlDotData(show: false),
+                          belowBarData: BarAreaData(
+                            show: true,
+                            applyCutOffY: true,
+                            cutOffY: 0,
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: snapshot.hasData
+                                  ? [
+                                      lineColor.withAlpha(100),
+                                      lineColor.withAlpha(1),
+                                    ]
+                                  : [Colors.grey, Colors.grey.lighten(0.3)]
+                                        .map((color) => color.withOpacity(0.15))
+                                        .toList(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
                 ),
                 if (!snapshot.hasData)
                   Positioned.fill(

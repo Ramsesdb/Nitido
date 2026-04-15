@@ -41,13 +41,13 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
           spacing: 8,
           children: [
             // --- Logout Button (Relocated) ---
-             SettingCardItem(
+            SettingCardItem(
               title: 'Cerrar Sesión',
               subtitle: 'Salir de la cuenta actual',
               icon: Icons.logout_rounded,
               mainAxis: Axis.horizontal,
               onTap: () async {
-                 final confirmed = await showDialog<bool>(
+                final confirmed = await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
                     title: const Text('Cerrar Sesión'),
@@ -74,10 +74,9 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
                   }
 
                   if (context.mounted) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                      '/login',
-                      (route) => false,
-                    );
+                    Navigator.of(
+                      context,
+                    ).pushNamedAndRemoveUntil('/login', (route) => false);
                   }
                 }
               },

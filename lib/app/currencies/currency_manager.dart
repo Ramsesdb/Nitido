@@ -270,66 +270,87 @@ class CurrencyManagerPage extends StatelessWidget {
                           ),
                         ),
                         onTap: () async {
-                           final rates = await DolarApiService.instance.fetchAllRates();
-                           if (rates.isEmpty) {
-                             if (context.mounted) {
-                               MonekinSnackbar.error(
-                                 SnackbarParams('Error al obtener tasas de cambio'),
-                               );
-                             }
-                             return;
-                           }
-                           
-                           final oficial = DolarApiService.instance.oficialRate;
-                           final paralelo = DolarApiService.instance.paraleloRate;
-                           
-                           if (!context.mounted) return;
-                           
-                           final selectedRate = await showDialog<String>(
-                             context: context,
-                             builder: (context) => AlertDialog(
-                               title: const Text('Seleccionar Tasa'),
-                               content: Column(
-                                 mainAxisSize: MainAxisSize.min,
-                                 children: [
-                                   if (oficial != null)
-                                     ListTile(
-                                       title: Text('Oficial (BCV): ${oficial.promedio.toStringAsFixed(2)}'),
-                                       subtitle: Text(oficial.fechaActualizacion.toString()),
-                                       onTap: () => Navigator.pop(context, 'oficial'),
-                                     ),
-                                   if (paralelo != null)
-                                     ListTile(
-                                       title: Text('Paralelo: ${paralelo.promedio.toStringAsFixed(2)}'),
-                                       subtitle: Text(paralelo.nombre),
-                                       onTap: () => Navigator.pop(context, 'paralelo'),
-                                     ),
-                                 ],
-                               ),
-                             ),
-                           );
-                           
-                           if (selectedRate == null) return;
-                           final rate = selectedRate == 'oficial' ? oficial : paralelo;
-                           if (rate == null) return;
-                           
-                           try {
-                             await ExchangeRateService.instance.insertOrUpdateExchangeRate(
-                               ExchangeRateInDB(
-                                 id: generateUUID(),
-                                 date: DateTime.now(),
-                                 currencyCode: 'USD',
-                                 exchangeRate: rate.promedio,
-                               ),
-                             );
-                             if (context.mounted) {
-                               MonekinSnackbar.success(SnackbarParams('Tasa actualizada: ${rate.promedio}'));
-                             }
-                           } catch (e) {
-                             if (context.mounted) {
-                               MonekinSnackbar.error(SnackbarParams('Error: $e'));
-                             }
-                           }
+                          final rates = await DolarApiService.instance
+                              .fetchAllRates();
+                          if (rates.isEmpty) {
+                            if (context.mounted) {
+                              MonekinSnackbar.error(
+                                SnackbarParams(
+                                  'Error al obtener tasas de cambio',
+                                ),
+                              );
+                            }
+                            return;
+                          }
+
+                          final oficial = DolarApiService.instance.oficialRate;
+                          final paralelo =
+                              DolarApiService.instance.paraleloRate;
+
+                          if (!context.mounted) return;
+
+                          final selectedRate = await showDialog<String>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Seleccionar Tasa'),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (oficial != null)
+                                    ListTile(
+                                      title: Text(
+                                        'Oficial (BCV): ${oficial.promedio.toStringAsFixed(2)}',
+                                      ),
+                                      subtitle: Text(
+                                        oficial.fechaActualizacion.toString(),
+                                      ),
+                                      onTap: () =>
+                                          Navigator.pop(context, 'oficial'),
+                                    ),
+                                  if (paralelo != null)
+                                    ListTile(
+                                      title: Text(
+                                        'Paralelo: ${paralelo.promedio.toStringAsFixed(2)}',
+                                      ),
+                                      subtitle: Text(paralelo.nombre),
+                                      onTap: () =>
+                                          Navigator.pop(context, 'paralelo'),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          );
+
+                          if (selectedRate == null) return;
+                          final rate = selectedRate == 'oficial'
+                              ? oficial
+                              : paralelo;
+                          if (rate == null) return;
+
+                          try {
+                            await ExchangeRateService.instance
+                                .insertOrUpdateExchangeRate(
+                                  ExchangeRateInDB(
+                                    id: generateUUID(),
+                                    date: DateTime.now(),
+                                    currencyCode: 'USD',
+                                    exchangeRate: rate.promedio,
+                                  ),
+                                );
+                            if (context.mounted) {
+                              MonekinSnackbar.success(
+                                SnackbarParams(
+                                  'Tasa actualizada: ${rate.promedio}',
+                                ),
+                              );
+                            }
+                          } catch (e) {
+                            if (context.mounted) {
+                              MonekinSnackbar.error(
+                                SnackbarParams('Error: $e'),
+                              );
+                            }
+                          }
                         },
                       ),
                       // --- End: Update Rate Button ---

@@ -108,6 +108,8 @@ class CategoryService {
         iconId: category['icon'],
         color: category['color'],
         type: CategoryType.values.byName(category['type']),
+        calcTithe: true,
+        subFundPercent: 0,
       );
 
       await db.customStatement("""
@@ -131,6 +133,8 @@ class CategoryService {
                 subcategory['names'][systemLang] ?? subcategory['names']['en'],
             iconId: subcategory['icon'],
             parentCategoryID: categoryToPush.id,
+            calcTithe: true,
+            subFundPercent: 0,
           );
 
           await db.customStatement("""

@@ -51,7 +51,9 @@ class FirebaseSyncService {
     try {
       final email = currentUserEmail?.toLowerCase();
       if (email == null) {
-        Logger.printDebug('FirebaseSyncService: No user email, not whitelisted');
+        Logger.printDebug(
+          'FirebaseSyncService: No user email, not whitelisted',
+        );
         return false;
       }
 
@@ -111,6 +113,7 @@ class FirebaseSyncService {
         'status': transaction.status?.name,
         'categoryID': transaction.categoryID,
         'isHidden': transaction.isHidden,
+        'calcTithe': transaction.calcTithe,
         'intervalEach': transaction.intervalEach,
         'intervalPeriod': transaction.intervalPeriod?.name,
         'endDate': transaction.endDate?.toIso8601String(),
@@ -200,6 +203,8 @@ class FirebaseSyncService {
         'color': category.color,
         'displayOrder': category.displayOrder,
         'type': category.type?.name,
+        'calcTithe': category.calcTithe,
+        'subFundPercent': category.subFundPercent,
         'parentCategoryID': category.parentCategoryID,
         'updatedAt': FieldValue.serverTimestamp(),
         'updatedBy': currentUserEmail,
@@ -324,15 +329,14 @@ class FirebaseSyncService {
         final accountName = data['name'] as String;
         final accountId = data['id'] as String;
 
-        Logger.printDebug(
-          'FirebaseSyncService: Parsing account ${doc.id}',
-        );
+        Logger.printDebug('FirebaseSyncService: Parsing account ${doc.id}');
 
         // Find any local account with the same NAME but different ID
-        final conflictingAccounts = await (db.select(db.accounts)
-              ..where((a) => a.name.equals(accountName))
-              ..where((a) => a.id.equals(accountId).not()))
-            .get();
+        final conflictingAccounts =
+            await (db.select(db.accounts)
+                  ..where((a) => a.name.equals(accountName))
+                  ..where((a) => a.id.equals(accountId).not()))
+                .get();
 
         // Migrate transactions from old account ID to new Firebase account ID
         for (final oldAccount in conflictingAccounts) {
@@ -376,9 +380,7 @@ class FirebaseSyncService {
         );
 
         // Insert or update by ID
-        await db
-            .into(db.accounts)
-            .insertOnConflictUpdate(account);
+        await db.into(db.accounts).insertOnConflictUpdate(account);
         successCount++;
       } catch (e, stackTrace) {
         errorCount++;
@@ -425,12 +427,12 @@ class FirebaseSyncService {
             (e) => e.name == data['type'],
             orElse: () => CategoryType.E,
           ),
+          calcTithe: data['calcTithe'] as bool? ?? true,
+          subFundPercent: (data['subFundPercent'] as num?)?.toDouble() ?? 0.0,
           parentCategoryID: data['parentCategoryID'] as String?,
         );
 
-        await db
-            .into(db.categories)
-            .insertOnConflictUpdate(category);
+        await db.into(db.categories).insertOnConflictUpdate(category);
         successCount++;
       } catch (e) {
         Logger.printDebug(
@@ -439,9 +441,7 @@ class FirebaseSyncService {
       }
     }
 
-    Logger.printDebug(
-      'FirebaseSyncService: Pulled $successCount categories',
-    );
+    Logger.printDebug('FirebaseSyncService: Pulled $successCount categories');
     return successCount;
   }
 
@@ -466,9 +466,7 @@ class FirebaseSyncService {
           exchangeRate: (data['exchangeRate'] as num).toDouble(),
         );
 
-        await db
-            .into(db.exchangeRates)
-            .insertOnConflictUpdate(rate);
+        await db.into(db.exchangeRates).insertOnConflictUpdate(rate);
         successCount++;
       } catch (e) {
         Logger.printDebug(
@@ -501,9 +499,9 @@ class FirebaseSyncService {
         final accountId = data['accountID'] as String;
 
         // Check if referenced account exists locally
-        final accountExists = await (db.select(db.accounts)
-              ..where((a) => a.id.equals(accountId)))
-            .getSingleOrNull();
+        final accountExists = await (db.select(
+          db.accounts,
+        )..where((a) => a.id.equals(accountId))).getSingleOrNull();
 
         // If account doesn't exist (orphan transaction), create a placeholder
         // so the user doesn't lose the transaction data.
@@ -511,7 +509,7 @@ class FirebaseSyncService {
           Logger.printDebug(
             'FirebaseSyncService: Orphan transaction $accountId. Creating placeholder.',
           );
-          
+
           final placeholderAccount = AccountInDB(
             id: accountId,
             name: 'Cuenta Recuperada',
@@ -549,6 +547,7 @@ class FirebaseSyncService {
               : TransactionStatus.reconciled,
           categoryID: data['categoryID'] as String?,
           isHidden: data['isHidden'] as bool? ?? false,
+          calcTithe: data['calcTithe'] as bool? ?? true,
           createdAt: data['createdAt'] != null
               ? DateTime.parse(data['createdAt'] as String)
               : DateTime.now(),
@@ -560,9 +559,7 @@ class FirebaseSyncService {
           remainingTransactions: data['remainingTransactions'] as int?,
         );
 
-        await db
-            .into(db.transactions)
-            .insertOnConflictUpdate(transaction);
+        await db.into(db.transactions).insertOnConflictUpdate(transaction);
         successCount++;
       } catch (e) {
         errorCount++;
@@ -605,35 +602,41 @@ class FirebaseSyncService {
       // Push accounts
       final accounts = await AccountService.instance.getAccounts().first;
       for (final account in accounts) {
-        await pushAccount(AccountInDB(
-          id: account.id,
-          name: account.name,
-          iniValue: account.iniValue,
-          date: account.date,
-          description: account.description,
-          type: account.type,
-          iconId: account.iconId,
-          displayOrder: account.displayOrder,
-          color: account.color,
-          closingDate: account.closingDate,
-          currencyId: account.currency.code,
-          iban: account.iban,
-          swift: account.swift,
-        ));
+        await pushAccount(
+          AccountInDB(
+            id: account.id,
+            name: account.name,
+            iniValue: account.iniValue,
+            date: account.date,
+            description: account.description,
+            type: account.type,
+            iconId: account.iconId,
+            displayOrder: account.displayOrder,
+            color: account.color,
+            closingDate: account.closingDate,
+            currencyId: account.currency.code,
+            iban: account.iban,
+            swift: account.swift,
+          ),
+        );
       }
 
       // Push categories
       final categories = await CategoryService.instance.getCategories().first;
       for (final category in categories) {
-        await pushCategory(CategoryInDB(
-          id: category.id,
-          name: category.name,
-          iconId: category.iconId,
-          color: category.color,
-          displayOrder: category.displayOrder,
-          type: category.type,
-          parentCategoryID: category.parentCategory?.id,
-        ));
+        await pushCategory(
+          CategoryInDB(
+            id: category.id,
+            name: category.name,
+            iconId: category.iconId,
+            color: category.color,
+            displayOrder: category.displayOrder,
+            type: category.type,
+            calcTithe: category.calcTithe,
+            subFundPercent: category.subFundPercent,
+            parentCategoryID: category.parentCategory?.id,
+          ),
+        );
       }
 
       // Push transactions
@@ -641,32 +644,33 @@ class FirebaseSyncService {
           .getTransactions()
           .first;
       for (final tx in transactions) {
-        await pushTransaction(TransactionInDB(
-          id: tx.id,
-          date: tx.date,
-          accountID: tx.account.id,
-          receivingAccountID: tx.receivingAccount?.id,
-          value: tx.value,
-          valueInDestiny: tx.valueInDestiny,
-          title: tx.title,
-          notes: tx.notes,
-          type: tx.type,
-          status: tx.status,
-          categoryID: tx.category?.id,
-          isHidden: tx.isHidden,
-          createdAt: DateTime.now(),
-          intervalEach: tx.recurrentInfo.intervalEach,
-          intervalPeriod: tx.recurrentInfo.intervalPeriod,
-          endDate: tx.recurrentInfo.ruleRecurrentLimit?.endDate,
-          remainingTransactions:
-              tx.recurrentInfo.ruleRecurrentLimit?.remainingIterations,
-        ));
+        await pushTransaction(
+          TransactionInDB(
+            id: tx.id,
+            date: tx.date,
+            accountID: tx.account.id,
+            receivingAccountID: tx.receivingAccount?.id,
+            value: tx.value,
+            valueInDestiny: tx.valueInDestiny,
+            title: tx.title,
+            notes: tx.notes,
+            type: tx.type,
+            status: tx.status,
+            categoryID: tx.category?.id,
+            isHidden: tx.isHidden,
+            calcTithe: tx.calcTithe,
+            createdAt: DateTime.now(),
+            intervalEach: tx.recurrentInfo.intervalEach,
+            intervalPeriod: tx.recurrentInfo.intervalPeriod,
+            endDate: tx.recurrentInfo.ruleRecurrentLimit?.endDate,
+            remainingTransactions:
+                tx.recurrentInfo.ruleRecurrentLimit?.remainingIterations,
+          ),
+        );
       }
 
       // Push exchange rates
-      final rates = await ExchangeRateService.instance
-          .getExchangeRates()
-          .first;
+      final rates = await ExchangeRateService.instance.getExchangeRates().first;
       for (final rate in rates) {
         await pushExchangeRate(rate);
       }

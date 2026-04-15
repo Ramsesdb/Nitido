@@ -174,16 +174,21 @@ class AccountService {
     // Sum the acount initial balance and the balance of the transactions
     return Rx.combineLatest2(
       initialBalanceQuery.map((val) {
-         // Logger.printDebug('AccountService: Initial balance emitted: $val');
-         return val;
+        // Logger.printDebug('AccountService: Initial balance emitted: $val');
+        return val;
       }),
-      TransactionService.instance.getTransactionsValueBalance(
-        filters: trFilters.copyWith(maxDate: useDate, accountsIDs: accountIds),
-        convertToPreferredCurrency: convertToPreferredCurrency,
-      ).map((val) {
-         // Logger.printDebug('AccountService: Tx balance emitted: $val');
-         return val;
-      }),
+      TransactionService.instance
+          .getTransactionsValueBalance(
+            filters: trFilters.copyWith(
+              maxDate: useDate,
+              accountsIDs: accountIds,
+            ),
+            convertToPreferredCurrency: convertToPreferredCurrency,
+          )
+          .map((val) {
+            // Logger.printDebug('AccountService: Tx balance emitted: $val');
+            return val;
+          }),
       (double initial, double tx) {
         // Logger.printDebug('AccountService: Combined balance: ${initial + tx}');
         return initial + tx;
