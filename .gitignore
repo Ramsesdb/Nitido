@@ -104,6 +104,7 @@ guia/
 *-backup.json
 users.json
 export-firestore.js
+firestore-backup/
 
 # npm (used for migration scripts, not part of the app)
 node_modules/
