@@ -1,12 +1,12 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:bolsio/core/models/auto_import/transaction_proposal.dart';
-import 'package:bolsio/core/services/ai/agents/agent_profile.dart';
-import 'package:bolsio/core/services/ai/agents/agent_run_result.dart';
-import 'package:bolsio/core/services/ai/ai_completion_result.dart';
-import 'package:bolsio/core/services/ai/nexus_ai_service.dart';
-import 'package:bolsio/core/services/ai/tools/ai_tool.dart';
+import 'package:nitido/core/models/auto_import/transaction_proposal.dart';
+import 'package:nitido/core/services/ai/agents/agent_profile.dart';
+import 'package:nitido/core/services/ai/agents/agent_run_result.dart';
+import 'package:nitido/core/services/ai/ai_completion_result.dart';
+import 'package:nitido/core/services/ai/nexus_ai_service.dart';
+import 'package:nitido/core/services/ai/tools/ai_tool.dart';
 
 /// Shared tool-loop runner used by every agent.
 ///

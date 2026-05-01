@@ -1,4 +1,4 @@
-import 'package:bolsio/core/database/services/budget/budget_service.dart';
+import 'package:nitido/core/database/services/budget/budget_service.dart';
 
 import '../ai_tool.dart';
 

@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:bolsio/core/services/ai/ai_provider.dart';
-import 'package:bolsio/core/services/ai/ai_provider_type.dart';
+import 'package:nitido/core/services/ai/ai_provider.dart';
+import 'package:nitido/core/services/ai/ai_provider_type.dart';
 
 /// BYOK provider for Google's Gemini `generateContent` API.
 ///

@@ -3,9 +3,9 @@ import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'package:bolsio/core/services/ai/ai_completion_result.dart';
-import 'package:bolsio/core/services/ai/ai_credentials_store.dart';
-import 'package:bolsio/core/services/ai/ai_provider_type.dart';
+import 'package:nitido/core/services/ai/ai_completion_result.dart';
+import 'package:nitido/core/services/ai/ai_credentials_store.dart';
+import 'package:nitido/core/services/ai/ai_provider_type.dart';
 
 typedef LoadSecret = Future<String?> Function();
 

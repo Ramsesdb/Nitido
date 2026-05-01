@@ -1,6 +1,6 @@
-import 'package:bolsio/core/database/services/transaction/transaction_service.dart';
-import 'package:bolsio/core/models/transaction/transaction_type.enum.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
+import 'package:nitido/core/database/services/transaction/transaction_service.dart';
+import 'package:nitido/core/models/transaction/transaction_type.enum.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
 
 import '../ai_tool.dart';
 

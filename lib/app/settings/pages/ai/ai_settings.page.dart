@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bolsio/app/onboarding/theme/v3_tokens.dart';
-import 'package:bolsio/app/settings/pages/ai/wizard/ai_wizard.page.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/routes/route_utils.dart';
-import 'package:bolsio/core/services/ai/ai_credentials.dart';
-import 'package:bolsio/core/services/ai/ai_credentials_store.dart';
-import 'package:bolsio/core/services/ai/ai_key_validator.dart';
-import 'package:bolsio/core/services/ai/ai_provider_type.dart';
-import 'package:bolsio/core/services/ai/ai_service.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
+import 'package:nitido/app/settings/pages/ai/wizard/ai_wizard.page.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/routes/route_utils.dart';
+import 'package:nitido/core/services/ai/ai_credentials.dart';
+import 'package:nitido/core/services/ai/ai_credentials_store.dart';
+import 'package:nitido/core/services/ai/ai_key_validator.dart';
+import 'package:nitido/core/services/ai/ai_provider_type.dart';
+import 'package:nitido/core/services/ai/ai_service.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 class AiSettingsPage extends StatefulWidget {
   const AiSettingsPage({super.key});
@@ -257,7 +257,7 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
     final editingCreds = _storedCreds[_editingProvider];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bolsi')),
+      appBar: AppBar(title: const Text('Niti')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -582,7 +582,7 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
             value: _aiEnabled,
             onChanged: (v) => _saveSetting(SettingKey.nexusAiEnabled, v),
             title: const Text('Habilitar IA'),
-            subtitle: const Text('Activa las funciones de Bolsi'),
+            subtitle: const Text('Activa las funciones de Niti'),
           ),
           const Divider(),
           SwitchListTile(
@@ -632,8 +632,8 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
             onChanged: _aiEnabled
                 ? (v) => _saveSetting(SettingKey.aiVoiceEnabled, v)
                 : null,
-            title: Text(t.bolsio_ai.voice_settings_title),
-            subtitle: Text(t.bolsio_ai.voice_settings_subtitle),
+            title: Text(t.nitido_ai.voice_settings_title),
+            subtitle: Text(t.nitido_ai.voice_settings_subtitle),
           ),
         ],
       ),

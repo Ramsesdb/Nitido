@@ -1,10 +1,10 @@
-import 'package:bolsio/core/services/ai/tools/ai_tool_registry.dart';
+﻿import 'package:nitido/core/services/ai/tools/ai_tool_registry.dart';
 
 /// Immutable description of an agent's configuration: system prompt, scoped
 /// tool registry, loop cap, tool-choice policy, and approval predicate.
 ///
 /// A profile does NOT own the loop runner — agents (see `QuickExpenseAgent`,
-/// `BolsioAiAgent`) compose a profile with the shared tool-loop algorithm.
+/// `NitidoAiAgent`) compose a profile with the shared tool-loop algorithm.
 /// Keeping this layer inert makes it trivial to add new agents without
 /// duplicating loop plumbing.
 class AgentProfile {

@@ -1,4 +1,4 @@
-import 'package:bolsio/core/services/ai/ai_provider_type.dart';
+import 'package:nitido/core/services/ai/ai_provider_type.dart';
 
 /// Best-effort syntactic validator for API keys.
 ///

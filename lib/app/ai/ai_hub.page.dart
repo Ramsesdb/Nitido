@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:bolsio/app/chat/bolsio_chat.page.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/models/date-utils/date_period_state.dart';
-import 'package:bolsio/core/routes/route_utils.dart';
-import 'package:bolsio/core/services/ai/spending_insights_service.dart';
+import 'package:nitido/app/chat/nitido_chat.page.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/models/date-utils/date_period_state.dart';
+import 'package:nitido/core/routes/route_utils.dart';
+import 'package:nitido/core/services/ai/spending_insights_service.dart';
 
 class AiHubPage extends StatefulWidget {
   const AiHubPage({super.key});
@@ -52,7 +52,7 @@ class _AiHubPageState extends State<AiHubPage> {
               ),
               child: Icon(Icons.auto_awesome_rounded, size: 20, color: cs.primary),
             ),
-            const Text('Bolsi'),
+            const Text('Niti'),
           ],
         ),
         actions: [
@@ -77,7 +77,7 @@ class _AiHubPageState extends State<AiHubPage> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(
-                      'Activa Bolsi en Configuracion para ver insights y usar el chat.',
+                      'Activa Niti en Configuracion para ver insights y usar el chat.',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: cs.onSurfaceVariant),
                     ),
@@ -105,7 +105,7 @@ class _AiHubPageState extends State<AiHubPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => RouteUtils.pushRoute(const BolsioChatPage()),
+        onTap: () => RouteUtils.pushRoute(const NitidoChatPage()),
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
