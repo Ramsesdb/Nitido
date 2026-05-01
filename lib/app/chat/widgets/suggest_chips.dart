@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/app/chat/theme/bolsio_ai_tokens.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class SuggestChips extends StatelessWidget {
   const SuggestChips({
@@ -17,7 +17,7 @@ class SuggestChips extends StatelessWidget {
   Widget build(BuildContext context) {
     if (suggestions.isEmpty) return const SizedBox.shrink();
 
-    final tokens = BolsioAiTokens.of(context);
+    final tokens = NitidoAiTokens.of(context);
     final bg = tokens.accent.withValues(alpha: 0.08);
     final border = tokens.accent.withValues(alpha: 0.44);
 

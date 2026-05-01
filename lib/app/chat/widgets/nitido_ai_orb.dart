@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/app/chat/theme/bolsio_ai_tokens.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
-class BolsioAiOrb extends StatefulWidget {
-  const BolsioAiOrb({
+class NitidoAiOrb extends StatefulWidget {
+  const NitidoAiOrb({
     super.key,
     required this.size,
     this.showGlow = true,
@@ -14,10 +14,10 @@ class BolsioAiOrb extends StatefulWidget {
   final bool animated;
 
   @override
-  State<BolsioAiOrb> createState() => _BolsioAiOrbState();
+  State<NitidoAiOrb> createState() => _NitidoAiOrbState();
 }
 
-class _BolsioAiOrbState extends State<BolsioAiOrb>
+class _NitidoAiOrbState extends State<NitidoAiOrb>
     with SingleTickerProviderStateMixin {
   AnimationController? _controller;
 
@@ -27,14 +27,14 @@ class _BolsioAiOrbState extends State<BolsioAiOrb>
     if (widget.animated) {
       _controller = AnimationController(
         vsync: this,
-        duration: BolsioAiTokens.orbPulseDuration,
-        reverseDuration: BolsioAiTokens.orbPulseDuration,
+        duration: NitidoAiTokens.orbPulseDuration,
+        reverseDuration: NitidoAiTokens.orbPulseDuration,
       )..repeat(reverse: true);
     }
   }
 
   @override
-  void didUpdateWidget(covariant BolsioAiOrb oldWidget) {
+  void didUpdateWidget(covariant NitidoAiOrb oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.animated != oldWidget.animated) {
       _controller?.dispose();
@@ -42,8 +42,8 @@ class _BolsioAiOrbState extends State<BolsioAiOrb>
       if (widget.animated) {
         _controller = AnimationController(
           vsync: this,
-          duration: BolsioAiTokens.orbPulseDuration,
-          reverseDuration: BolsioAiTokens.orbPulseDuration,
+          duration: NitidoAiTokens.orbPulseDuration,
+          reverseDuration: NitidoAiTokens.orbPulseDuration,
         )..repeat(reverse: true);
       }
     }
@@ -57,7 +57,7 @@ class _BolsioAiOrbState extends State<BolsioAiOrb>
 
   @override
   Widget build(BuildContext context) {
-    final tokens = BolsioAiTokens.of(context);
+    final tokens = NitidoAiTokens.of(context);
     final size = widget.size;
 
     final orb = SizedBox(

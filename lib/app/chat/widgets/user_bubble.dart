@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/app/chat/theme/bolsio_ai_tokens.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class UserBubble extends StatelessWidget {
   const UserBubble({
@@ -13,7 +13,7 @@ class UserBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = BolsioAiTokens.of(context);
+    final tokens = NitidoAiTokens.of(context);
     final width = MediaQuery.of(context).size.width;
 
     return ConstrainedBox(
@@ -23,10 +23,10 @@ class UserBubble extends StatelessWidget {
         decoration: BoxDecoration(
           color: tokens.accent,
           borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(BolsioAiTokens.bubbleRadius),
-            topRight: Radius.circular(BolsioAiTokens.bubbleRadius),
-            bottomLeft: Radius.circular(BolsioAiTokens.bubbleRadius),
-            bottomRight: Radius.circular(BolsioAiTokens.bubbleTailRadius),
+            topLeft: Radius.circular(NitidoAiTokens.bubbleRadius),
+            topRight: Radius.circular(NitidoAiTokens.bubbleRadius),
+            bottomLeft: Radius.circular(NitidoAiTokens.bubbleRadius),
+            bottomRight: Radius.circular(NitidoAiTokens.bubbleTailRadius),
           ),
         ),
         child: Text(

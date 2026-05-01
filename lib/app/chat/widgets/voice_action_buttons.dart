@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/app/chat/theme/bolsio_ai_tokens.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 /// Shared cancel-X + "Enviar" pill pair used across every voice-recording
 /// surface in the app (chat voice overlay, voice quick-expense overlay,
@@ -8,7 +8,7 @@ import 'package:bolsio/i18n/generated/translations.g.dart';
 /// control bar.
 ///
 /// Tokens (spacing, radii, sizes) match the design spec; colors defer to
-/// [BolsioAiTokens] so the buttons follow the user's accent.
+/// [NitidoAiTokens] so the buttons follow the user's accent.
 class VoiceActionButtons extends StatelessWidget {
   const VoiceActionButtons({
     super.key,
@@ -33,7 +33,7 @@ class VoiceActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = BolsioAiTokens.of(context);
+    final tokens = NitidoAiTokens.of(context);
     final t = Translations.of(context);
     final label = sendLabel ?? t.ui_actions.submit;
     final sendEnabled = onSend != null && !isSending;
@@ -64,7 +64,7 @@ class _CancelCircle extends StatelessWidget {
   const _CancelCircle({required this.onTap, required this.tokens});
 
   final VoidCallback? onTap;
-  final BolsioAiTokens tokens;
+  final NitidoAiTokens tokens;
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class _SendPill extends StatelessWidget {
   final bool enabled;
   final bool isSending;
   final VoidCallback? onTap;
-  final BolsioAiTokens tokens;
+  final NitidoAiTokens tokens;
 
   @override
   Widget build(BuildContext context) {

@@ -1,44 +1,44 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:bolsio/app/chat/models/chat_card_dispatcher.dart';
-import 'package:bolsio/app/chat/models/chat_card_payload.dart';
-import 'package:bolsio/app/chat/models/chat_text_sanitizer.dart';
-import 'package:bolsio/app/chat/theme/bolsio_ai_tokens.dart';
-import 'package:bolsio/app/chat/widgets/ai_bubble.dart';
-import 'package:bolsio/app/chat/widgets/cards/account_pick_card.dart';
-import 'package:bolsio/app/chat/widgets/cards/balance_card.dart';
-import 'package:bolsio/app/chat/widgets/cards/expense_card.dart';
-import 'package:bolsio/app/chat/widgets/chat_empty_state.dart';
-import 'package:bolsio/app/chat/widgets/chat_input_bar.dart';
-import 'package:bolsio/app/chat/widgets/suggest_chips.dart';
-import 'package:bolsio/app/chat/widgets/typing_dots.dart';
-import 'package:bolsio/app/chat/widgets/user_bubble.dart';
-import 'package:bolsio/app/chat/widgets/bolsio_ai_markdown.dart';
-import 'package:bolsio/app/chat/widgets/bolsio_ai_orb.dart';
-import 'package:bolsio/app/common/widgets/user_avatar_display.dart';
-import 'package:bolsio/app/transactions/voice_input/voice_record_overlay.dart';
-import 'package:bolsio/core/database/services/account/account_service.dart';
-import 'package:bolsio/core/database/services/category/category_service.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/services/ai/agents/agent_run_result.dart';
-import 'package:bolsio/core/services/ai/agents/bolsio_ai_agent.dart';
-import 'package:bolsio/core/services/voice/voice_permission_dialog.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/app/chat/models/chat_card_dispatcher.dart';
+import 'package:nitido/app/chat/models/chat_card_payload.dart';
+import 'package:nitido/app/chat/models/chat_text_sanitizer.dart';
+import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
+import 'package:nitido/app/chat/widgets/ai_bubble.dart';
+import 'package:nitido/app/chat/widgets/cards/account_pick_card.dart';
+import 'package:nitido/app/chat/widgets/cards/balance_card.dart';
+import 'package:nitido/app/chat/widgets/cards/expense_card.dart';
+import 'package:nitido/app/chat/widgets/chat_empty_state.dart';
+import 'package:nitido/app/chat/widgets/chat_input_bar.dart';
+import 'package:nitido/app/chat/widgets/suggest_chips.dart';
+import 'package:nitido/app/chat/widgets/typing_dots.dart';
+import 'package:nitido/app/chat/widgets/user_bubble.dart';
+import 'package:nitido/app/chat/widgets/nitido_ai_markdown.dart';
+import 'package:nitido/app/chat/widgets/nitido_ai_orb.dart';
+import 'package:nitido/app/common/widgets/user_avatar_display.dart';
+import 'package:nitido/app/transactions/voice_input/voice_record_overlay.dart';
+import 'package:nitido/core/database/services/account/account_service.dart';
+import 'package:nitido/core/database/services/category/category_service.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/services/ai/agents/agent_run_result.dart';
+import 'package:nitido/core/services/ai/agents/nitido_ai_agent.dart';
+import 'package:nitido/core/services/voice/voice_permission_dialog.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
-class BolsioChatPage extends StatefulWidget {
-  const BolsioChatPage({super.key});
+class NitidoChatPage extends StatefulWidget {
+  const NitidoChatPage({super.key});
 
   @override
-  State<BolsioChatPage> createState() => _BolsioChatPageState();
+  State<NitidoChatPage> createState() => _NitidoChatPageState();
 }
 
-class _BolsioChatPageState extends State<BolsioChatPage> {
+class _NitidoChatPageState extends State<NitidoChatPage> {
   final _messages = <_ChatMessage>[];
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _inputFocus = FocusNode();
-  final _agent = BolsioAiAgent();
+  final _agent = NitidoAiAgent();
   final _cardDispatcher = const ChatCardDispatcher();
 
   bool _isBooting = true;
@@ -64,7 +64,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
     final chatEnabled = appStateSettings[SettingKey.aiChatEnabled] == '1';
 
     if (!mounted) return;
-    final t = Translations.of(context).bolsio_ai;
+    final t = Translations.of(context).nitido_ai;
 
     if (!aiEnabled || !chatEnabled) {
       setState(() {
@@ -83,7 +83,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
 
   Future<void> _onMicTap() async {
     if (_isSending) return;
-    final t = Translations.of(context).bolsio_ai;
+    final t = Translations.of(context).nitido_ai;
 
     final outcome = await ensureMicPermissionWithExplainer(context);
     if (outcome != VoicePermissionOutcome.granted) {
@@ -178,7 +178,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
 
   Future<void> _handleAgentResult(AgentRunResult result) async {
     if (!mounted) return;
-    final t = Translations.of(context).bolsio_ai;
+    final t = Translations.of(context).nitido_ai;
 
     switch (result.status) {
       case AgentRunStatus.finalText:
@@ -213,7 +213,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
         // with provider hiccups (invalid tool args, dispatch crash, empty
         // stream) without surfacing the raw code to the user.
         debugPrint(
-          '[BOLSIO_CHAT] agent run returned error code='
+          '[nitido_CHAT] agent run returned error code='
           '${result.error ?? 'unknown'}',
         );
         // If the placeholder bubble was never filled by streaming, either
@@ -266,7 +266,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
               (m['tool_calls'] as List).isNotEmpty)
           .toList();
       debugPrint(
-        '[BOLSIO_CHAT_CARDS] scan: total=${messages.length} '
+        '[nitido_CHAT_CARDS] scan: total=${messages.length} '
         'toolMsgs=${toolRoles.length} assistantWithCalls=${assistantToolCalls.length}',
       );
 
@@ -288,7 +288,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
 
       if (lastToolMsg == null || lastAssistantWithCalls == null) {
         debugPrint(
-          '[BOLSIO_CHAT_CARDS] no tool/assistant pair found — agent did not '
+          '[nitido_CHAT_CARDS] no tool/assistant pair found — agent did not '
           'call tools this turn',
         );
         return;
@@ -308,7 +308,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
       final fn = matchedCall['function'] as Map<String, dynamic>?;
       final toolName = (fn?['name'] as String?) ?? '';
       if (toolName.isEmpty) {
-        debugPrint('[BOLSIO_CHAT_CARDS] abort: empty toolName');
+        debugPrint('[nitido_CHAT_CARDS] abort: empty toolName');
         return;
       }
 
@@ -331,7 +331,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
         rawJson: rawJson,
       );
       debugPrint(
-        '[BOLSIO_CHAT_CARDS] dispatch tool=$toolName '
+        '[nitido_CHAT_CARDS] dispatch tool=$toolName '
         'argKeys=${args.keys.toList()} cardProduced=${payload != null} '
         'rawPreview=$rawPreview',
       );
@@ -357,7 +357,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
       });
       _scrollToBottom();
     } catch (e, st) {
-      debugPrint('[BOLSIO_CHAT_CARDS] dispatch failed: $e\n$st');
+      debugPrint('[nitido_CHAT_CARDS] dispatch failed: $e\n$st');
     }
   }
 
@@ -508,7 +508,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
 
   void _replaceLastAssistantWithError() {
     if (!mounted) return;
-    final t = Translations.of(context).bolsio_ai;
+    final t = Translations.of(context).nitido_ai;
     _replaceLastAssistant(t.chat_error_generic);
   }
 
@@ -526,7 +526,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final t = Translations.of(context).bolsio_ai;
+    final t = Translations.of(context).nitido_ai;
 
     // Perf-fix #1: hoist every appStateSettings read out of the widget tree so
     // rebuilds do not re-hash the settings map repeatedly mid-frame. The
@@ -586,7 +586,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
                         final chips = _chipsFor(message.card!);
                         return Padding(
                           padding: const EdgeInsets.only(
-                            bottom: BolsioAiTokens.bubbleGap,
+                            bottom: NitidoAiTokens.bubbleGap,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -596,7 +596,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
                                   alignment: Alignment.centerLeft,
                                   child: AiBubble(
                                     child: RepaintBoundary(
-                                      child: BolsioAiMarkdown(
+                                      child: NitidoAiMarkdown(
                                         data: message.text,
                                         onUser: false,
                                       ),
@@ -604,7 +604,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: BolsioAiTokens.bubbleGap,
+                                  height: NitidoAiTokens.bubbleGap,
                                 ),
                               ],
                               Align(
@@ -616,7 +616,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
                                   suggestions: chips,
                                   onTap: _onChipTap,
                                   padding: const EdgeInsets.only(
-                                    top: BolsioAiTokens.bubbleGap,
+                                    top: NitidoAiTokens.bubbleGap,
                                     left: 4,
                                   ),
                                 ),
@@ -627,7 +627,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
 
                       return Padding(
                         padding: const EdgeInsets.only(
-                          bottom: BolsioAiTokens.bubbleGap,
+                          bottom: NitidoAiTokens.bubbleGap,
                         ),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -650,7 +650,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
                                       alignment: Alignment.centerLeft,
                                       child: AiBubble(
                                         child: RepaintBoundary(
-                                          child: BolsioAiMarkdown(
+                                          child: NitidoAiMarkdown(
                                             data: message.text,
                                             onUser: false,
                                           ),
@@ -659,7 +659,7 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
                                     ),
                             ),
                             if (isUser) ...[
-                              const SizedBox(width: BolsioAiTokens.bubbleGap / 1.5),
+                              const SizedBox(width: NitidoAiTokens.bubbleGap / 1.5),
                               UserAvatarDisplay(avatar: avatarId, size: 24),
                             ],
                           ],
@@ -685,12 +685,12 @@ class _BolsioChatPageState extends State<BolsioChatPage> {
     );
   }
 
-  PreferredSizeWidget _buildAppBar(TranslationsBolsioAiEn t) {
+  PreferredSizeWidget _buildAppBar(TranslationsNitidoAiEn t) {
     return AppBar(
       title: Row(
         spacing: 10,
         children: [
-          const BolsioAiOrb(size: 28, showGlow: false),
+          const NitidoAiOrb(size: 28, showGlow: false),
           Text(t.chat_header),
         ],
       ),
@@ -748,7 +748,7 @@ class _ToolApprovalSheet extends StatelessWidget {
   final String toolName;
   final Map<String, dynamic> arguments;
 
-  String _titleFor(TranslationsBolsioAiEn t) {
+  String _titleFor(TranslationsNitidoAiEn t) {
     switch (toolName) {
       case 'create_transaction':
         final type = arguments['type'] as String?;
@@ -776,7 +776,7 @@ class _ToolApprovalSheet extends StatelessWidget {
     }
   }
 
-  List<_Summary> _summaryLines(TranslationsBolsioAiEn t) {
+  List<_Summary> _summaryLines(TranslationsNitidoAiEn t) {
     switch (toolName) {
       case 'create_transaction':
         final categoryLabel = arguments['__categoryLabel']?.toString() ??
@@ -846,7 +846,7 @@ class _ToolApprovalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final t = Translations.of(context).bolsio_ai;
+    final t = Translations.of(context).nitido_ai;
     final lines = _summaryLines(t);
 
     return SafeArea(

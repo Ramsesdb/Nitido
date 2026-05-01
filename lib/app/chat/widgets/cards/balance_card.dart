@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/app/chat/models/chat_card_payload.dart';
-import 'package:bolsio/app/chat/theme/bolsio_ai_tokens.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/app/chat/models/chat_card_payload.dart';
+import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class BalanceCard extends StatelessWidget {
   const BalanceCard(this.payload, {super.key});
@@ -9,7 +9,7 @@ class BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = BolsioAiTokens.of(context);
+    final tokens = NitidoAiTokens.of(context);
     final width = MediaQuery.of(context).size.width;
     final breakdown = payload.breakdown;
 
@@ -23,7 +23,7 @@ class BalanceCard extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [tokens.surfaceAlt, tokens.bubbleAi],
           ),
-          borderRadius: BorderRadius.circular(BolsioAiTokens.cardRadius),
+          borderRadius: BorderRadius.circular(NitidoAiTokens.cardRadius),
           border: Border.all(
             color: tokens.accent.withValues(alpha: 0.3),
             width: 1,
@@ -72,7 +72,7 @@ class _AmountDisplay extends StatelessWidget {
 
   final double total;
   final String currencyCode;
-  final BolsioAiTokens tokens;
+  final NitidoAiTokens tokens;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +132,7 @@ class _BreakdownCol extends StatelessWidget {
   const _BreakdownCol({required this.row, required this.tokens});
 
   final BalanceBreakdownRow row;
-  final BolsioAiTokens tokens;
+  final NitidoAiTokens tokens;
 
   @override
   Widget build(BuildContext context) {

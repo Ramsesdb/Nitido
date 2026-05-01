@@ -1,26 +1,26 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
-import 'package:bolsio/core/presentation/app_colors.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
+import 'package:nitido/core/presentation/app_colors.dart';
 
-/// Design tokens for Wallex sheet surfaces (chat, profile, future modals).
+/// Design tokens for Nitido sheet surfaces (chat, profile, future modals).
 ///
 /// Translates the hardcoded tokens from the Claude Design bundle
-/// (see `wai-chrome.jsx` / `bolsio-theme.jsx`) to the dynamic Bolsio
+/// (see `wai-chrome.jsx` / `nitido-theme.jsx`) to the dynamic Nitido
 /// theme so sheet surfaces follow the user's accent / brightness / amoled
 /// selection at runtime.
 ///
 /// API mirrors [AppColors.of] (context-bound accessor). We deliberately
 /// do NOT implement [ThemeExtension] because these tokens are a shared
-/// design-token source for Wallex sheet surfaces (chat, profile, future
+/// design-token source for Nitido sheet surfaces (chat, profile, future
 /// modals); promoting them to a theme extension would be overkill and
 /// would force every theme rebuild to carry them.
-class BolsioAiTokens {
-  const BolsioAiTokens._(this._context);
+class NitidoAiTokens {
+  const NitidoAiTokens._(this._context);
 
   final BuildContext _context;
 
-  /// Context-bound accessor. Usage: `BolsioAiTokens.of(context).accent`.
-  static BolsioAiTokens of(BuildContext context) => BolsioAiTokens._(context);
+  /// Context-bound accessor. Usage: `NitidoAiTokens.of(context).accent`.
+  static NitidoAiTokens of(BuildContext context) => NitidoAiTokens._(context);
 
   ColorScheme get _cs => Theme.of(_context).colorScheme;
   AppColors get _app => AppColors.of(_context);
@@ -51,7 +51,7 @@ class BolsioAiTokens {
   /// AI chat bubble background (design spec `#1A1A2E`).
   ///
   /// Mapped to `surfaceContainerHighest` (NOT `surfaceContainer` as the
-  /// brief initially suggested) to match the existing `bolsio_chat.page.dart`
+  /// brief initially suggested) to match the existing `nitido_chat.page.dart`
   /// which already paints AI bubbles with `cs.surfaceContainerHighest`.
   /// This preserves visual continuity during the Tanda 2 migration.
   Color get bubbleAi => _cs.surfaceContainerHighest;

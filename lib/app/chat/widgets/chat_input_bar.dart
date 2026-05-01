@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/app/chat/theme/bolsio_ai_tokens.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class ChatInputBar extends StatefulWidget {
   const ChatInputBar({
@@ -80,7 +80,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
 
   @override
   Widget build(BuildContext context) {
-    final tokens = BolsioAiTokens.of(context);
+    final tokens = NitidoAiTokens.of(context);
     final bottomInset = MediaQuery.of(context).viewPadding.bottom;
     final showMic = widget.voiceAffordance &&
         widget.onMicTap != null &&
@@ -126,21 +126,21 @@ class _ChatInputBarState extends State<ChatInputBar> {
     );
   }
 
-  Widget _buildPill(BolsioAiTokens tokens) {
+  Widget _buildPill(NitidoAiTokens tokens) {
     final borderColor = _focused
         ? tokens.accent.withValues(alpha: 0.35)
         : tokens.border;
 
     return ConstrainedBox(
       constraints: BoxConstraints(
-        minHeight: BolsioAiTokens.inputBarHeight,
+        minHeight: NitidoAiTokens.inputBarHeight,
         // ~4 lines * 14px * 1.55 height + vertical padding headroom.
         maxHeight: 140,
       ),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: tokens.bubbleAi,
-          borderRadius: BorderRadius.circular(BolsioAiTokens.inputBarRadius),
+          borderRadius: BorderRadius.circular(NitidoAiTokens.inputBarRadius),
           border: Border.all(color: borderColor, width: 1),
         ),
         child: Padding(
@@ -183,7 +183,7 @@ class _MicButton extends StatelessWidget {
     required this.enabled,
   });
 
-  final BolsioAiTokens tokens;
+  final NitidoAiTokens tokens;
   final VoidCallback onTap;
   final bool enabled;
 
@@ -228,7 +228,7 @@ class _SendButton extends StatelessWidget {
     required this.onTap,
   });
 
-  final BolsioAiTokens tokens;
+  final NitidoAiTokens tokens;
   final bool enabled;
   final bool isSending;
   final VoidCallback onTap;
