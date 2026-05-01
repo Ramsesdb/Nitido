@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
-import 'package:bolsio/core/presentation/responsive/breakpoints.dart';
-import 'package:bolsio/core/presentation/responsive/responsive_row_column.dart';
-import 'package:bolsio/core/utils/logger.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
+import 'package:nitido/core/presentation/responsive/breakpoints.dart';
+import 'package:nitido/core/presentation/responsive/responsive_row_column.dart';
+import 'package:nitido/core/utils/logger.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 class CustomColorPicker extends StatefulWidget {
   const CustomColorPicker({

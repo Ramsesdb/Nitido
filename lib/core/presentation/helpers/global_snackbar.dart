@@ -1,7 +1,7 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/presentation/helpers/snackbar.dart';
+import 'package:nitido/core/presentation/helpers/snackbar.dart';
 import 'package:pausable_timer/pausable_timer.dart';
 
 class SnackbarInstance extends SnackbarParams {
@@ -203,14 +203,14 @@ class GlobalSnackbarState extends State<GlobalSnackbar>
                 ),
                 child: snackbar == null
                     ? SizedBox.shrink()
-                    : BolsioSnackbarContent(
+                    : NitidoSnackbarContent(
                         title: snackbar!.title,
                         message: snackbar!.message,
                         color: snackbar!.textColor,
                         icon: snackbar!.iconData,
                         actions: snackbar!.actions
                             ?.map(
-                              (action) => BolsioSnackbarAction(
+                              (action) => NitidoSnackbarAction(
                                 label: action.label,
                                 onPressed: () {
                                   action.onPressed?.call();

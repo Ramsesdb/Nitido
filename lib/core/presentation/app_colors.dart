@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-/// Bolsio brand color (very dark muted purple — used for glass surfaces).
+/// Nitido brand color (very dark muted purple — used for glass surfaces).
 const brandBlue = Color(0xFF1E1B2E);
 
 /// Muted gray-purple accent for active text/icons.

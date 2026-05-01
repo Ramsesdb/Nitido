@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/presentation/styles/borders.dart';
-import 'package:bolsio/core/presentation/widgets/tappable.dart';
+import 'package:nitido/core/presentation/styles/borders.dart';
+import 'package:nitido/core/presentation/widgets/tappable.dart';
 
 class ListTileField extends StatelessWidget {
   const ListTileField({

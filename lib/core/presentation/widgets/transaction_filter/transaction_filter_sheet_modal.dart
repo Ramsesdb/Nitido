@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/filters/saved_filters_service.dart';
-import 'package:bolsio/core/presentation/app_colors.dart';
-import 'package:bolsio/core/presentation/helpers/snackbar.dart';
-import 'package:bolsio/core/presentation/widgets/bottom_sheet_footer.dart';
-import 'package:bolsio/core/presentation/widgets/modal_container.dart';
-import 'package:bolsio/core/presentation/widgets/scrollable_with_bottom_gradient.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/saved_filters_selector.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/transaction_filter_form.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
-import 'package:bolsio/core/routes/route_utils.dart';
-import 'package:bolsio/core/utils/app_utils.dart';
-import 'package:bolsio/core/utils/list_tile_action_item.dart';
-import 'package:bolsio/core/utils/uuid.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/filters/saved_filters_service.dart';
+import 'package:nitido/core/presentation/app_colors.dart';
+import 'package:nitido/core/presentation/helpers/snackbar.dart';
+import 'package:nitido/core/presentation/widgets/bottom_sheet_footer.dart';
+import 'package:nitido/core/presentation/widgets/modal_container.dart';
+import 'package:nitido/core/presentation/widgets/scrollable_with_bottom_gradient.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/saved_filters_selector.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/transaction_filter_form.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
+import 'package:nitido/core/routes/route_utils.dart';
+import 'package:nitido/core/utils/app_utils.dart';
+import 'package:nitido/core/utils/list_tile_action_item.dart';
+import 'package:nitido/core/utils/uuid.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 Future<TransactionFilterSet?> openFilterSheetModal(
   BuildContext context,
@@ -119,7 +119,7 @@ class _FilterSheetModalState extends State<FilterSheetModal> {
                 });
 
                 if (context.mounted) {
-                  BolsioSnackbar.success(
+                  NitidoSnackbar.success(
                     SnackbarParams(
                       t.transaction.filters.saved.save_success,
                       showAtTop: true,
@@ -128,7 +128,7 @@ class _FilterSheetModalState extends State<FilterSheetModal> {
                 }
               } catch (e) {
                 if (context.mounted) {
-                  BolsioSnackbar.error(SnackbarParams.fromError(e));
+                  NitidoSnackbar.error(SnackbarParams.fromError(e));
                 }
               }
             },

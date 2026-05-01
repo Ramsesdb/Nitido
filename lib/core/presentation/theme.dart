@@ -1,9 +1,9 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/database/services/user-setting/enum/app-fonts.enum.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
-import 'package:bolsio/core/presentation/styles/borders.dart';
+import 'package:nitido/core/database/services/user-setting/enum/app-fonts.enum.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
+import 'package:nitido/core/presentation/styles/borders.dart';
 
 import 'app_colors.dart';
 

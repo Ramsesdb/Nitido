@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/app/layout/page_framework.dart';
-import 'package:bolsio/core/database/utils/demo_app_seeders.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
-import 'package:bolsio/core/presentation/app_colors.dart';
-import 'package:bolsio/core/presentation/helpers/snackbar.dart';
-import 'package:bolsio/core/presentation/widgets/loading_overlay.dart';
-import 'package:bolsio/core/utils/logger.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/app/layout/page_framework.dart';
+import 'package:nitido/core/database/utils/demo_app_seeders.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
+import 'package:nitido/core/presentation/app_colors.dart';
+import 'package:nitido/core/presentation/helpers/snackbar.dart';
+import 'package:nitido/core/presentation/widgets/loading_overlay.dart';
+import 'package:nitido/core/utils/logger.dart';
 
 class DebugPage extends StatelessWidget {
   const DebugPage({super.key});
@@ -229,7 +229,7 @@ class DebugPage extends StatelessWidget {
                     .then((value) {
                       loadingOverlay.hide();
 
-                      BolsioSnackbar.success(
+                      NitidoSnackbar.success(
                         SnackbarParams('Demo data inserted successfully!'),
                       );
 
@@ -238,7 +238,7 @@ class DebugPage extends StatelessWidget {
                     .catchError((error) {
                       loadingOverlay.hide();
                       Logger.printDebug(error);
-                      BolsioSnackbar.error(SnackbarParams.fromError(error));
+                      NitidoSnackbar.error(SnackbarParams.fromError(error));
                     });
               },
               child: Text('DEMO DATA'),

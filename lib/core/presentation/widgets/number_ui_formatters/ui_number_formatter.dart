@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/presentation/widgets/number_ui_formatters/decimal_separator.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/presentation/widgets/number_ui_formatters/decimal_separator.dart';
 
 enum UINumberFormatterMode { currency, percentage, decimal }
 

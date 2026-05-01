@@ -1,14 +1,14 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:drift/drift.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/account/account_service.dart';
-import 'package:bolsio/core/database/utils/drift_utils.dart';
-import 'package:bolsio/core/extensions/string.extension.dart';
-import 'package:bolsio/core/models/account/account.dart';
-import 'package:bolsio/core/models/transaction/transaction_status.enum.dart';
-import 'package:bolsio/core/utils/uuid.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/account/account_service.dart';
+import 'package:nitido/core/database/utils/drift_utils.dart';
+import 'package:nitido/core/extensions/string.extension.dart';
+import 'package:nitido/core/models/account/account.dart';
+import 'package:nitido/core/models/transaction/transaction_status.enum.dart';
+import 'package:nitido/core/utils/uuid.dart';
 
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
 
 import '../../../models/transaction/transaction_type.enum.dart';
 

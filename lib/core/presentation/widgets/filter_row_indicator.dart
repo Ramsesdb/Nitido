@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:bolsio/core/database/services/category/category_service.dart';
-import 'package:bolsio/core/models/category/category.dart';
-import 'package:bolsio/core/presentation/responsive/responsive_row_column.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/database/services/category/category_service.dart';
+import 'package:nitido/core/models/category/category.dart';
+import 'package:nitido/core/presentation/responsive/responsive_row_column.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 class FilterRowIndicator extends StatefulWidget {
   const FilterRowIndicator({

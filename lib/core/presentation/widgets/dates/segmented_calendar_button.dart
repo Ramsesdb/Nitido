@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bolsio/core/database/services/user-setting/hidden_mode_service.dart';
-import 'package:bolsio/core/models/date-utils/date_period.dart';
-import 'package:bolsio/core/models/date-utils/date_period_state.dart';
-import 'package:bolsio/core/models/date-utils/period_type.dart';
-import 'package:bolsio/core/presentation/widgets/dates/date_period_modal.dart';
+import 'package:nitido/core/database/services/user-setting/hidden_mode_service.dart';
+import 'package:nitido/core/models/date-utils/date_period.dart';
+import 'package:nitido/core/models/date-utils/date_period_state.dart';
+import 'package:nitido/core/models/date-utils/period_type.dart';
+import 'package:nitido/core/presentation/widgets/dates/date_period_modal.dart';
 
 class SegmentedCalendarButton extends StatefulWidget {
   const SegmentedCalendarButton({

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/extensions/padding.extension.dart';
-import 'package:bolsio/core/models/mixins/financial_target_mixin.dart';
-import 'package:bolsio/core/presentation/responsive/breakpoints.dart';
-import 'package:bolsio/core/presentation/widgets/no_results.dart';
-import 'package:bolsio/core/presentation/widgets/targets/financial_target_card.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/extensions/padding.extension.dart';
+import 'package:nitido/core/models/mixins/financial_target_mixin.dart';
+import 'package:nitido/core/presentation/responsive/breakpoints.dart';
+import 'package:nitido/core/presentation/widgets/no_results.dart';
+import 'package:nitido/core/presentation/widgets/targets/financial_target_card.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 class TargetListWithEmptyIndicator extends StatelessWidget {
   const TargetListWithEmptyIndicator({

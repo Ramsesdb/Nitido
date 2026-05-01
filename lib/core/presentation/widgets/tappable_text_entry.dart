@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/extensions/string.extension.dart';
-import 'package:bolsio/core/presentation/app_colors.dart';
-import 'package:bolsio/core/presentation/widgets/tappable.dart';
+import 'package:nitido/core/extensions/string.extension.dart';
+import 'package:nitido/core/presentation/app_colors.dart';
+import 'package:nitido/core/presentation/widgets/tappable.dart';
 
 class TappableTextEntry extends StatelessWidget {
   const TappableTextEntry({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:bolsio/core/presentation/responsive/breakpoints.dart';
+import 'package:nitido/core/presentation/responsive/breakpoints.dart';
 
 class AnimatedFloatingButton extends StatelessWidget {
   const AnimatedFloatingButton({

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/presentation/widgets/tappable.dart';
+import 'package:nitido/core/presentation/widgets/tappable.dart';
 
 class OutlinedButtonStacked extends StatelessWidget {
   const OutlinedButtonStacked({

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/presentation/widgets/bottom_sheet_footer.dart';
-import 'package:bolsio/core/presentation/widgets/modal_container.dart';
-import 'package:bolsio/core/routes/route_utils.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/presentation/widgets/bottom_sheet_footer.dart';
+import 'package:nitido/core/presentation/widgets/modal_container.dart';
+import 'package:nitido/core/routes/route_utils.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 /// A dynamic selector modal that displays a list of selectable items with radio buttons.
 ///

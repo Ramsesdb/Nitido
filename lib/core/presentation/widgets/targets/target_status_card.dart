@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:bolsio/core/database/services/currency/currency_service.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
-import 'package:bolsio/core/models/budget/budget.dart';
-import 'package:bolsio/core/models/budget/target_progress_status.enum.dart';
-import 'package:bolsio/core/models/budget/target_timeline_status.enum.dart';
-import 'package:bolsio/core/models/goal/goal.dart';
-import 'package:bolsio/core/models/mixins/financial_target_mixin.dart';
-import 'package:bolsio/core/presentation/app_colors.dart';
-import 'package:bolsio/core/presentation/widgets/animated_progress_bar.dart';
-import 'package:bolsio/core/presentation/widgets/card_with_header.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/database/services/currency/currency_service.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
+import 'package:nitido/core/models/budget/budget.dart';
+import 'package:nitido/core/models/budget/target_progress_status.enum.dart';
+import 'package:nitido/core/models/budget/target_timeline_status.enum.dart';
+import 'package:nitido/core/models/goal/goal.dart';
+import 'package:nitido/core/models/mixins/financial_target_mixin.dart';
+import 'package:nitido/core/presentation/app_colors.dart';
+import 'package:nitido/core/presentation/widgets/animated_progress_bar.dart';
+import 'package:nitido/core/presentation/widgets/card_with_header.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

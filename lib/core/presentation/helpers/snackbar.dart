@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/core/presentation/helpers/global_snackbar.dart';
-import 'package:bolsio/core/presentation/theme.dart';
-import 'package:bolsio/core/utils/logger.dart';
-import 'package:bolsio/core/utils/unique_app_widgets_keys.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/core/presentation/helpers/global_snackbar.dart';
+import 'package:nitido/core/presentation/theme.dart';
+import 'package:nitido/core/utils/logger.dart';
+import 'package:nitido/core/utils/unique_app_widgets_keys.dart';
 
 class SnackbarParams {
   /// The amount of time the snack bar should be displayed.
@@ -11,7 +11,7 @@ class SnackbarParams {
   final Duration duration;
   final String title;
   final String? message;
-  final List<BolsioSnackbarAction>? actions;
+  final List<NitidoSnackbarAction>? actions;
 
   /// Whether to clear all previous snackbars before showing the new one.
   ///
@@ -21,7 +21,7 @@ class SnackbarParams {
   /// Whether to show the snackbar at the top of the screen using global snackbar
   /// or at the bottom using ScaffoldMessenger.
   ///
-  /// If null, uses the default defined in [BolsioSnackbar.showAtTopDefault].
+  /// If null, uses the default defined in [NitidoSnackbar.showAtTopDefault].
   final bool? showAtTop;
 
   SnackbarParams(
@@ -50,7 +50,7 @@ class SnackbarParams {
   );
 }
 
-abstract class BolsioSnackbar {
+abstract class NitidoSnackbar {
   /// Whether to show snackbars at the top of the screen using global snackbar
   /// or at the bottom using ScaffoldMessenger.
   static bool get showAtTopDefault => false;
@@ -88,7 +88,7 @@ abstract class BolsioSnackbar {
     required Color textColor,
     required IconData iconData,
   }) {
-    final showAtTop = options.showAtTop ?? BolsioSnackbar.showAtTopDefault;
+    final showAtTop = options.showAtTop ?? NitidoSnackbar.showAtTopDefault;
 
     if (showAtTop) {
       _getScaffoldMessenger(options);
@@ -112,7 +112,7 @@ abstract class BolsioSnackbar {
         //  margin: const EdgeInsets.all(8),
         //  behavior: SnackBarBehavior.floating,
         duration: options.duration,
-        content: BolsioSnackbarContent(
+        content: NitidoSnackbarContent(
           title: options.title,
           message: options.message,
           color: textColor,
@@ -124,7 +124,7 @@ abstract class BolsioSnackbar {
   }
 
   static dynamic success(SnackbarParams options) {
-    return BolsioSnackbar.openSnackbar(
+    return NitidoSnackbar.openSnackbar(
       options: options,
       bgColor: Colors.green[50]!,
       textColor: Colors.green,
@@ -133,7 +133,7 @@ abstract class BolsioSnackbar {
   }
 
   static dynamic error(SnackbarParams options) {
-    return BolsioSnackbar.openSnackbar(
+    return NitidoSnackbar.openSnackbar(
       options: options,
       bgColor: isAppInLightBrightness(snackbarKey.currentContext!)
           ? Theme.of(snackbarKey.currentContext!).colorScheme.errorContainer
@@ -146,7 +146,7 @@ abstract class BolsioSnackbar {
   }
 
   static dynamic warning(SnackbarParams options) {
-    return BolsioSnackbar.openSnackbar(
+    return NitidoSnackbar.openSnackbar(
       options: options,
       bgColor: Colors.amber[50]!,
       textColor: Colors.amber,
@@ -155,7 +155,7 @@ abstract class BolsioSnackbar {
   }
 
   static dynamic info(SnackbarParams options) {
-    return BolsioSnackbar.openSnackbar(
+    return NitidoSnackbar.openSnackbar(
       options: options,
       bgColor: Colors.blue[50]!,
       textColor: Colors.blue,
@@ -164,15 +164,15 @@ abstract class BolsioSnackbar {
   }
 }
 
-class BolsioSnackbarAction {
+class NitidoSnackbarAction {
   final String label;
   final VoidCallback? onPressed;
 
-  BolsioSnackbarAction({required this.label, required this.onPressed});
+  NitidoSnackbarAction({required this.label, required this.onPressed});
 }
 
-class BolsioSnackbarContent extends StatelessWidget {
-  const BolsioSnackbarContent({
+class NitidoSnackbarContent extends StatelessWidget {
+  const NitidoSnackbarContent({
     super.key,
     required this.title,
     required this.color,
@@ -192,7 +192,7 @@ class BolsioSnackbarContent extends StatelessWidget {
   /// `optional` color of the SnackBar/MaterialBanner body
   final IconData? icon;
 
-  final List<BolsioSnackbarAction>? actions;
+  final List<NitidoSnackbarAction>? actions;
 
   @override
   Widget build(BuildContext context) {

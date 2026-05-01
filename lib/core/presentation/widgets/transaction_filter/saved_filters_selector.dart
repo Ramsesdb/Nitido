@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/app/categories/selectors/draggableScrollableKeyboardAware.mixin.dart';
-import 'package:bolsio/core/database/services/filters/saved_filters_service.dart';
-import 'package:bolsio/core/models/filters/saved_filter.dart';
-import 'package:bolsio/core/presentation/widgets/modal_container.dart';
-import 'package:bolsio/core/presentation/widgets/no_results.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/saved_filter_form_page.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/saved_filters_list_page.dart';
-import 'package:bolsio/core/utils/app_utils.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/app/categories/selectors/draggableScrollableKeyboardAware.mixin.dart';
+import 'package:nitido/core/database/services/filters/saved_filters_service.dart';
+import 'package:nitido/core/models/filters/saved_filter.dart';
+import 'package:nitido/core/presentation/widgets/modal_container.dart';
+import 'package:nitido/core/presentation/widgets/no_results.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/saved_filter_form_page.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/saved_filters_list_page.dart';
+import 'package:nitido/core/utils/app_utils.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 Future<SavedFilter?> showSavedFiltersBottomSheetSelector(BuildContext context) {
   return showModalBottomSheet<SavedFilter>(

@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:bolsio/core/utils/list_tile_action_item.dart';
+﻿import 'package:flutter/material.dart';
+import 'package:nitido/core/utils/list_tile_action_item.dart';
 
-class BolsioPopupMenuButton extends StatelessWidget {
-  const BolsioPopupMenuButton({
+class NitidoPopupMenuButton extends StatelessWidget {
+  const NitidoPopupMenuButton({
     super.key,
     required this.actionItems,
     this.icon,

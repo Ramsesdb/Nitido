@@ -1,20 +1,20 @@
-import 'dart:async';
+﻿import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
-import 'package:bolsio/app/layout/page_framework.dart';
-import 'package:bolsio/core/database/services/filters/saved_filters_service.dart';
-import 'package:bolsio/core/extensions/string.extension.dart';
-import 'package:bolsio/core/presentation/animations/animated_floating_button.dart';
-import 'package:bolsio/core/presentation/responsive/breakpoints.dart';
-import 'package:bolsio/core/presentation/widgets/column_with_reorderable_list_and_search.dart';
-import 'package:bolsio/core/presentation/widgets/bolsio_reorderable_list.dart';
-import 'package:bolsio/core/presentation/widgets/no_results.dart';
-import 'package:bolsio/core/presentation/widgets/reorderable_drag_icon.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/saved_filter_form_page.dart';
-import 'package:bolsio/core/routes/route_utils.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/app/layout/page_framework.dart';
+import 'package:nitido/core/database/services/filters/saved_filters_service.dart';
+import 'package:nitido/core/extensions/string.extension.dart';
+import 'package:nitido/core/presentation/animations/animated_floating_button.dart';
+import 'package:nitido/core/presentation/responsive/breakpoints.dart';
+import 'package:nitido/core/presentation/widgets/column_with_reorderable_list_and_search.dart';
+import 'package:nitido/core/presentation/widgets/nitido_reorderable_list.dart';
+import 'package:nitido/core/presentation/widgets/no_results.dart';
+import 'package:nitido/core/presentation/widgets/reorderable_drag_icon.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/saved_filter_form_page.dart';
+import 'package:nitido/core/routes/route_utils.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 class SavedFiltersListPage extends StatefulWidget {
   const SavedFiltersListPage({super.key});
@@ -73,7 +73,7 @@ class _SavedFiltersListPageState extends State<SavedFiltersListPage> {
 
         final isOrderEnabled = filters.length > 1 && searchQuery.isNullOrEmpty;
 
-        return BolsioReorderableList(
+        return NitidoReorderableList(
           totalItemCount: filters.length,
           padding: ColumnWithReorderableListAndSearch.listPadding(context),
           scrollController: _scrollController,

@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
-class BolsioDropdownSelect<T> extends StatefulWidget {
-  const BolsioDropdownSelect({
+class NitidoDropdownSelect<T> extends StatefulWidget {
+  const NitidoDropdownSelect({
     super.key,
     required this.initial,
     required this.items,
@@ -29,17 +29,17 @@ class BolsioDropdownSelect<T> extends StatefulWidget {
   final BoxConstraints textConstraints;
 
   @override
-  State<BolsioDropdownSelect> createState() => BolsioDropdownSelectState<T>();
+  State<NitidoDropdownSelect> createState() => NitidoDropdownSelectState<T>();
 }
 
-/// State of the `BolsioDropdownSelect` component. Use it for creating a key and open the dropdown programatically:
+/// State of the `NitidoDropdownSelect` component. Use it for creating a key and open the dropdown programatically:
 ///
 ///
 ///```
-///     late GlobalKey<BolsioDropdownSelectState>? _dropdownKey = GlobalKey();
+///     late GlobalKey<NitidoDropdownSelectState>? _dropdownKey = GlobalKey();
 ///     _dropdownKey!.currentState!.openDropdown();
 ///```
-class BolsioDropdownSelectState<T> extends State<BolsioDropdownSelect<T>> {
+class NitidoDropdownSelectState<T> extends State<NitidoDropdownSelect<T>> {
   T? currentValue;
 
   late final GlobalKey _dropdownButtonKey = GlobalKey();

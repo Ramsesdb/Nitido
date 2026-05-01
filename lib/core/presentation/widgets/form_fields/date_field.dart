@@ -3,8 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:bolsio/core/utils/date_time_picker.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/utils/date_time_picker.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 const double kCupertinoDatePickerHeight = 216;
 
