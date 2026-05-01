@@ -1,4 +1,4 @@
-import 'package:bolsio/core/database/app_db.dart';
+import 'package:nitido/core/database/app_db.dart';
 
 class ExchangeRate extends ExchangeRateInDB {
   CurrencyInDB currency;

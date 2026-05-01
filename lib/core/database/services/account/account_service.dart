@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/transaction/transaction_service.dart';
-import 'package:bolsio/core/extensions/numbers.extensions.dart';
-import 'package:bolsio/core/models/account/account.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/transaction/transaction_service.dart';
+import 'package:nitido/core/extensions/numbers.extensions.dart';
+import 'package:nitido/core/models/account/account.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/services/firebase_sync_service.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/services/firebase_sync_service.dart';
 
 enum AccountDataFilter { income, expense, balance }
 

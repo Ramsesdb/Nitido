@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:bolsio/core/models/date-utils/periodicity.dart';
-import 'package:bolsio/core/models/transaction/rule_recurrent_limit.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/models/date-utils/periodicity.dart';
+import 'package:nitido/core/models/transaction/rule_recurrent_limit.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 class RecurrencyData extends Equatable {
   final RecurrentRuleLimit? ruleRecurrentLimit;

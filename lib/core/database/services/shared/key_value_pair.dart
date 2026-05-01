@@ -1,6 +1,6 @@
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/app-data/app_data_service.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/app-data/app_data_service.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
 
 class KeyValuePairInDB<T extends Enum> {
   final T key;

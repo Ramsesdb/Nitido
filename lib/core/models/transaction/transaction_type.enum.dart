@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/database/utils/database_enum.dart';
-import 'package:bolsio/core/presentation/app_colors.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/database/utils/database_enum.dart';
+import 'package:nitido/core/presentation/app_colors.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 /// All the possible types of a transaction
 enum TransactionType implements DatabaseEnum<String> {

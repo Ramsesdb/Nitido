@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' show IconData, Icons;
-import 'package:bolsio/core/database/app_db.dart';
+import 'package:nitido/core/database/app_db.dart';
 
 class Debt extends DebtInDB {
   final CurrencyInDB currency;

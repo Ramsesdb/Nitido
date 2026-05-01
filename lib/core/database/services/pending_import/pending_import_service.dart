@@ -1,7 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/models/auto_import/transaction_proposal_status.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/models/auto_import/transaction_proposal_status.dart';
+import 'package:sqlite3/sqlite3.dart' show SqliteException;
 
 /// CRUD service for the `pending_imports` table.
 ///
@@ -18,8 +19,17 @@ class PendingImportService {
   /// For testing: create an instance with a custom [AppDB].
   PendingImportService.forTesting(this.db);
 
-  /// Insert a new pending import row. Returns the auto-generated rowid.
-  Future<int> insertPendingImport(PendingImportsCompanion companion) async {
+  /// Insert a new pending import row.
+  ///
+  /// Returns the auto-generated rowid on success, or `null` when the insert
+  /// was silently skipped because it collided with the partial UNIQUE index
+  /// `idx_pending_imports_bankref_account_unique` on `(bankRef, accountId)`.
+  /// That index is the database-level safety net against the dedupe race
+  /// where two simultaneous orchestrator dispatches both pass DedupeChecker
+  /// and try to insert the same proposal in the same millisecond. The first
+  /// insert wins; the second is treated as a no-op so the auto-import
+  /// pipeline keeps running.
+  Future<int?> insertPendingImport(PendingImportsCompanion companion) async {
     final bankRefVal = companion.bankRef.present ? companion.bankRef.value : '<absent>';
     final idVal = companion.id.present ? companion.id.value : '<absent>';
     final accountIdVal =
@@ -35,6 +45,31 @@ class PendingImportService {
         'rowId=$rowId id=$idVal bankRef=$bankRefVal',
       );
       return rowId;
+    } on SqliteException catch (e) {
+      // SQLite extended result code 2067 = SQLITE_CONSTRAINT_UNIQUE; some
+      // builds also surface the generic 19 = SQLITE_CONSTRAINT. We additionally
+      // sniff the message for safety because the extended code surface varies
+      // between sqlite3 versions and Drift wrappings.
+      final msg = e.message.toLowerCase();
+      final isUniqueViolation = e.extendedResultCode == 2067 ||
+          (e.extendedResultCode == 19 && msg.contains('unique')) ||
+          msg.contains('unique constraint');
+
+      if (isUniqueViolation) {
+        debugPrint(
+          '[DEDUPE-DBG] PendingImportService.insertPendingImport: dedupe race '
+          'detected — UNIQUE violation, skipping duplicate insert '
+          'bankRef=$bankRefVal accountId=$accountIdVal id=$idVal '
+          '(error: ${e.message})',
+        );
+        return null;
+      }
+
+      debugPrint(
+        '[DEDUPE-DBG] PendingImportService.insertPendingImport THREW SqliteException '
+        'id=$idVal bankRef=$bankRefVal error=$e',
+      );
+      rethrow;
     } catch (e, st) {
       debugPrint(
         '[DEDUPE-DBG] PendingImportService.insertPendingImport THREW '

@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/models/transaction/transaction_form_field.enum.dart';
-import 'package:bolsio/core/models/transaction/transaction_status.enum.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/models/transaction/transaction_form_field.enum.dart';
+import 'package:nitido/core/models/transaction/transaction_status.enum.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DefaultTransactionValues {

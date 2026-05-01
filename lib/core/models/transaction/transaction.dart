@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
-import 'package:bolsio/core/models/account/account.dart';
-import 'package:bolsio/core/models/category/category.dart';
-import 'package:bolsio/core/models/date-utils/periodicity.dart';
-import 'package:bolsio/core/models/supported-icon/icon_displayer.dart';
-import 'package:bolsio/core/models/tags/tag.dart';
-import 'package:bolsio/core/models/transaction/recurrency_data.dart';
-import 'package:bolsio/core/models/transaction/rule_recurrent_limit.dart';
-import 'package:bolsio/core/models/transaction/transaction_status.enum.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
+import 'package:nitido/core/models/account/account.dart';
+import 'package:nitido/core/models/category/category.dart';
+import 'package:nitido/core/models/date-utils/periodicity.dart';
+import 'package:nitido/core/models/supported-icon/icon_displayer.dart';
+import 'package:nitido/core/models/tags/tag.dart';
+import 'package:nitido/core/models/transaction/recurrency_data.dart';
+import 'package:nitido/core/models/transaction/rule_recurrent_limit.dart';
+import 'package:nitido/core/models/transaction/transaction_status.enum.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 import 'next_pay_status.enum.dart';
 import 'transaction_type.enum.dart';

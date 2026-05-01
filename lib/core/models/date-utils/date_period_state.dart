@@ -1,12 +1,12 @@
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:bolsio/core/extensions/date.extensions.dart';
-import 'package:bolsio/core/models/date-utils/date_period.dart';
-import 'package:bolsio/core/models/date-utils/period_type.dart';
-import 'package:bolsio/core/models/date-utils/periodicity.dart';
-import 'package:bolsio/core/utils/constants.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/extensions/date.extensions.dart';
+import 'package:nitido/core/models/date-utils/date_period.dart';
+import 'package:nitido/core/models/date-utils/period_type.dart';
+import 'package:nitido/core/models/date-utils/periodicity.dart';
+import 'package:nitido/core/utils/constants.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 part 'date_period_state.g.dart';
 

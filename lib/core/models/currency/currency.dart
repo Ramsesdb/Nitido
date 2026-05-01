@@ -1,6 +1,6 @@
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/models/currency/currency_type.enum.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/models/currency/currency_type.enum.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class Currency extends CurrencyInDB {

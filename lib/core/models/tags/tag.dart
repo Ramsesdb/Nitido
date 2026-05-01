@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
 
 class Tag extends TagInDB {
   Tag({

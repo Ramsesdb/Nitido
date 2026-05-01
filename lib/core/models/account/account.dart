@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/extensions/color.extensions.dart';
-import 'package:bolsio/core/models/supported-icon/icon_displayer.dart';
-import 'package:bolsio/core/models/supported-icon/supported_icon.dart';
-import 'package:bolsio/core/presentation/theme.dart';
-import 'package:bolsio/core/services/supported_icon/supported_icon_service.dart';
-import 'package:bolsio/i18n/generated/translations.g.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/extensions/color.extensions.dart';
+import 'package:nitido/core/models/supported-icon/icon_displayer.dart';
+import 'package:nitido/core/models/supported-icon/supported_icon.dart';
+import 'package:nitido/core/presentation/theme.dart';
+import 'package:nitido/core/services/supported_icon/supported_icon_service.dart';
+import 'package:nitido/i18n/generated/translations.g.dart';
 
 enum AccountType {
   /// A normal type of account The default type

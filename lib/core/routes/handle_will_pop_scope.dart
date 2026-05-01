@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:bolsio/core/routes/destinations.dart';
-import 'package:bolsio/core/utils/unique_app_widgets_keys.dart';
+import 'package:nitido/core/routes/destinations.dart';
+import 'package:nitido/core/utils/unique_app_widgets_keys.dart';
 
 class HandleWillPopScope extends StatefulWidget {
   const HandleWillPopScope({required this.child, super.key});

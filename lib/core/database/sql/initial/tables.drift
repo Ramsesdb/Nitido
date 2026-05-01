@@ -415,6 +415,17 @@ CREATE TABLE IF NOT EXISTS pendingImports (
   valueInDestiny REAL
 ) AS PendingImportInDB;
 
+-- Defense-in-depth against the dedupe race observed in production: when the
+-- orchestrator dispatches the same notification to its pipeline twice within
+-- the same millisecond, both invocations pass DedupeChecker (no row exists
+-- yet) and both reach insertPendingImport. This partial UNIQUE index lets
+-- SQLite reject the second INSERT with a UNIQUE-violation, which the service
+-- layer catches and treats as a no-op. NULL bankRef rows (e.g. SMS without a
+-- reference) are excluded by the WHERE clause so they never collide.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_pending_imports_bankref_account_unique
+  ON pendingImports(bankRef, accountId)
+  WHERE bankRef IS NOT NULL;
+
 CREATE TABLE IF NOT EXISTS attachments (
   id TEXT NOT NULL PRIMARY KEY,
 

@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:drift/drift.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/exchange-rate/exchange_rate_service.dart';
-import 'package:bolsio/core/database/services/transaction/transaction_service.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/models/debt/debt.dart';
-import 'package:bolsio/core/models/debt/debt_direction.enum.dart';
-import 'package:bolsio/core/models/transaction/transaction_type.enum.dart';
-import 'package:bolsio/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/exchange-rate/exchange_rate_service.dart';
+import 'package:nitido/core/database/services/transaction/transaction_service.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/models/debt/debt.dart';
+import 'package:nitido/core/models/debt/debt_direction.enum.dart';
+import 'package:nitido/core/models/transaction/transaction_type.enum.dart';
+import 'package:nitido/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
 import 'package:rxdart/rxdart.dart';
 
 class DebtService {

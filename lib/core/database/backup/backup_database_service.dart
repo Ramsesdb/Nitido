@@ -1,15 +1,15 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/app-data/app_data_service.dart';
-import 'package:bolsio/core/models/transaction/transaction.dart';
-import 'package:bolsio/core/models/transaction/transaction_type.enum.dart';
-import 'package:bolsio/core/utils/logger.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/app-data/app_data_service.dart';
+import 'package:nitido/core/models/transaction/transaction.dart';
+import 'package:nitido/core/models/transaction/transaction_type.enum.dart';
+import 'package:nitido/core/utils/logger.dart';
 import 'package:path/path.dart' as path;
 
 class BackupDatabaseService {
@@ -36,7 +36,7 @@ class BackupDatabaseService {
     final file = createAndReturnFile(
       exportPath: exportPath,
       fileName:
-          "bolsio-${DateFormat('yyyyMMdd-Hms').format(DateTime.now())}.db",
+          "nitido-${DateFormat('yyyyMMdd-Hms').format(DateTime.now())}.db",
     );
 
     return file.writeAsBytes(dbFileInBytes, mode: FileMode.write);
@@ -114,7 +114,7 @@ class BackupDatabaseService {
     final file = createAndReturnFile(
       exportPath: exportPath,
       fileName:
-          "Bolsio_Report_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.csv",
+          "nitido_Report_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}.csv",
     );
 
     return file.writeAsString(

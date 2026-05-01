@@ -1,16 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bolsio/core/database/app_db.dart';
-import 'package:bolsio/core/database/services/account/account_service.dart';
-import 'package:bolsio/core/database/services/exchange-rate/exchange_rate_service.dart';
-import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
-import 'package:bolsio/core/models/currency/currency_display_policy.dart';
-import 'package:bolsio/core/models/currency/currency_display_policy_resolver.dart';
-import 'package:bolsio/core/services/dolar_api_service.dart';
-import 'package:bolsio/core/services/rate_providers/frankfurter_provider.dart';
-import 'package:bolsio/core/services/rate_providers/rate_provider_chain.dart';
-import 'package:bolsio/core/services/rate_providers/rate_provider_manager.dart';
-import 'package:bolsio/core/services/rate_providers/rate_source.dart';
+import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/account/account_service.dart';
+import 'package:nitido/core/database/services/exchange-rate/exchange_rate_service.dart';
+import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
+import 'package:nitido/core/models/currency/currency_display_policy.dart';
+import 'package:nitido/core/models/currency/currency_display_policy_resolver.dart';
+import 'package:nitido/core/services/dolar_api_service.dart';
+import 'package:nitido/core/services/rate_providers/frankfurter_provider.dart';
+import 'package:nitido/core/services/rate_providers/rate_provider_chain.dart';
+import 'package:nitido/core/services/rate_providers/rate_provider_manager.dart';
+import 'package:nitido/core/services/rate_providers/rate_source.dart';
 
 /// Result summary of a rate-refresh cycle.
 class RateRefreshResult {

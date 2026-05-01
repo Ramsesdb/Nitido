@@ -1,5 +1,5 @@
-import 'package:bolsio/core/models/supported-icon/supported_icon.dart';
-import 'package:bolsio/core/services/supported_icon/getter/supported_icons.dart';
+import 'package:nitido/core/models/supported-icon/supported_icon.dart';
+import 'package:nitido/core/services/supported_icon/getter/supported_icons.dart';
 import 'package:collection/collection.dart';
 
 class SupportedIconService {

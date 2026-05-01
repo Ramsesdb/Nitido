@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:bolsio/core/services/ai/nexus_ai_service.dart';
-import 'package:bolsio/core/services/statement_import/models/extracted_row.dart';
-import 'package:bolsio/core/utils/uuid.dart';
+import 'package:nitido/core/services/ai/nexus_ai_service.dart';
+import 'package:nitido/core/services/statement_import/models/extracted_row.dart';
+import 'package:nitido/core/utils/uuid.dart';
 
 typedef StatementMultimodalCompleteFn = Future<String?> Function({
   required String systemPrompt,
