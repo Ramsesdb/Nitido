@@ -1,4 +1,4 @@
-# Commit message convention for Bolsio
+# Commit message convention for Nitido
 
 To ensure a correct reading of commits and to facilitate their subsequent search or enable automation processes for the app, we use well-defined criteria when formulating commit messages. This criterion is based on the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/), and is explained below:
 

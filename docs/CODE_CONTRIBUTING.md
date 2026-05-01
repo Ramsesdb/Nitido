@@ -1,4 +1,4 @@
-# Code contributions in Bolsio
+# Code contributions in Nitido
 
 In this article you will find information about the steps you should take to help us with the development of code for the application.
 
@@ -12,7 +12,7 @@ After that you should run your app to check that everything is correct.
 
 ## 2. Configure your developer workspace
 
-Once you have the project up and running, you should prepare to develop in Bolsio. To make changes to the project and develop on it, the use of **[Visual Studio Code](https://code.visualstudio.com/)** as a text editor is strongly recommended. You can use any other code editor, you can even program using Word, but Visual Studio Code is the most widespread editor for Front-End development, and using it guarantees you follow the same work methods as the administrators of this project.
+Once you have the project up and running, you should prepare to develop in Nitido. To make changes to the project and develop on it, the use of **[Visual Studio Code](https://code.visualstudio.com/)** as a text editor is strongly recommended. You can use any other code editor, you can even program using Word, but Visual Studio Code is the most widespread editor for Front-End development, and using it guarantees you follow the same work methods as the administrators of this project.
 
 ### Visual Studio and Recommended extensions
 
@@ -37,7 +37,7 @@ If the list of tasks is too small for you, or you can't find one that matches yo
 
 ## 3. Create a new working branch in your fork
 
-Once you've decided on what you want to contribute it's time to create a new branch in your forked Bolsio
+Once you've decided on what you want to contribute it's time to create a new branch in your forked Nitido
 repository.
 
     git checkout -b your-branch-name develop
@@ -77,11 +77,11 @@ With your branch created, it’s time to start coding! Follow these steps and ti
   - Does it handle all cases?
 - **Minimize Breakage**: Ensure your changes don’t disrupt existing features in any OS.
 
-By following these steps and tips, you’ll maintain code quality and contribute effectively to Bolsio.
+By following these steps and tips, you’ll maintain code quality and contribute effectively to Nitido.
 
 ## 5. Submit a PR to `develop` branch
 
-So far you should have pushed your work to your working branch and have tested that it works on all the compatible devices. Then final step is to open a pull request to the `develop` branch of the official Bolsio repo.
+So far you should have pushed your work to your working branch and have tested that it works on all the compatible devices. Then final step is to open a pull request to the `develop` branch of the official Nitido repo.
 
 **[How To Submit a PR Guide - by GitHub.com](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork)**
 
@@ -98,4 +98,4 @@ If you have any doubts or need further guidance, feel free to ask! You can:
 - **Post on the Forum**: Join discussions or raise your queries in our community forum.
 - **Contact Directly**: Reach out to me via email at lozin.technologies@gmail.com.
 
-We’re here to help and excited to see your contributions to Bolsio!
+We’re here to help and excited to see your contributions to Nitido!

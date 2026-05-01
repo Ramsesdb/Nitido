@@ -16,7 +16,7 @@
 - [x] 2.1 Crear `lib/app/calculator/widgets/currency_amount_pane.dart`: stateless con `isActive`, `currency`, `displayValue`, `onCurrencyChanged`, `onTap` (focus pane). Currency picker via `DropdownButton` estándar — Satisfies REQ-CALC-1
 - [x] 2.2 Cablear estado en `_CalculatorPageState`: `_topCurrency = USD`, `_bottomCurrency = VES`, `_topIsActive = true` (defaults per spec) — Satisfies REQ-CALC-1
 - [x] 2.3 Renderizar dos `CurrencyAmountPane` apilados con tap → marca pane como activo (`setState`)
-- [x] 2.4 Implementar swap button (round, color desde theme/`BolsioAiTokens`, ícono `Icons.swap_vert` o equiv.) entre panes; intercambia top↔bottom currencies, conserva expresión activa, alterna `_topIsActive`. Wrap en `Semantics(label: t.calculator.swap.a11y, button: true)` — Satisfies REQ-CALC-3
+- [x] 2.4 Implementar swap button (round, color desde theme/`NitidoAiTokens`, ícono `Icons.swap_vert` o equiv.) entre panes; intercambia top↔bottom currencies, conserva expresión activa, alterna `_topIsActive`. Wrap en `Semantics(label: t.calculator.swap.a11y, button: true)` — Satisfies REQ-CALC-3
 - [x] 2.5 `flutter analyze` limpio
 
 ## Tanda 3 — Keypad + arithmetic
@@ -44,10 +44,10 @@
 
 ## Tanda 5 — Share card + render pipeline
 
-- [x] 5.1 Crear `lib/app/calculator/widgets/share_card.dart`: pure-render branded card (logo Bolsio, conversión `$25,00 = Bs. 12.118,50`, source label, timestamp, footer "Generado con Bolsio"). No estado — Satisfies REQ-CALC-7
+- [x] 5.1 Crear `lib/app/calculator/widgets/share_card.dart`: pure-render branded card (logo Nitido, conversión `$25,00 = Bs. 12.118,50`, source label, timestamp, footer "Generado con Nitido"). No estado — Satisfies REQ-CALC-7
 - [x] 5.2 Montar `ShareCard` en árbol del page bajo `Offstage(offstage: true, child: RepaintBoundary(key: _shareCardKey, child: ShareCard(...)))` con valores actuales
 - [x] 5.3 Crear `lib/app/calculator/utils/share_card_renderer.dart` con `Future<XFile?> renderShareCard(GlobalKey, BuildContext)`: cap `pixelRatio = 2.0` si `MediaQuery.shortestSide < 360`, sino `3.0`; try/catch devuelve `null` en falla — Satisfies REQ-CALC-7
-- [x] 5.4 Helper `_buildPlainTextPayload()` en page: `"$ 25,00 = Bs. 12.118,50\nParalelo · DolarApi · 27/04/2026 14:23\nGenerado con Bolsio"` (locale-aware) — Satisfies REQ-CALC-7
+- [x] 5.4 Helper `_buildPlainTextPayload()` en page: `"$ 25,00 = Bs. 12.118,50\nParalelo · DolarApi · 27/04/2026 14:23\nGenerado con Nitido"` (locale-aware) — Satisfies REQ-CALC-7
 - [x] 5.5 Cablear AppBar share icon: render → `Share.shareXFiles([XFile], text: payload)` en éxito; en falla (renderer devuelve `null` o throw) → `Share.share(payload)` SIN toast, log a `Logger.printDebug` — Satisfies REQ-CALC-7 (Render failure falls back to text)
 - [x] 5.6 `Semantics(label: t.calculator.share.action_a11y, button: true)` en share button — Satisfies REQ-CALC-11
 - [x] 5.7 `flutter analyze` limpio

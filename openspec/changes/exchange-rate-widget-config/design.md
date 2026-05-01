@@ -184,7 +184,7 @@ configEditor: (context, descriptor) {
 In `registry_bootstrap.dart`, after calling `registerExchangeRateCardWidget()`:
 
 ```dart
-import 'package:bolsio/app/home/dashboard_widgets/edit/exchange_rate_config_sheet.dart';
+import 'package:nitido/app/home/dashboard_widgets/edit/exchange_rate_config_sheet.dart';
 
 // (add to registerDashboardWidgets body)
 exchangeRateConfigEditorBuilder = (context, descriptor) {

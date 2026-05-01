@@ -9,7 +9,7 @@ Fix a display bug where the exchange rate card shows "EUR/EUR" instead of useful
 ### In Scope
 - Bug fix: `_effectiveCurrencies()` seeds with `['VES', 'EUR']` (or `['USD', 'EUR']` when pref ≠ USD) — remove the broken preferredCurrency-removal logic
 - Fix `defaults.dart`: `exchangeRateCard` defaultConfig respects `preferredCurrency` (USD→`['VES','EUR']`; VES→`['USD','EUR']`)
-- New bottom sheet `exchange_rate_config_sheet.dart` (add/remove currencies, Wallex visual language)
+- New bottom sheet `exchange_rate_config_sheet.dart` (add/remove currencies, Nitido visual language)
 - Promedio row: computed at runtime as `(BCV + Paralelo) / 2` when both sources present for a given pair
 - Wire `configEditor` builder in `registry_bootstrap.dart` (same import-cycle pattern as quickUse)
 

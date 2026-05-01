@@ -1,4 +1,4 @@
-# Contributing to Bolsio
+# Contributing to Nitido
 
 Contributions are welcome. Report bugs, request features, improve translations, and send pull requests that follow the repository conventions.
 

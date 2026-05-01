@@ -1,5 +1,5 @@
 name: ✨ Feature Request
-description: Suggest a feature to improve Bolsio
+description: Suggest a feature to improve Nitido
 labels:
   - 'type: enhancement'
 body:
@@ -18,7 +18,7 @@ body:
           required: true
   - type: markdown
     attributes:
-      value: If you do not meet this last requirement, do not worry. Share your idea/request through the forum in a much simpler and briefer way and the Bolsio community will help you shape it.
+      value: If you do not meet this last requirement, do not worry. Share your idea/request through the forum in a much simpler and briefer way and the Nitido community will help you shape it.
   - type: textarea
     attributes:
       label: What do you want to be added or improved?

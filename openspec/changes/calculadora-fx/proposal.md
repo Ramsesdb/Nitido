@@ -4,7 +4,7 @@
 
 ## Why
 
-Bolsio users in Venezuela perform ad-hoc FX conversions (USD/EUR/USDT ↔ VES) many times per day — at the store, during negotiations, splitting bills. Today the app exposes rates inside `CurrencyManagerPage` and the transaction form's `ExchangeRateSelector`, but there is no first-class surface for "just convert and tell me the number". Users open Rial or a browser, leaving Bolsio for a use case it already has all the data for (DolarApi, BCV/paralelo, promedio, manual overrides). A dedicated Calculadora reuses existing plumbing and turns Bolsio into the daily-driver FX surface Venezuelan users already expect.
+Nitido users in Venezuela perform ad-hoc FX conversions (USD/EUR/USDT ↔ VES) many times per day — at the store, during negotiations, splitting bills. Today the app exposes rates inside `CurrencyManagerPage` and the transaction form's `ExchangeRateSelector`, but there is no first-class surface for "just convert and tell me the number". Users open Rial or a browser, leaving Nitido for a use case it already has all the data for (DolarApi, BCV/paralelo, promedio, manual overrides). A dedicated Calculadora reuses existing plumbing and turns Nitido into the daily-driver FX surface Venezuelan users already expect.
 
 ## What changes
 

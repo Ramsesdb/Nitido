@@ -28,7 +28,7 @@ The rest of the method (the `SingleMode` / `DualMode` policy-merge additions)
 stays untouched.
 
 Also remove the now-unused import
-`package:bolsio/core/database/services/user-setting/user_setting_service.dart`
+`package:nitido/core/database/services/user-setting/user_setting_service.dart`
 **only** if `appStateSettings` is no longer referenced anywhere else in the
 file after this removal. (Check: `appStateSettings` is also referenced in
 `defaults.dart` — but that is a different file. In the widget file itself,
@@ -85,7 +85,7 @@ Also update the fallback inside `builder:` for the empty-currencies guard:
 **What to change:**
 1. Add import at top of file:
    ```dart
-   import 'package:bolsio/core/database/services/user-setting/user_setting_service.dart';
+   import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
    ```
    (Check first if already imported — in the current file it is not.)
 
@@ -288,9 +288,9 @@ Full implementation spec:
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:bolsio/app/home/dashboard_widgets/models/widget_descriptor.dart';
-import 'package:bolsio/app/home/dashboard_widgets/services/dashboard_layout_service.dart';
-import 'package:bolsio/core/database/services/exchange-rate/exchange_rate_service.dart';
+import 'package:nitido/app/home/dashboard_widgets/models/widget_descriptor.dart';
+import 'package:nitido/app/home/dashboard_widgets/services/dashboard_layout_service.dart';
+import 'package:nitido/core/database/services/exchange-rate/exchange_rate_service.dart';
 
 /// Bottom sheet para configurar las divisas mostradas en un widget
 /// `exchangeRateCard`. Dos secciones en columna scrollable:
@@ -587,7 +587,7 @@ the field is already on `DashboardWidgetSpec`.)
 **What to change:**
 1. Add import:
    ```dart
-   import 'package:bolsio/app/home/dashboard_widgets/edit/exchange_rate_config_sheet.dart';
+   import 'package:nitido/app/home/dashboard_widgets/edit/exchange_rate_config_sheet.dart';
    ```
 
 2. In `registerDashboardWidgets()`, after the call to

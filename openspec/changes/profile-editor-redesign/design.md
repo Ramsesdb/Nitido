@@ -1,8 +1,8 @@
-# Design: profile-editor-redesign
+﻿# Design: profile-editor-redesign
 
 ## Technical Approach
 
-Single-file rewrite of [edit_profile_modal.dart](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/app/settings/widgets/edit_profile_modal.dart) plus additive getters on [bolsio_ai_tokens.dart](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/app/chat/theme/bolsio_ai_tokens.dart). State for the avatar selection collapses into a sealed class held by the existing `_EditProfileModalState`. No new providers, no theme extension, no Drift change. The mockup at [editar-perfil.html](c:/Users/ramse/OneDrive/Documents/vacas/wallex/mockups/editar-perfil.html) is the visual contract.
+Single-file rewrite of [edit_profile_modal.dart](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/app/settings/widgets/edit_profile_modal.dart) plus additive getters on [nitido_ai_tokens.dart](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/app/chat/theme/nitido_ai_tokens.dart). State for the avatar selection collapses into a sealed class held by the existing `_EditProfileModalState`. No new providers, no theme extension, no Drift change. The mockup at [editar-perfil.html](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/mockups/editar-perfil.html) is the visual contract.
 
 ## 1. State machine — `_selectedAvatarSource`
 
@@ -54,9 +54,9 @@ ModalContainer (title: t.settings.edit_profile, showTitleDivider: true)
 
 Stable keys: `edit-profile-cancel` (test handle), `edit-profile-save`, per-tile `ValueKey('avatar-tile-$id')`. `RepaintBoundary` wraps the hero (layered shadows) and each tile (selection shadow animation).
 
-## 3. `BolsioAiTokens` extension
+## 3. `NitidoAiTokens` extension
 
-Add to [bolsio_ai_tokens.dart](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/app/chat/theme/bolsio_ai_tokens.dart):
+Add to [nitido_ai_tokens.dart](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/app/chat/theme/nitido_ai_tokens.dart):
 
 | Getter | Returns | Resolves to |
 |---|---|---|
@@ -70,7 +70,7 @@ Add to [bolsio_ai_tokens.dart](c:/Users/ramse/OneDrive/Documents/vacas/wallex/li
 | `accentFaint` | `Color` | `_cs.primary.withValues(alpha: 0.10)` — dashed-tile hover bg |
 | `accentOn` | `Color` | `_cs.onPrimary` — checkmark icon color |
 
-Doc-comment edit at [bolsio_ai_tokens.dart:13](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/app/chat/theme/bolsio_ai_tokens.dart:13): replace "scoped to the chat feature" with "shared design-token source for Wallex sheet surfaces (chat, profile, future modals)".
+Doc-comment edit at [nitido_ai_tokens.dart:13](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/app/chat/theme/nitido_ai_tokens.dart:13): replace "scoped to the chat feature" with "shared design-token source for Nitido sheet surfaces (chat, profile, future modals)".
 
 ## 4. Adaptive grid algorithm
 
@@ -115,11 +115,11 @@ await userSettingsService.setItem(SettingKey.userName, _nameController.text);
 RouteUtils.popRoute();
 ```
 
-The empty-string clear is safe: `UserAvatarDisplay` already short-circuits to attachment when present, and `UserAvatar` falls back to `'man'` when name is empty (verified in [user_avatar.dart:45](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/core/presentation/widgets/user_avatar.dart:45)). No new helper needed.
+The empty-string clear is safe: `UserAvatarDisplay` already short-circuits to attachment when present, and `UserAvatar` falls back to `'man'` when name is empty (verified in [user_avatar.dart:45](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/core/presentation/widgets/user_avatar.dart:45)). No new helper needed.
 
 ## 7. Typography integration
 
-`google_fonts: ^6.2.1` already in [pubspec.yaml:98](c:/Users/ramse/OneDrive/Documents/vacas/wallex/pubspec.yaml:98). No version bump. Wire locally inside `EditProfileModal`:
+`google_fonts: ^6.2.1` already in [pubspec.yaml:98](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/pubspec.yaml:98). No version bump. Wire locally inside `EditProfileModal`:
 
 ```dart
 final heroNameStyle = GoogleFonts.nunito(
@@ -139,8 +139,8 @@ No theme extension hook — Nunito is local to this surface only (the chat uses 
 | Layer | Coverage |
 |---|---|
 | Widget | Table-driven `_AvatarSource` transitions: preset tap, upload-tile tap (mock picker), uploaded-tile tap. Save guard: validates name, dispatches correct `setItem` calls per branch. |
-| Golden | **No.** Tokens are theme-driven (varies per accent); golden churn would exceed value. Manual visual QA on POCO rodin per memory `project_wallex_build_optimal`. |
-| Integration | Update [dashboard_nav_test.dart:28](c:/Users/ramse/OneDrive/Documents/vacas/wallex/integration_test/tests/navigation/dashboard_nav_test.dart:28): replace `find.byIcon(Icons.close)` with `find.byKey(const ValueKey('edit-profile-cancel'))`. |
+| Golden | **No.** Tokens are theme-driven (varies per accent); golden churn would exceed value. Manual visual QA on POCO rodin per memory `project_bolsio_build_optimal`. |
+| Integration | Update [dashboard_nav_test.dart:28](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/integration_test/tests/navigation/dashboard_nav_test.dart:28): replace `find.byIcon(Icons.close)` with `find.byKey(const ValueKey('edit-profile-cancel'))`. |
 
 Per memory `feedback_flutter_tests_slow.md`: only `flutter analyze` runs inside tandas; tests defer.
 

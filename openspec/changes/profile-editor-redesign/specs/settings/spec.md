@@ -1,8 +1,8 @@
-# Delta: Profile Editor Redesign
+﻿# Delta: Profile Editor Redesign
 
 Operationalizes the visual + interaction rewrite of `EditProfileModal` against
-[mockups/editar-perfil.html](c:/Users/ramse/OneDrive/Documents/vacas/wallex/mockups/editar-perfil.html).
-Decisions are locked in [proposal.md](c:/Users/ramse/OneDrive/Documents/vacas/wallex/openspec/changes/profile-editor-redesign/proposal.md);
+[mockups/editar-perfil.html](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/mockups/editar-perfil.html).
+Decisions are locked in [proposal.md](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/openspec/changes/profile-editor-redesign/proposal.md);
 this delta describes observable behavior only.
 
 ---
@@ -47,7 +47,7 @@ MUST show the selected cue.
 The Guardar button MUST be enabled when the in-memory selection is either a
 `predeterminado` OR `uploadedPhoto`. Guardar MUST be disabled ONLY when the
 name field fails its validator. The pre-redesign guard at
-[edit_profile_modal.dart:226](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/app/settings/widgets/edit_profile_modal.dart:226)
+[edit_profile_modal.dart:226](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/app/settings/widgets/edit_profile_modal.dart:226)
 that disabled Save when `selectedAvatar == null` MUST be removed.
 
 #### Scenario: Save enabled when only uploaded photo is the selection
@@ -218,7 +218,7 @@ MUST be a text button (NOT a circular icon button).
 > Note: the upload itself happens at picker-success time, not at Save time.
 > Cancelar only abandons the in-memory selection; it does not rewind a successful
 > upload. This matches existing behavior and is acceptable per
-> [proposal.md](c:/Users/ramse/OneDrive/Documents/vacas/wallex/openspec/changes/profile-editor-redesign/proposal.md)
+> [proposal.md](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/openspec/changes/profile-editor-redesign/proposal.md)
 > rollback plan.
 
 ---
@@ -226,8 +226,8 @@ MUST be a text button (NOT a circular icon button).
 ### Requirement: Visual outcomes match mockup
 
 The rewritten sheet MUST render with the following observable visual properties,
-sourced exclusively from `BolsioAiTokens.of(context)` (zero hardcoded hex in
-[edit_profile_modal.dart](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/app/settings/widgets/edit_profile_modal.dart)):
+sourced exclusively from `NitidoAiTokens.of(context)` (zero hardcoded hex in
+[edit_profile_modal.dart](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/app/settings/widgets/edit_profile_modal.dart)):
 
 - Hero avatar diameter SHALL be ~140 logical pixels.
 - Hero avatar MUST use a soft halo (token: `heroHaloShadow`) and MUST NOT have
@@ -265,8 +265,8 @@ sourced exclusively from `BolsioAiTokens.of(context)` (zero hardcoded hex in
 
 New i18n keys (hero hint, grid heading, count aside, "Tu foto" badge, upload
 tile label, Cancelar) MUST exist in
-[en.json](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/i18n/json/en.json)
-AND [es.json](c:/Users/ramse/OneDrive/Documents/vacas/wallex/lib/i18n/json/es.json).
+[en.json](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/i18n/json/en.json)
+AND [es.json](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/lib/i18n/json/es.json).
 The 8 secondary locales (de, fr, hu, it, tr, uk, zh-CN, zh-TW) MUST NOT receive
 new keys; slang's `base_locale=en` fallback covers them.
 
@@ -288,6 +288,6 @@ new keys; slang's `base_locale=en` fallback covers them.
 #### Scenario: Integration test selector still resolves
 
 - GIVEN the integration test
-  [dashboard_nav_test.dart](c:/Users/ramse/OneDrive/Documents/vacas/wallex/integration_test/tests/navigation/dashboard_nav_test.dart)
+  [dashboard_nav_test.dart](c:/Users/ramse/OneDrive/Documents/vacas/Nitido/integration_test/tests/navigation/dashboard_nav_test.dart)
 - WHEN the test attempts to dismiss the sheet
 - THEN it MUST find the Cancelar control by text or key (NOT by `Icons.close`)

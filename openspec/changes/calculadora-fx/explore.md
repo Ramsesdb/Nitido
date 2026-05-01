@@ -6,7 +6,7 @@
 
 ## Problem statement
 
-Bolsio users in Venezuela do quick FX conversions multiple times per day (price tags in stores, tipping, paying in dollars vs bolivares). Today the app exposes rates inside `CurrencyManagerPage` and inside the transaction form's `ExchangeRateSelector`, but there is no first-class "Calculadora" surface: no large amount display, no numeric keypad, no swap button, no "share this conversion" affordance. Users open Rial or a browser instead. Bolsio already has the data plumbing (DolarApi, BCV/paralelo, promedio, manual overrides, source-aware queries) but no presentation layer dedicated to ad-hoc conversions outside of a transaction.
+Nitido users in Venezuela do quick FX conversions multiple times per day (price tags in stores, tipping, paying in dollars vs bolivares). Today the app exposes rates inside `CurrencyManagerPage` and inside the transaction form's `ExchangeRateSelector`, but there is no first-class "Calculadora" surface: no large amount display, no numeric keypad, no swap button, no "share this conversion" affordance. Users open Rial or a browser instead. Nitido already has the data plumbing (DolarApi, BCV/paralelo, promedio, manual overrides, source-aware queries) but no presentation layer dedicated to ad-hoc conversions outside of a transaction.
 
 ## User stories
 
@@ -101,7 +101,7 @@ Bolsio users in Venezuela do quick FX conversions multiple times per day (price 
 **Recommendation: branded image with plain-text fallback.**
 - `share_plus ^12.0.1` is already in `pubspec.yaml`, supports `shareXFiles`.
 - Flutter's `RenderRepaintBoundary.toImage(pixelRatio: 3)` → `ByteData` → temp file is the standard pattern; no extra package.
-- The card includes: Bolsio logo, the conversion ("$ 25.00 ⇄ Bs. 12.118,50"), source ("Paralelo · DolarApi"), timestamp, and a small "Generado con Bolsio" footer. Acts as soft brand exposure.
+- The card includes: Nitido logo, the conversion ("$ 25.00 ⇄ Bs. 12.118,50"), source ("Paralelo · DolarApi"), timestamp, and a small "Generado con Nitido" footer. Acts as soft brand exposure.
 - **Fallback path**: if rendering fails (low memory, headless render race), call `Share.share(plainText)` instead — never silently fail.
 - A11y: the rendered card must have a textual `Share.shareXFiles(text:)` companion so screen readers and "Save text" share targets get the same content.
 
@@ -124,7 +124,7 @@ Bolsio users in Venezuela do quick FX conversions multiple times per day (price 
 3. **USDT vs paralelo divergence** — In normal market conditions paralelo ≈ USDT P2P, but during stress events (devaluation spikes) they can diverge by 5–8 %. Labeling it explicitly as "Paralelo (USDT)" mitigates user confusion; a real USDT provider remains the right long-term answer.
 4. **Share card render on low-end devices** — POCO rodin is fine, but a 3× pixel ratio render of a full-card layout could OOM on very old devices. Mitigation: cap pixel ratio at 2× for screens <360 dp, or detect and degrade to plain text. Cover in test plan.
 5. **Share card a11y / OCR-resistance** — Pure-image cards are invisible to screen readers and to copy/paste. Always pair the image with a text payload (`Share.shareXFiles(files: [...], text: '...')`).
-6. **Locale-aware decimal separator** — Keypad must show `,` for `es-VE` and `.` for `en-US`. Bolsio uses `intl.NumberFormat` already; reuse the existing pattern — don't roll new locale logic.
+6. **Locale-aware decimal separator** — Keypad must show `,` for `es-VE` and `.` for `en-US`. Nitido uses `intl.NumberFormat` already; reuse the existing pattern — don't roll new locale logic.
 7. **Manual rate input UX** — A small inline field is risky on small screens (keyboard occlusion). If the keypad is custom (no system keyboard), the manual rate field should reuse the calculator keypad rather than popping the system keyboard.
 8. **Quick action enum ordering** — `QuickActionId` values are persisted by `name` in dashboard layout JSON. Adding `goToCalculator` at the end is safe; never reorder existing entries.
 
