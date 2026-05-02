@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:nitido/app/budgets/budget_form_page.dart';
@@ -135,9 +135,7 @@ class _BudgetDetailsPageState extends State<BudgetDetailsPage>
                             );
                           })
                           .catchError((err) {
-                            NitidoSnackbar.error(
-                              SnackbarParams.fromError(err),
-                            );
+                            NitidoSnackbar.error(SnackbarParams.fromError(err));
                           });
                     });
                   },

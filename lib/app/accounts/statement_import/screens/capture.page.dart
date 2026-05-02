@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:exif/exif.dart';
@@ -45,10 +45,9 @@ class _CapturePageState extends State<CapturePage> {
       final base64 = base64Encode(resized);
 
       if (!mounted) return;
-      StatementImportFlow.of(context).goToProcessing(
-        imageBase64: base64,
-        pivotDate: pivot,
-      );
+      StatementImportFlow.of(
+        context,
+      ).goToProcessing(imageBase64: base64, pivotDate: pivot);
     } catch (e, st) {
       debugPrint('CapturePage.takePhoto failed: $e\n$st');
       _showReadError();
@@ -96,10 +95,9 @@ class _CapturePageState extends State<CapturePage> {
     final base64 = base64Encode(resized);
 
     if (!mounted) return;
-    StatementImportFlow.of(context).goToProcessing(
-      imageBase64: base64,
-      pivotDate: pivot,
-    );
+    StatementImportFlow.of(
+      context,
+    ).goToProcessing(imageBase64: base64, pivotDate: pivot);
   }
 
   Future<void> _handlePdf(Uint8List bytes) async {
@@ -141,17 +139,17 @@ class _CapturePageState extends State<CapturePage> {
     final base64 = base64Encode(resized);
 
     if (!mounted) return;
-    StatementImportFlow.of(context).goToProcessing(
-      imageBase64: base64,
-      pivotDate: pivot,
-    );
+    StatementImportFlow.of(
+      context,
+    ).goToProcessing(imageBase64: base64, pivotDate: pivot);
   }
 
   Future<DateTime?> _readExifDate(Uint8List bytes) async {
     try {
       final tags = await readExifFromBytes(bytes);
       if (tags.isEmpty) return null;
-      final raw = tags['EXIF DateTimeOriginal']?.printable ??
+      final raw =
+          tags['EXIF DateTimeOriginal']?.printable ??
           tags['Image DateTime']?.printable;
       if (raw == null || raw.isEmpty) return null;
       final match = RegExp(
@@ -179,7 +177,9 @@ class _CapturePageState extends State<CapturePage> {
       initialDate: now,
       firstDate: DateTime(now.year - 5),
       lastDate: now,
-      helpText: Translations.of(context).statement_import.capture.date_picker_title,
+      helpText: Translations.of(
+        context,
+      ).statement_import.capture.date_picker_title,
     );
   }
 
@@ -217,9 +217,7 @@ class _CapturePageState extends State<CapturePage> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.statement_import.title),
-      ),
+      appBar: AppBar(title: Text(t.statement_import.title)),
       body: AbsorbPointer(
         absorbing: _busy,
         child: SingleChildScrollView(
@@ -312,11 +310,7 @@ class _HeroDocument extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
       ),
       child: Center(
-        child: Icon(
-          Icons.description_outlined,
-          size: 96,
-          color: cs.primary,
-        ),
+        child: Icon(Icons.description_outlined, size: 96, color: cs.primary),
       ),
     );
   }

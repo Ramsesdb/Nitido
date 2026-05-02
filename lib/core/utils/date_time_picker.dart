@@ -43,16 +43,10 @@ Future<DateTime?> openDateTimePicker(
   final timePicked = await showTimePicker(
     context: context,
     initialEntryMode: initialTimeEntryMode,
-    initialTime: TimeOfDay(
-      hour: timeSource.hour,
-      minute: timeSource.minute,
-    ),
+    initialTime: TimeOfDay(hour: timeSource.hour, minute: timeSource.minute),
   );
 
   if (timePicked == null) return null;
 
-  return pickedDate.copyWith(
-    hour: timePicked.hour,
-    minute: timePicked.minute,
-  );
+  return pickedDate.copyWith(hour: timePicked.hour, minute: timePicked.minute);
 }

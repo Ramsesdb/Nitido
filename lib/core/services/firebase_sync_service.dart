@@ -96,14 +96,18 @@ class FirebaseSyncService {
     } else {
       await initialize();
     }
-    Logger.printDebug('FirebaseSyncService: sync ${enabled ? "enabled" : "disabled"}');
+    Logger.printDebug(
+      'FirebaseSyncService: sync ${enabled ? "enabled" : "disabled"}',
+    );
   }
 
   /// Get the current user's UID, or null if not logged in.
-  String? get currentUserId => _isFirebaseCoreReady ? auth.currentUser?.uid : null;
+  String? get currentUserId =>
+      _isFirebaseCoreReady ? auth.currentUser?.uid : null;
 
   /// Get the current user's email.
-  String? get currentUserEmail => _isFirebaseCoreReady ? auth.currentUser?.email : null;
+  String? get currentUserEmail =>
+      _isFirebaseCoreReady ? auth.currentUser?.email : null;
 
   /// Base Firestore path for the current user: `users/{uid}`
   String get _userBasePath {
@@ -238,9 +242,7 @@ class FirebaseSyncService {
           .doc(accountId)
           .delete();
 
-      Logger.printDebug(
-        'FirebaseSyncService: Deleted account $accountId',
-      );
+      Logger.printDebug('FirebaseSyncService: Deleted account $accountId');
     } catch (e) {
       Logger.printDebug('FirebaseSyncService: Error deleting account: $e');
     }
@@ -296,9 +298,7 @@ class FirebaseSyncService {
           .doc(categoryId)
           .delete();
 
-      Logger.printDebug(
-        'FirebaseSyncService: Deleted category $categoryId',
-      );
+      Logger.printDebug('FirebaseSyncService: Deleted category $categoryId');
     } catch (e) {
       Logger.printDebug('FirebaseSyncService: Error deleting category: $e');
     }
@@ -416,9 +416,7 @@ class FirebaseSyncService {
       onGlobalAppStateRefresh?.call();
     }
 
-    Logger.printDebug(
-      'FirebaseSyncService: Pulled $writeCount user settings',
-    );
+    Logger.printDebug('FirebaseSyncService: Pulled $writeCount user settings');
     return writeCount;
   }
 
@@ -486,7 +484,8 @@ class FirebaseSyncService {
       if (originalSize > _avatarCompressThresholdBytes) {
         final decoded = img.decodeImage(bytes);
         if (decoded != null) {
-          final needsResize = decoded.width > _avatarMaxDimension ||
+          final needsResize =
+              decoded.width > _avatarMaxDimension ||
               decoded.height > _avatarMaxDimension;
           final processed = needsResize
               ? img.copyResize(
@@ -634,7 +633,11 @@ class FirebaseSyncService {
 
       final docsDir = await getApplicationDocumentsDirectory();
       final ownerFolder = Directory(
-        p.join(docsDir.path, 'attachments', AttachmentOwnerType.userProfile.dbValue),
+        p.join(
+          docsDir.path,
+          'attachments',
+          AttachmentOwnerType.userProfile.dbValue,
+        ),
       );
       await ownerFolder.create(recursive: true);
 
@@ -658,7 +661,9 @@ class FirebaseSyncService {
 
       final db = AppDB.instance;
       final localPath = p.relative(targetFile.path, from: docsDir.path);
-      await db.into(db.attachments).insert(
+      await db
+          .into(db.attachments)
+          .insert(
             AttachmentsCompanion.insert(
               id: newId,
               ownerType: AttachmentOwnerType.userProfile.dbValue,
@@ -710,18 +715,15 @@ class FirebaseSyncService {
 
       for (final tag in rows) {
         try {
-          await _firestore!
-              .collection('$_userBasePath/tags')
-              .doc(tag.id)
-              .set({
-                'id': tag.id,
-                'name': tag.name,
-                'color': tag.color,
-                'displayOrder': tag.displayOrder,
-                'description': tag.description,
-                'updatedAt': FieldValue.serverTimestamp(),
-                'updatedBy': currentUserEmail,
-              });
+          await _firestore!.collection('$_userBasePath/tags').doc(tag.id).set({
+            'id': tag.id,
+            'name': tag.name,
+            'color': tag.color,
+            'displayOrder': tag.displayOrder,
+            'description': tag.description,
+            'updatedAt': FieldValue.serverTimestamp(),
+            'updatedBy': currentUserEmail,
+          });
         } catch (e) {
           Logger.printDebug(
             'FirebaseSyncService: Error pushing tag ${tag.id}: $e',
@@ -742,18 +744,15 @@ class FirebaseSyncService {
     try {
       if (currentUserId == null) return;
 
-      await _firestore!
-          .collection('$_userBasePath/tags')
-          .doc(tag.id)
-          .set({
-            'id': tag.id,
-            'name': tag.name,
-            'color': tag.color,
-            'displayOrder': tag.displayOrder,
-            'description': tag.description,
-            'updatedAt': FieldValue.serverTimestamp(),
-            'updatedBy': currentUserEmail,
-          });
+      await _firestore!.collection('$_userBasePath/tags').doc(tag.id).set({
+        'id': tag.id,
+        'name': tag.name,
+        'color': tag.color,
+        'displayOrder': tag.displayOrder,
+        'description': tag.description,
+        'updatedAt': FieldValue.serverTimestamp(),
+        'updatedBy': currentUserEmail,
+      });
 
       Logger.printDebug('FirebaseSyncService: Pushed tag ${tag.id}');
     } catch (e) {
@@ -767,10 +766,7 @@ class FirebaseSyncService {
     try {
       if (currentUserId == null) return;
 
-      await _firestore!
-          .collection('$_userBasePath/tags')
-          .doc(tagId)
-          .delete();
+      await _firestore!.collection('$_userBasePath/tags').doc(tagId).delete();
 
       Logger.printDebug('FirebaseSyncService: Deleted tag $tagId');
     } catch (e) {
@@ -779,8 +775,7 @@ class FirebaseSyncService {
   }
 
   Future<int> _pullTags() async {
-    final snapshot =
-        await _firestore!.collection('$_userBasePath/tags').get();
+    final snapshot = await _firestore!.collection('$_userBasePath/tags').get();
 
     final db = AppDB.instance;
     int successCount = 0;
@@ -1035,10 +1030,7 @@ class FirebaseSyncService {
     try {
       if (currentUserId == null) return;
 
-      await _firestore!
-          .collection('$_userBasePath/goals')
-          .doc(goalId)
-          .delete();
+      await _firestore!.collection('$_userBasePath/goals').doc(goalId).delete();
 
       Logger.printDebug('FirebaseSyncService: Deleted goal $goalId');
     } catch (e) {
@@ -1556,31 +1548,36 @@ class FirebaseSyncService {
       // provider). The active-provider id is non-secret and rides along in
       // user_settings via the standard settings sync path.
       for (final providerType in AiProviderType.values) {
-        final creds = await AiCredentialsStore.instance
-            .loadCredentials(providerType);
+        final creds = await AiCredentialsStore.instance.loadCredentials(
+          providerType,
+        );
         if (creds == null) continue;
         if (creds.apiKey.isNotEmpty) {
-          payload['ai_${providerType.storageId}_apiKey'] =
-              await cipher.encryptForUser(creds.apiKey, uid);
+          payload['ai_${providerType.storageId}_apiKey'] = await cipher
+              .encryptForUser(creds.apiKey, uid);
         }
         final model = creds.model;
         if (model != null && model.isNotEmpty) {
-          payload['ai_${providerType.storageId}_model'] =
-              await cipher.encryptForUser(model, uid);
+          payload['ai_${providerType.storageId}_model'] = await cipher
+              .encryptForUser(model, uid);
         }
         final baseUrl = creds.baseUrl;
         if (baseUrl != null && baseUrl.isNotEmpty) {
-          payload['ai_${providerType.storageId}_baseUrl'] =
-              await cipher.encryptForUser(baseUrl, uid);
+          payload['ai_${providerType.storageId}_baseUrl'] = await cipher
+              .encryptForUser(baseUrl, uid);
         }
       }
 
       final binance = await BinanceCredentialsStore.instance.load();
       if (binance != null) {
-        payload['binanceApiKey'] =
-            await cipher.encryptForUser(binance.apiKey, uid);
-        payload['binanceSecret'] =
-            await cipher.encryptForUser(binance.apiSecret, uid);
+        payload['binanceApiKey'] = await cipher.encryptForUser(
+          binance.apiKey,
+          uid,
+        );
+        payload['binanceSecret'] = await cipher.encryptForUser(
+          binance.apiSecret,
+          uid,
+        );
       }
 
       // Hidden Mode PIN: hash + salt must travel together, or not at all.
@@ -1590,10 +1587,14 @@ class FirebaseSyncService {
           hiddenHash.isNotEmpty &&
           hiddenSalt != null &&
           hiddenSalt.isNotEmpty) {
-        payload['hiddenModePinHash'] =
-            await cipher.encryptForUser(hiddenHash, uid);
-        payload['hiddenModePinSalt'] =
-            await cipher.encryptForUser(hiddenSalt, uid);
+        payload['hiddenModePinHash'] = await cipher.encryptForUser(
+          hiddenHash,
+          uid,
+        );
+        payload['hiddenModePinSalt'] = await cipher.encryptForUser(
+          hiddenSalt,
+          uid,
+        );
       }
 
       if (payload.isEmpty) {
@@ -1660,18 +1661,22 @@ class FirebaseSyncService {
       // Pull every BYOK provider. Each entry is restored independently so a
       // single decryption failure for one provider does not block the rest.
       for (final providerType in AiProviderType.values) {
-        final apiKey =
-            await decryptField('ai_${providerType.storageId}_apiKey');
+        final apiKey = await decryptField(
+          'ai_${providerType.storageId}_apiKey',
+        );
         if (apiKey == null || apiKey.isEmpty) continue;
         final model = await decryptField('ai_${providerType.storageId}_model');
-        final baseUrl =
-            await decryptField('ai_${providerType.storageId}_baseUrl');
-        await AiCredentialsStore.instance.saveCredentials(AiCredentials(
-          providerType: providerType,
-          apiKey: apiKey,
-          model: (model != null && model.isNotEmpty) ? model : null,
-          baseUrl: (baseUrl != null && baseUrl.isNotEmpty) ? baseUrl : null,
-        ));
+        final baseUrl = await decryptField(
+          'ai_${providerType.storageId}_baseUrl',
+        );
+        await AiCredentialsStore.instance.saveCredentials(
+          AiCredentials(
+            providerType: providerType,
+            apiKey: apiKey,
+            model: (model != null && model.isNotEmpty) ? model : null,
+            baseUrl: (baseUrl != null && baseUrl.isNotEmpty) ? baseUrl : null,
+          ),
+        );
         written++;
       }
 
@@ -1680,17 +1685,20 @@ class FirebaseSyncService {
       // already restore Nexus credentials.
       final legacyNexusApiKey = await decryptField('nexusApiKey');
       if (legacyNexusApiKey != null && legacyNexusApiKey.isNotEmpty) {
-        final existing = await AiCredentialsStore.instance
-            .loadCredentials(AiProviderType.nexus);
+        final existing = await AiCredentialsStore.instance.loadCredentials(
+          AiProviderType.nexus,
+        );
         if (existing == null) {
           final legacyModel = await decryptField('nexusModel');
-          await AiCredentialsStore.instance.saveCredentials(AiCredentials(
-            providerType: AiProviderType.nexus,
-            apiKey: legacyNexusApiKey,
-            model: (legacyModel != null && legacyModel.isNotEmpty)
-                ? legacyModel
-                : null,
-          ));
+          await AiCredentialsStore.instance.saveCredentials(
+            AiCredentials(
+              providerType: AiProviderType.nexus,
+              apiKey: legacyNexusApiKey,
+              model: (legacyModel != null && legacyModel.isNotEmpty)
+                  ? legacyModel
+                  : null,
+            ),
+          );
           written++;
         }
       }
@@ -1711,8 +1719,10 @@ class FirebaseSyncService {
       final hiddenHash = await decryptField('hiddenModePinHash');
       final hiddenSalt = await decryptField('hiddenModePinSalt');
       if (hiddenHash != null && hiddenSalt != null) {
-        await HiddenModeService.instance
-            .writePinHashAndSalt(hiddenHash, hiddenSalt);
+        await HiddenModeService.instance.writePinHashAndSalt(
+          hiddenHash,
+          hiddenSalt,
+        );
         written += 2;
       } else if (hiddenHash != null || hiddenSalt != null) {
         Logger.printDebug(

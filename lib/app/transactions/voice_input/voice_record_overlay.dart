@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -48,8 +48,7 @@ const Color _kSheetTint = Color.fromRGBO(22, 22, 22, 0.62);
 const Color _kHairline = Color.fromRGBO(255, 255, 255, 0.08);
 const Color _kInnerShineTop = Color.fromRGBO(255, 255, 255, 0.08);
 
-Color _kAccentOf(BuildContext context) =>
-    Theme.of(context).colorScheme.primary;
+Color _kAccentOf(BuildContext context) => Theme.of(context).colorScheme.primary;
 
 class _VoiceRecordOverlay extends StatefulWidget {
   const _VoiceRecordOverlay({required this.service, required this.locale});
@@ -256,8 +255,7 @@ class _VoiceRecordOverlayState extends State<_VoiceRecordOverlay>
                   left: BorderSide(color: _kHairline, width: 0.5),
                   right: BorderSide(color: _kHairline, width: 0.5),
                 ),
-                borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(28)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
                 boxShadow: [
                   BoxShadow(
                     color: _kInnerShineTop,
@@ -314,12 +312,14 @@ class _VoiceRecordOverlayState extends State<_VoiceRecordOverlay>
                                 text: _state == _OverlayState.error
                                     ? (_errorMessage ?? t.voice_error_fallback)
                                     : (_partial.isEmpty
-                                        ? t.voice_listening_hint
-                                        : _partial),
-                                showCaret: _state == _OverlayState.listening &&
+                                          ? t.voice_listening_hint
+                                          : _partial),
+                                showCaret:
+                                    _state == _OverlayState.listening &&
                                     _partial.isNotEmpty,
                                 caretCtrl: _caretCtrl,
-                                dim: _partial.isEmpty &&
+                                dim:
+                                    _partial.isEmpty &&
                                     _state != _OverlayState.error,
                               ),
                               if (_state == _OverlayState.processing) ...[
@@ -440,8 +440,7 @@ class _MicButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final accent =
-        isError ? const Color(0xFFF75959) : _kAccentOf(context);
+    final accent = isError ? const Color(0xFFF75959) : _kAccentOf(context);
     final accentSoft = accent.withValues(alpha: 0.33);
     return SizedBox(
       width: 260,
@@ -528,10 +527,7 @@ class _MicButton extends StatelessWidget {
                 color: accent,
                 size: 64,
                 shadows: [
-                  Shadow(
-                    color: accent.withValues(alpha: 0.60),
-                    blurRadius: 12,
-                  ),
+                  Shadow(color: accent.withValues(alpha: 0.60), blurRadius: 12),
                 ],
               ),
             ),
@@ -564,9 +560,7 @@ class _LiveTranscript extends StatelessWidget {
         .split(RegExp(r'\s+'))
         .where((w) => w.isNotEmpty)
         .toList(growable: false);
-    final color = dim
-        ? Colors.white.withValues(alpha: 0.55)
-        : Colors.white;
+    final color = dim ? Colors.white.withValues(alpha: 0.55) : Colors.white;
     final wordCount = words.length;
 
     // NOTE: the old impl used a `Wrap` of per-word `Text` widgets. `Wrap`
@@ -606,9 +600,13 @@ class _LiveTranscript extends StatelessWidget {
                           child: FadeTransition(
                             opacity: TweenSequence<double>([
                               TweenSequenceItem(
-                                  tween: ConstantTween(1.0), weight: 50),
+                                tween: ConstantTween(1.0),
+                                weight: 50,
+                              ),
                               TweenSequenceItem(
-                                  tween: ConstantTween(0.0), weight: 50),
+                                tween: ConstantTween(0.0),
+                                weight: 50,
+                              ),
                             ]).animate(caretCtrl),
                             child: Container(
                               width: 3,

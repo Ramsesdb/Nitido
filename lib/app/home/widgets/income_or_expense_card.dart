@@ -214,10 +214,7 @@ class _DualBalanceLines extends StatelessWidget {
             // line has rendered to keep the row layout stable during the
             // cold-start frame.
             if (hasPrimary)
-              _SecondaryEquivalenceLine(
-                filters: filters,
-                policy: policy,
-              ),
+              _SecondaryEquivalenceLine(filters: filters, policy: policy),
           ],
         );
       },
@@ -251,7 +248,9 @@ class _SecondaryEquivalenceLine extends StatelessWidget {
           return const SizedBox.shrink();
         }
         final amount = snapshot.data!.abs();
-        final formatted = amount.toStringAsFixed(2).replaceAllMapped(
+        final formatted = amount
+            .toStringAsFixed(2)
+            .replaceAllMapped(
               RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
               (m) => '${m[1]}.',
             );

@@ -115,8 +115,9 @@ class StatementImportFlowState extends State<StatementImportFlow> {
   /// Refresca la cuenta desde el servicio (por ejemplo tras editar
   /// trackedSince desde el flow).
   Future<void> refreshAccount() async {
-    final updated =
-        await AccountService.instance.getAccountById(widget.account.id).first;
+    final updated = await AccountService.instance
+        .getAccountById(widget.account.id)
+        .first;
     if (!mounted) return;
     if (updated != null) {
       setState(() => _refreshedAccount = updated);
@@ -177,10 +178,7 @@ class StatementImportFlowState extends State<StatementImportFlow> {
 }
 
 class _StatementImportFlowScope extends InheritedWidget {
-  const _StatementImportFlowScope({
-    required this.state,
-    required super.child,
-  });
+  const _StatementImportFlowScope({required this.state, required super.child});
 
   final StatementImportFlowState state;
 

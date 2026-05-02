@@ -68,11 +68,8 @@ class S4PasteKeyStep extends StatefulWidget {
   /// `model` may be `null` (the dispatcher falls back to the provider
   /// default). `baseUrl` is only meaningful for Nexus and is `null` for
   /// every other provider.
-  final void Function({
-    required String apiKey,
-    String? model,
-    String? baseUrl,
-  }) onSubmit;
+  final void Function({required String apiKey, String? model, String? baseUrl})
+  onSubmit;
 
   final VoidCallback onBack;
 
@@ -95,8 +92,9 @@ class _S4PasteKeyStepState extends State<S4PasteKeyStep>
   void initState() {
     super.initState();
     _keyController = TextEditingController(text: widget.initialApiKey ?? '');
-    _baseUrlController =
-        TextEditingController(text: widget.initialBaseUrl ?? '');
+    _baseUrlController = TextEditingController(
+      text: widget.initialBaseUrl ?? '',
+    );
     _selectedModel = widget.initialModel ?? widget.provider.defaultModel;
     if (!widget.provider.allowsFreeTextModel &&
         !widget.provider.models.contains(_selectedModel)) {
@@ -217,16 +215,16 @@ class _S4PasteKeyStepState extends State<S4PasteKeyStep>
         children: [
           Text(
             'Pegá tu API key',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Tu key se guarda cifrada en este dispositivo. Podés cambiarla cuando quieras desde Settings.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
 
@@ -292,10 +290,7 @@ class _S4PasteKeyStepState extends State<S4PasteKeyStep>
                 Expanded(
                   child: Text(
                     formatWarning,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.orange,
-                    ),
+                    style: const TextStyle(fontSize: 12, color: Colors.orange),
                   ),
                 ),
               ],
@@ -330,18 +325,14 @@ class _S4PasteKeyStepState extends State<S4PasteKeyStep>
           else
             DropdownButtonFormField<String>(
               key: ValueKey('wizard_model_dropdown_${widget.provider.name}'),
-              initialValue:
-                  widget.provider.models.contains(_selectedModel)
-                      ? _selectedModel
-                      : widget.provider.defaultModel,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
+              initialValue: widget.provider.models.contains(_selectedModel)
+                  ? _selectedModel
+                  : widget.provider.defaultModel,
+              decoration: const InputDecoration(border: OutlineInputBorder()),
               items: widget.provider.models
-                  .map((m) => DropdownMenuItem<String>(
-                        value: m,
-                        child: Text(m),
-                      ))
+                  .map(
+                    (m) => DropdownMenuItem<String>(value: m, child: Text(m)),
+                  )
                   .toList(),
               onChanged: (v) {
                 setState(() => _selectedModel = v);

@@ -93,8 +93,8 @@ class HiddenModeService with WidgetsBindingObserver {
   /// `Rx.combineLatest2` + `AccountService.getAccounts()` pipeline instead of
   /// firing one parallel account query per subscriber at startup.
   Stream<List<String>> get visibleAccountIdsStream {
-    return _visibleAccountIdsStream ??= Rx.combineLatest2<bool, List<Account>,
-            List<String>>(
+    return _visibleAccountIdsStream ??=
+        Rx.combineLatest2<bool, List<Account>, List<String>>(
           isLockedStream,
           _accountService.getAccounts(),
           (locked, accounts) {
@@ -103,9 +103,7 @@ class HiddenModeService with WidgetsBindingObserver {
                 : accounts;
             return filtered.map((a) => a.id).toList(growable: false);
           },
-        )
-        .distinct(_listEquals)
-        .shareValue();
+        ).distinct(_listEquals).shareValue();
   }
 
   static bool _listEquals(List<String> a, List<String> b) {
@@ -152,10 +150,7 @@ class HiddenModeService with WidgetsBindingObserver {
   Future<bool> hasPin() async {
     final hash = await _storage.read(key: _kPinHashKey);
     final salt = await _storage.read(key: _kPinSaltKey);
-    return hash != null &&
-        hash.isNotEmpty &&
-        salt != null &&
-        salt.isNotEmpty;
+    return hash != null && hash.isNotEmpty && salt != null && salt.isNotEmpty;
   }
 
   // for Firebase sync only

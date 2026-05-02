@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/models/auto_import/capture_channel.dart';
@@ -349,8 +349,7 @@ void main() {
       expect(proposal!.amount, 300.0);
       expect(proposal.currencyId, 'USD');
       expect(proposal.type, TransactionType.income);
-      expect(proposal.counterpartyName,
-          'TXyz1234567890abcdef1234567890abcd');
+      expect(proposal.counterpartyName, 'TXyz1234567890abcdef1234567890abcd');
       expect(proposal.bankRef, '0xabc123def456789');
       expect(proposal.confidence, 0.90);
     });
@@ -416,8 +415,7 @@ void main() {
       expect(proposal!.amount, 50.0);
       expect(proposal.currencyId, 'USD');
       expect(proposal.type, TransactionType.expense);
-      expect(proposal.counterpartyName,
-          'TDestination1234567890abcdef12345');
+      expect(proposal.counterpartyName, 'TDestination1234567890abcdef12345');
       expect(proposal.bankRef, 'wdr_001');
       expect(proposal.confidence, 0.90);
     });

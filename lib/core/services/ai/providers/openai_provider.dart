@@ -16,8 +16,8 @@ class OpenAiProvider implements AiProvider {
     required this.model,
     http.Client? client,
     Duration requestTimeout = const Duration(seconds: 20),
-  })  : _client = client ?? http.Client(),
-        _requestTimeout = requestTimeout;
+  }) : _client = client ?? http.Client(),
+       _requestTimeout = requestTimeout;
 
   static const _endpoint = 'https://api.openai.com/v1/chat/completions';
 
@@ -41,7 +41,9 @@ class OpenAiProvider implements AiProvider {
       return null;
     }
 
-    final resolvedModel = (model != null && model.isNotEmpty) ? model : this.model;
+    final resolvedModel = (model != null && model.isNotEmpty)
+        ? model
+        : this.model;
     final body = <String, dynamic>{
       'model': resolvedModel,
       'messages': messages,

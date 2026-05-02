@@ -1,4 +1,4 @@
-﻿import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 /// Single source of truth for one bank/app supported by nitido auto-import.
 ///
@@ -52,19 +52,13 @@ const List<SupportedBank> kSupportedBanks = [
   SupportedBank(
     profileId: 'bdv_notif',
     displayName: 'Banco de Venezuela',
-    packageNames: [
-      'com.bancodevenezuela.bdvdigital',
-      'com.tralix.bdvmovil',
-    ],
+    packageNames: ['com.bancodevenezuela.bdvdigital', 'com.tralix.bdvmovil'],
     hasDedicatedParser: true,
   ),
   SupportedBank(
     profileId: 'zinli_notif',
     displayName: 'Zinli',
-    packageNames: [
-      'com.zinli.app',
-      'com.zinli.wallet',
-    ],
+    packageNames: ['com.zinli.app', 'com.zinli.wallet'],
     hasDedicatedParser: true,
     defaultCurrency: 'USD',
   ),
@@ -97,10 +91,7 @@ const List<SupportedBank> kSupportedBanks = [
   SupportedBank(
     profileId: 'provincial_notif',
     displayName: 'BBVA Provincial',
-    packageNames: [
-      'com.totaltexto.bancamovil',
-      'com.dinerorapido.bancamovil',
-    ],
+    packageNames: ['com.totaltexto.bancamovil', 'com.dinerorapido.bancamovil'],
     playStoreUrlAliases: ['com.bbva.bbvacontigove'],
     hasDedicatedParser: false,
   ),
@@ -126,20 +117,14 @@ const List<SupportedBank> kSupportedBanks = [
   SupportedBank(
     profileId: 'bancamiga_notif',
     displayName: 'Bancamiga',
-    packageNames: [
-      'com.bancamiga',
-      'com.bancamiga.bapos',
-    ],
+    packageNames: ['com.bancamiga', 'com.bancamiga.bapos'],
     playStoreUrlAliases: ['com.bancamiga.movil'],
     hasDedicatedParser: false,
   ),
   SupportedBank(
     profileId: 'bancaribe_notif',
     displayName: 'Bancaribe',
-    packageNames: [
-      'bancaribe.miconexion',
-      'bancaribe.mipago',
-    ],
+    packageNames: ['bancaribe.miconexion', 'bancaribe.mipago'],
     playStoreUrlAliases: ['com.bancaribe.movil'],
     hasDedicatedParser: false,
   ),
@@ -152,10 +137,7 @@ const List<SupportedBank> kSupportedBanks = [
   SupportedBank(
     profileId: 'exterior_notif',
     displayName: 'Banco Exterior',
-    packageNames: [
-      'com.bancoexterior',
-      'com.bancoexterior.nexomobile2',
-    ],
+    packageNames: ['com.bancoexterior', 'com.bancoexterior.nexomobile2'],
     hasDedicatedParser: false,
   ),
   SupportedBank(
@@ -209,10 +191,7 @@ const List<SupportedBank> kSupportedBanks = [
   SupportedBank(
     profileId: 'mercadopago_notif',
     displayName: 'Mercado Pago',
-    packageNames: [
-      'com.mercadolibre',
-      'com.mercadopago.wallet',
-    ],
+    packageNames: ['com.mercadolibre', 'com.mercadopago.wallet'],
     hasDedicatedParser: false,
     defaultCurrency: 'USD',
   ),

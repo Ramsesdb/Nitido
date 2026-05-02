@@ -131,9 +131,7 @@ class HorizontalScrollableAccountList extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: ResponsiveRowColumn(
-          direction: _useSmallLayout(context)
-              ? Axis.vertical
-              : Axis.horizontal,
+          direction: _useSmallLayout(context) ? Axis.vertical : Axis.horizontal,
           columnCrossAxisAlignment: CrossAxisAlignment.start,
           columnSpacing: 8,
           rowSpacing: 16,
@@ -204,10 +202,7 @@ class HorizontalScrollableAccountList extends StatelessWidget {
         decoration: BoxDecoration(
           color: primary.withValues(alpha: 0.08),
           borderRadius: borderRadius,
-          border: Border.all(
-            color: primary.withValues(alpha: 0.1),
-            width: 0.5,
-          ),
+          border: Border.all(color: primary.withValues(alpha: 0.1), width: 0.5),
         ),
         child: cardContent,
       );

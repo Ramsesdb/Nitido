@@ -65,10 +65,7 @@ class V3BankTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(V3Tokens.radiusMd),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 11,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
         decoration: BoxDecoration(
           color: selected && selectionMode
               ? V3Tokens.accent.withValues(alpha: 0.08)
@@ -128,10 +125,7 @@ class V3BankTile extends StatelessWidget {
               const SizedBox(width: 8),
             ],
             if (onChanged != null || badgeLabel != null)
-              V3Switch(
-                value: selected,
-                onChanged: onChanged,
-              )
+              V3Switch(value: selected, onChanged: onChanged)
             else
               Icon(
                 selected ? Icons.check_circle : Icons.radio_button_off,
@@ -146,11 +140,7 @@ class V3BankTile extends StatelessWidget {
                   width: 32,
                   height: 32,
                   alignment: Alignment.center,
-                  child: Icon(
-                    Icons.close,
-                    size: 18,
-                    color: mutedColor,
-                  ),
+                  child: Icon(Icons.close, size: 18, color: mutedColor),
                 ),
               ),
             ],

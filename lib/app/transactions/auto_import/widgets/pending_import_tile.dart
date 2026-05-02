@@ -7,19 +7,14 @@ import 'package:nitido/core/models/auto_import/transaction_proposal_status.dart'
 
 /// A list tile representing a single pending import proposal.
 class PendingImportTile extends StatelessWidget {
-  const PendingImportTile({
-    super.key,
-    required this.pendingImport,
-    this.onTap,
-  });
+  const PendingImportTile({super.key, required this.pendingImport, this.onTap});
 
   final PendingImportInDB pendingImport;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    final status =
-        TransactionProposalStatus.fromDbValue(pendingImport.status);
+    final status = TransactionProposalStatus.fromDbValue(pendingImport.status);
     final channel = CaptureChannel.fromDbValue(pendingImport.channel);
     final isIncome = pendingImport.type == 'I';
 
@@ -44,7 +39,10 @@ class PendingImportTile extends StatelessWidget {
   Widget _buildChannelIcon(CaptureChannel channel, BuildContext context) {
     final (icon, color) = switch (channel) {
       CaptureChannel.sms => (Icons.sms_outlined, Colors.blue),
-      CaptureChannel.notification => (Icons.notifications_outlined, Colors.purple),
+      CaptureChannel.notification => (
+        Icons.notifications_outlined,
+        Colors.purple,
+      ),
       CaptureChannel.api => (Icons.sync, Colors.teal),
       CaptureChannel.receiptImage => (Icons.receipt_long, Colors.orange),
       CaptureChannel.voice => (Icons.mic_none_rounded, Colors.deepPurple),
@@ -78,8 +76,7 @@ class PendingImportTile extends StatelessWidget {
   }
 
   String _buildSubtitle() {
-    final counterparty =
-        pendingImport.counterpartyName ?? 'Sin contraparte';
+    final counterparty = pendingImport.counterpartyName ?? 'Sin contraparte';
     final relativeDate = _formatRelativeDate(pendingImport.createdAt);
     return '$counterparty  -  $relativeDate';
   }

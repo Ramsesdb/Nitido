@@ -8,9 +8,7 @@ import 'bank_profile.dart';
 import 'bdv_sms_profile.dart';
 
 /// Package name candidates for the BDV mobile app on Android.
-const List<String> _bdvPackageCandidates = [
-  'com.bancodevenezuela.bdvdigital',
-];
+const List<String> _bdvPackageCandidates = ['com.bancodevenezuela.bdvdigital'];
 
 /// Bank profile for Banco de Venezuela (BDV) push notifications.
 ///
@@ -128,9 +126,7 @@ class BdvNotifProfile implements BankProfile {
     final rawText = event.rawText;
     final newlineIdx = rawText.indexOf('\n');
     if (newlineIdx < 0) {
-      return ParseResult.failed(
-        'Notificación sin cuerpo (solo título)',
-      );
+      return ParseResult.failed('Notificación sin cuerpo (solo título)');
     }
 
     final title = rawText.substring(0, newlineIdx).trim();
@@ -230,12 +226,16 @@ class BdvNotifProfile implements BankProfile {
       final phoneFromMatch = _counterpartyPhoneFromRegex.firstMatch(fullText);
       if (phoneFromMatch != null) {
         counterpartyName = phoneFromMatch.group(1)!;
-        debugPrint('BdvNotifProfile: counterparty (phone from)=$counterpartyName');
+        debugPrint(
+          'BdvNotifProfile: counterparty (phone from)=$counterpartyName',
+        );
       } else {
         final phoneToMatch = _counterpartyPhoneToRegex.firstMatch(fullText);
         if (phoneToMatch != null) {
           counterpartyName = phoneToMatch.group(1)!;
-          debugPrint('BdvNotifProfile: counterparty (phone to)=$counterpartyName');
+          debugPrint(
+            'BdvNotifProfile: counterparty (phone to)=$counterpartyName',
+          );
         } else {
           debugPrint('BdvNotifProfile: no counterparty found');
         }
@@ -275,8 +275,7 @@ class BdvNotifProfile implements BankProfile {
         bankRef != null && type == TransactionType.expense) {
       // amount + bankRef + type detected
       confidence = 0.95;
-    } else if (bankRef == null &&
-        (hasIncome || hasExpense)) {
+    } else if (bankRef == null && (hasIncome || hasExpense)) {
       // amount + type detected but no bankRef
       confidence = 0.85;
     } else {
@@ -291,19 +290,21 @@ class BdvNotifProfile implements BankProfile {
 
     // ── 7. Build proposal ────────────────────────────────────────────────────
 
-    return ParseResult.parsed(TransactionProposal.newProposal(
-      accountId: accountId,
-      amount: amount,
-      currencyId: currencyId,
-      date: date,
-      type: type,
-      counterpartyName: counterpartyName,
-      bankRef: bankRef,
-      rawText: event.rawText,
-      channel: CaptureChannel.notification,
-      sender: event.sender,
-      confidence: confidence,
-      parsedBySender: 'bdv_notif_v2_dynamic',
-    ));
+    return ParseResult.parsed(
+      TransactionProposal.newProposal(
+        accountId: accountId,
+        amount: amount,
+        currencyId: currencyId,
+        date: date,
+        type: type,
+        counterpartyName: counterpartyName,
+        bankRef: bankRef,
+        rawText: event.rawText,
+        channel: CaptureChannel.notification,
+        sender: event.sender,
+        confidence: confidence,
+        parsedBySender: 'bdv_notif_v2_dynamic',
+      ),
+    );
   }
 }

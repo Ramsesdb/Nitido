@@ -80,10 +80,7 @@ class CardWithHeader extends StatelessWidget {
         decoration: BoxDecoration(
           color: primary.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(cardWithHeaderRadius),
-          border: Border.all(
-            color: primary.withValues(alpha: 0.1),
-            width: 0.5,
-          ),
+          border: Border.all(color: primary.withValues(alpha: 0.1), width: 0.5),
         ),
         child: column,
       );

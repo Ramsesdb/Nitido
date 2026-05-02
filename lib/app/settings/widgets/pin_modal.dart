@@ -544,12 +544,10 @@ class PinModalState extends State<PinModal>
                 // Damped sine wave — oscillates ±10px twice while decaying
                 // back to 0 over the animation's duration.
                 final t = _shakeController.value;
-                final dx =
-                    t == 0 ? 0.0 : 10 * (1 - t) * math.sin(t * math.pi * 4);
-                return Transform.translate(
-                  offset: Offset(dx, 0),
-                  child: child,
-                );
+                final dx = t == 0
+                    ? 0.0
+                    : 10 * (1 - t) * math.sin(t * math.pi * 4);
+                return Transform.translate(offset: Offset(dx, 0), child: child);
               },
               child: _PinDots(
                 length: kPinLength,
@@ -733,8 +731,8 @@ class _KeypadButton extends StatelessWidget {
               child: Text(
                 label,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
           ),
@@ -768,9 +766,7 @@ class _KeypadIconButton extends StatelessWidget {
           child: InkWell(
             customBorder: const CircleBorder(),
             onTap: onTap,
-            child: Center(
-              child: Icon(icon, size: 28),
-            ),
+            child: Center(child: Icon(icon, size: 28)),
           ),
         ),
       ),

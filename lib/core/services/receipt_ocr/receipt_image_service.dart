@@ -6,7 +6,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class ReceiptImageService {
-  ReceiptImageService({ImagePicker? picker}) : _picker = picker ?? ImagePicker();
+  ReceiptImageService({ImagePicker? picker})
+    : _picker = picker ?? ImagePicker();
 
   final ImagePicker _picker;
 

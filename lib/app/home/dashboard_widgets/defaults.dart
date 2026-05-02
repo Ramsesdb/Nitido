@@ -73,14 +73,13 @@ class DashboardLayoutDefaults {
 
   /// Config especial para el widget quickUse: solo muestra nuevo ingreso,
   /// nuevo egreso y calculadora.
-  static Map<String, dynamic> get _quickUseFixedConfig =>
-      <String, dynamic>{
-        'chips': <String>[
-          QuickActionId.newIncomeTransaction.name,
-          QuickActionId.newExpenseTransaction.name,
-          QuickActionId.goToCalculator.name,
-        ],
-      };
+  static Map<String, dynamic> get _quickUseFixedConfig => <String, dynamic>{
+    'chips': <String>[
+      QuickActionId.newIncomeTransaction.name,
+      QuickActionId.newExpenseTransaction.name,
+      QuickActionId.goToCalculator.name,
+    ],
+  };
 
   /// Config para el widget exchangeRateCard que respeta la moneda preferida
   /// del usuario:

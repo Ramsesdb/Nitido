@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/core/utils/list_tile_action_item.dart';
 
 class NitidoPopupMenuButton extends StatelessWidget {
@@ -65,8 +65,8 @@ class NitidoPopupMenuButton extends StatelessWidget {
                       color: actionItem.role != null
                           ? actionItem
                                 .getColorBasedOnRole(context)
-                                .withValues(alpha: 
-                                  actionItem.onClick != null ? 1 : 0.6,
+                                .withValues(
+                                  alpha: actionItem.onClick != null ? 1 : 0.6,
                                 )
                           : null,
                     ),

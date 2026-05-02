@@ -18,7 +18,9 @@ class DecorativeSparkline extends StatelessWidget {
       child: CustomPaint(
         painter: _SparklinePainter(
           isPositive: isPositive!,
-          color: color ?? (isPositive! ? const Color(0xFF4CAF50) : const Color(0xFFF75959)),
+          color:
+              color ??
+              (isPositive! ? const Color(0xFF4CAF50) : const Color(0xFFF75959)),
         ),
       ),
     );

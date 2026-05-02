@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/layout/page_framework.dart';
 import 'package:nitido/app/settings/purchases/donate_button.dart';
 import 'package:nitido/app/settings/purchases/in_app_purchase.dart';
@@ -87,10 +87,7 @@ class _HelpUsPageState extends State<HelpUsPage> {
                     icon: Icons.rate_review_outlined,
                     mainAxis: Axis.horizontal,
                     onTap: () {
-                      openExternalURL(
-                        context,
-                        '__nitido_GITHUB_URL__/issues',
-                      );
+                      openExternalURL(context, '__nitido_GITHUB_URL__/issues');
                     },
                   ),
                 ],

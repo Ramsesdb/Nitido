@@ -120,8 +120,9 @@ void registerPendingImportsAlertWidget() {
   DashboardWidgetRegistry.instance.register(
     DashboardWidgetSpec(
       type: WidgetType.pendingImportsAlert,
-      displayName: (ctx) =>
-          Translations.of(ctx).home.dashboard_widgets.pending_imports_alert.name,
+      displayName: (ctx) => Translations.of(
+        ctx,
+      ).home.dashboard_widgets.pending_imports_alert.name,
       description: (ctx) => Translations.of(
         ctx,
       ).home.dashboard_widgets.pending_imports_alert.description,

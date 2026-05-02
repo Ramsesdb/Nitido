@@ -41,11 +41,7 @@ class _SourceSlice {
   final Color color;
   final double amount;
 
-  _SourceSlice({
-    required this.name,
-    required this.color,
-    required this.amount,
-  });
+  _SourceSlice({required this.name, required this.color, required this.amount});
 }
 
 /// Stacked bar chart that shows income evolution by time period,
@@ -87,16 +83,17 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
       for (final year in years) {
         final start = DateTime(year);
         final end = DateTime(year + 1);
-        buckets.add(_TimeBucket(
-          start: start,
-          end: end,
-          shortTitle: DateFormat.y().format(start),
-          longTitle: DateFormat.y().format(start),
-          transactions: allTransactions
-              .where((t) =>
-                  !t.date.isBefore(start) && t.date.isBefore(end))
-              .toList(),
-        ));
+        buckets.add(
+          _TimeBucket(
+            start: start,
+            end: end,
+            shortTitle: DateFormat.y().format(start),
+            longTitle: DateFormat.y().format(start),
+            transactions: allTransactions
+                .where((t) => !t.date.isBefore(start) && t.date.isBefore(end))
+                .toList(),
+          ),
+        );
       }
       return buckets;
     }
@@ -108,29 +105,34 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
       switch (periodicity) {
         case Periodicity.day:
           // Single day: just one aggregated bar
-          buckets.add(_TimeBucket(
-            start: startDate,
-            end: endDate,
-            shortTitle: DateFormat.MMMd().format(startDate),
-            longTitle: DateFormat.yMMMEd().format(startDate),
-            transactions: allTransactions,
-          ));
+          buckets.add(
+            _TimeBucket(
+              start: startDate,
+              end: endDate,
+              shortTitle: DateFormat.MMMd().format(startDate),
+              longTitle: DateFormat.yMMMEd().format(startDate),
+              transactions: allTransactions,
+            ),
+          );
           break;
 
         case Periodicity.week:
           for (var i = 0; i < DateTime.daysPerWeek; i++) {
             final start = startDate.add(Duration(days: i));
             final end = start.add(const Duration(days: 1));
-            buckets.add(_TimeBucket(
-              start: start,
-              end: end,
-              shortTitle: DateFormat.E().format(start),
-              longTitle: DateFormat.yMMMEd().format(start),
-              transactions: allTransactions
-                  .where((t) =>
-                      !t.date.isBefore(start) && t.date.isBefore(end))
-                  .toList(),
-            ));
+            buckets.add(
+              _TimeBucket(
+                start: start,
+                end: end,
+                shortTitle: DateFormat.E().format(start),
+                longTitle: DateFormat.yMMMEd().format(start),
+                transactions: allTransactions
+                    .where(
+                      (t) => !t.date.isBefore(start) && t.date.isBefore(end),
+                    )
+                    .toList(),
+              ),
+            );
           }
           break;
 
@@ -145,24 +147,26 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
             [25, null],
           ];
           for (final r in ranges) {
-            final start =
-                DateTime(startDate.year, startDate.month, r[0]!);
+            final start = DateTime(startDate.year, startDate.month, r[0]!);
             final end = DateTime(
               start.year,
               r[1] == null ? start.month + 1 : start.month,
               r[1] ?? 1,
             );
-            buckets.add(_TimeBucket(
-              start: start,
-              end: end,
-              shortTitle: '${r[0]}-${r[1] ?? ''}',
-              longTitle:
-                  '${DateFormat.MMMd().format(start)} - ${DateFormat.MMMd().format(end)}',
-              transactions: allTransactions
-                  .where((t) =>
-                      !t.date.isBefore(start) && t.date.isBefore(end))
-                  .toList(),
-            ));
+            buckets.add(
+              _TimeBucket(
+                start: start,
+                end: end,
+                shortTitle: '${r[0]}-${r[1] ?? ''}',
+                longTitle:
+                    '${DateFormat.MMMd().format(start)} - ${DateFormat.MMMd().format(end)}',
+                transactions: allTransactions
+                    .where(
+                      (t) => !t.date.isBefore(start) && t.date.isBefore(end),
+                    )
+                    .toList(),
+              ),
+            );
           }
           break;
 
@@ -174,16 +178,19 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
           ) {
             final start = DateTime(startDate.year, i);
             final end = DateTime(start.year, i + 1);
-            buckets.add(_TimeBucket(
-              start: start,
-              end: end,
-              shortTitle: DateFormat.MMM().format(start),
-              longTitle: DateFormat.MMMM().format(start),
-              transactions: allTransactions
-                  .where((t) =>
-                      !t.date.isBefore(start) && t.date.isBefore(end))
-                  .toList(),
-            ));
+            buckets.add(
+              _TimeBucket(
+                start: start,
+                end: end,
+                shortTitle: DateFormat.MMM().format(start),
+                longTitle: DateFormat.MMMM().format(start),
+                transactions: allTransactions
+                    .where(
+                      (t) => !t.date.isBefore(start) && t.date.isBefore(end),
+                    )
+                    .toList(),
+              ),
+            );
           }
           break;
       }
@@ -196,16 +203,17 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
         for (var i = 0; i < dayDiff; i++) {
           final start = startDate.add(Duration(days: i));
           final end = start.add(const Duration(days: 1));
-          buckets.add(_TimeBucket(
-            start: start,
-            end: end,
-            shortTitle: DateFormat.E().format(start),
-            longTitle: DateFormat.yMMMEd().format(start),
-            transactions: allTransactions
-                .where((t) =>
-                    !t.date.isBefore(start) && t.date.isBefore(end))
-                .toList(),
-          ));
+          buckets.add(
+            _TimeBucket(
+              start: start,
+              end: end,
+              shortTitle: DateFormat.E().format(start),
+              longTitle: DateFormat.yMMMEd().format(start),
+              transactions: allTransactions
+                  .where((t) => !t.date.isBefore(start) && t.date.isBefore(end))
+                  .toList(),
+            ),
+          );
         }
       } else if (dayDiff <= 31) {
         // Week-level buckets within the month
@@ -218,25 +226,25 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
           [25, null],
         ];
         for (final r in ranges) {
-          final start =
-              DateTime(startDate.year, startDate.month, r[0]!);
+          final start = DateTime(startDate.year, startDate.month, r[0]!);
           final end = DateTime(
             start.year,
             r[1] == null ? start.month + 1 : start.month,
             r[1] ?? 1,
           );
           if (end.isAfter(endDate.add(const Duration(days: 1)))) continue;
-          buckets.add(_TimeBucket(
-            start: start,
-            end: end,
-            shortTitle: '${r[0]}-${r[1] ?? ''}',
-            longTitle:
-                '${DateFormat.MMMd().format(start)} - ${DateFormat.MMMd().format(end)}',
-            transactions: allTransactions
-                .where((t) =>
-                    !t.date.isBefore(start) && t.date.isBefore(end))
-                .toList(),
-          ));
+          buckets.add(
+            _TimeBucket(
+              start: start,
+              end: end,
+              shortTitle: '${r[0]}-${r[1] ?? ''}',
+              longTitle:
+                  '${DateFormat.MMMd().format(start)} - ${DateFormat.MMMd().format(end)}',
+              transactions: allTransactions
+                  .where((t) => !t.date.isBefore(start) && t.date.isBefore(end))
+                  .toList(),
+            ),
+          );
         }
       } else if (dayDiff <= 365) {
         // Month-level buckets
@@ -244,16 +252,17 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
         while (current.isBefore(endDate)) {
           final start = current;
           final end = DateTime(current.year, current.month + 1);
-          buckets.add(_TimeBucket(
-            start: start,
-            end: end,
-            shortTitle: DateFormat.MMM().format(start),
-            longTitle: DateFormat.MMMM().format(start),
-            transactions: allTransactions
-                .where((t) =>
-                    !t.date.isBefore(start) && t.date.isBefore(end))
-                .toList(),
-          ));
+          buckets.add(
+            _TimeBucket(
+              start: start,
+              end: end,
+              shortTitle: DateFormat.MMM().format(start),
+              longTitle: DateFormat.MMMM().format(start),
+              transactions: allTransactions
+                  .where((t) => !t.date.isBefore(start) && t.date.isBefore(end))
+                  .toList(),
+            ),
+          );
           current = end;
         }
       } else {
@@ -261,16 +270,17 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
         for (var year = startDate.year; year <= endDate.year; year++) {
           final start = DateTime(year);
           final end = DateTime(year + 1);
-          buckets.add(_TimeBucket(
-            start: start,
-            end: end,
-            shortTitle: DateFormat.y().format(start),
-            longTitle: DateFormat.y().format(start),
-            transactions: allTransactions
-                .where((t) =>
-                    !t.date.isBefore(start) && t.date.isBefore(end))
-                .toList(),
-          ));
+          buckets.add(
+            _TimeBucket(
+              start: start,
+              end: end,
+              shortTitle: DateFormat.y().format(start),
+              longTitle: DateFormat.y().format(start),
+              transactions: allTransactions
+                  .where((t) => !t.date.isBefore(start) && t.date.isBefore(end))
+                  .toList(),
+            ),
+          );
         }
       }
     }
@@ -286,31 +296,33 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
     final slices = <_SourceSlice>[];
 
     for (final tag in tags) {
-      final tagTxs =
-          transactions.where((tx) => tx.tags.any((t) => t.id == tag.id));
-      final amount =
-          tagTxs.map((e) => e.currentValueInPreferredCurrency ?? 0.0).sum;
+      final tagTxs = transactions.where(
+        (tx) => tx.tags.any((t) => t.id == tag.id),
+      );
+      final amount = tagTxs
+          .map((e) => e.currentValueInPreferredCurrency ?? 0.0)
+          .sum;
 
       if (amount > 0) {
-        slices.add(_SourceSlice(
-          name: tag.name,
-          color: tag.colorData,
-          amount: amount,
-        ));
+        slices.add(
+          _SourceSlice(name: tag.name, color: tag.colorData, amount: amount),
+        );
       }
     }
 
     // Also handle transactions with no tags
-    final noTagTxs =
-        transactions.where((tx) => tx.tags.isEmpty);
-    final noTagAmount =
-        noTagTxs.map((e) => e.currentValueInPreferredCurrency ?? 0.0).sum;
+    final noTagTxs = transactions.where((tx) => tx.tags.isEmpty);
+    final noTagAmount = noTagTxs
+        .map((e) => e.currentValueInPreferredCurrency ?? 0.0)
+        .sum;
     if (noTagAmount > 0) {
-      slices.add(_SourceSlice(
-        name: 'Sin tag', // TODO: i18n
-        color: Colors.grey,
-        amount: noTagAmount,
-      ));
+      slices.add(
+        _SourceSlice(
+          name: 'Sin tag', // TODO: i18n
+          color: Colors.grey,
+          amount: noTagAmount,
+        ),
+      );
     }
 
     return slices;
@@ -376,8 +388,9 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
         stream: CurrencyService.instance.ensureAndGetPreferredCurrency(),
         builder: (context, currSnapshot) {
           return StreamBuilder<List<MoneyTransaction>>(
-            stream: TransactionService.instance
-                .getTransactions(filters: widget.filters),
+            stream: TransactionService.instance.getTransactions(
+              filters: widget.filters,
+            ),
             builder: (context, trSnapshot) {
               if (!trSnapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
@@ -411,12 +424,12 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
                       shortTitles.add(bucket.shortTitle);
                       longTitles.add(bucket.longTitle);
 
-                      final slices =
-                          _slicesByTag(bucket.transactions, tagsSnapshot.data!);
-
-                      barGroups.add(
-                        _buildBarGroup(i, slices, buckets.length),
+                      final slices = _slicesByTag(
+                        bucket.transactions,
+                        tagsSnapshot.data!,
                       );
+
+                      barGroups.add(_buildBarGroup(i, slices, buckets.length));
                     }
 
                     return _buildChart(
@@ -490,11 +503,13 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
     double cumulative = 0;
 
     for (final slice in slices) {
-      stackItems.add(BarChartRodStackItem(
-        cumulative,
-        cumulative + slice.amount,
-        isTouched ? slice.color.lighten(0.2) : slice.color,
-      ));
+      stackItems.add(
+        BarChartRodStackItem(
+          cumulative,
+          cumulative + slice.amount,
+          isTouched ? slice.color.lighten(0.2) : slice.color,
+        ),
+      );
       cumulative += slice.amount;
     }
 
@@ -525,9 +540,7 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
         ? Colors.black12
         : Colors.white12;
 
-    final allZero = barGroups.every(
-      (g) => g.barRods.every((r) => r.toY == 0),
-    );
+    final allZero = barGroups.every((g) => g.barRods.every((r) => r.toY == 0));
 
     return BarChart(
       BarChartData(
@@ -536,8 +549,7 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
           touchTooltipData: BarTouchTooltipData(
             fitInsideVertically: true,
             fitInsideHorizontally: true,
-            getTooltipColor: (spot) =>
-                Theme.of(context).colorScheme.surface,
+            getTooltipColor: (spot) => Theme.of(context).colorScheme.surface,
             getTooltipItem: (group, groupIndex, rod, rodIndex) {
               final title = groupIndex < longTitles.length
                   ? longTitles[groupIndex]
@@ -548,14 +560,16 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
                 final amount = stackItem.toY - stackItem.fromY;
                 if (amount <= 0) continue;
                 children.add(const TextSpan(text: '\n'));
-                children.add(TextSpan(
-                  text: '● ',
-                  style: TextStyle(
-                    color: stackItem.color,
-                    fontSize: 12,
-                    decoration: TextDecoration.none,
+                children.add(
+                  TextSpan(
+                    text: '● ',
+                    style: TextStyle(
+                      color: stackItem.color,
+                      fontSize: 12,
+                      decoration: TextDecoration.none,
+                    ),
                   ),
-                ));
+                );
                 children.addAll(
                   UINumberFormatter.currency(
                     currency: currency,
@@ -583,8 +597,7 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
               touchedBarGroupIndex = -1;
               return;
             }
-            touchedBarGroupIndex =
-                barTouchResponse.spot!.touchedBarGroupIndex;
+            touchedBarGroupIndex = barTouchResponse.spot!.touchedBarGroupIndex;
             setState(() {});
           },
         ),
@@ -632,19 +645,15 @@ class _IncomeStackedBarChartState extends State<IncomeStackedBarChart> {
         borderData: FlBorderData(
           show: true,
           border: Border(
-            bottom: BorderSide(
-              width: 1,
-              color: ultraLightBorderColor,
-            ),
+            bottom: BorderSide(width: 1, color: ultraLightBorderColor),
           ),
         ),
         gridData: FlGridData(
           drawVerticalLine: false,
           getDrawingHorizontalLine: (value) {
-            return defaultGridLine(value).copyWith(
-              strokeWidth: 0.5,
-              color: ultraLightBorderColor,
-            );
+            return defaultGridLine(
+              value,
+            ).copyWith(strokeWidth: 0.5, color: ultraLightBorderColor);
           },
         ),
         barGroups: barGroups,

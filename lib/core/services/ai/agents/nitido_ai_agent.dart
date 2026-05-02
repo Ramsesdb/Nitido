@@ -1,4 +1,4 @@
-﻿import 'package:nitido/core/services/ai/agents/agent_profile.dart';
+import 'package:nitido/core/services/ai/agents/agent_profile.dart';
 import 'package:nitido/core/services/ai/agents/agent_run_result.dart';
 import 'package:nitido/core/services/ai/agents/agent_runner.dart';
 import 'package:nitido/core/services/ai/financial_context_builder.dart';
@@ -29,7 +29,7 @@ class NitidoAiAgent {
   final AgentRunner _runner;
 
   NitidoAiAgent._({required this.profile, required AgentRunner runner})
-      : _runner = runner;
+    : _runner = runner;
 
   factory NitidoAiAgent({
     AgentRunner? runner,
@@ -58,10 +58,7 @@ class NitidoAiAgent {
       modelOverride: modelOverride,
       approvalRequiredTools: const {'create_transaction', 'create_transfer'},
     );
-    return NitidoAiAgent._(
-      profile: profile,
-      runner: runner ?? AgentRunner(),
-    );
+    return NitidoAiAgent._(profile: profile, runner: runner ?? AgentRunner());
   }
 
   /// Run the chat agent with the current message history.

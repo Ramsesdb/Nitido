@@ -27,9 +27,9 @@ class BinanceApiClient {
     BinanceCredentialsStore? credentialsStore,
     http.Client? httpClient,
     String baseUrl = 'https://api.binance.com',
-  })  : _credentialsStore = credentialsStore ?? BinanceCredentialsStore.instance,
-        _http = httpClient ?? http.Client(),
-        _baseUrl = baseUrl;
+  }) : _credentialsStore = credentialsStore ?? BinanceCredentialsStore.instance,
+       _http = httpClient ?? http.Client(),
+       _baseUrl = baseUrl;
 
   // ─── Public endpoints ───────────────────────────────────────────
 
@@ -42,13 +42,14 @@ class BinanceApiClient {
     DateTime? since,
     int rows = 100,
   }) async {
-    final params = <String, String>{
-      'rows': rows.toString(),
-    };
+    final params = <String, String>{'rows': rows.toString()};
     if (since != null) {
       params['startTimestamp'] = since.millisecondsSinceEpoch.toString();
     }
-    final resp = await _signedGet('/sapi/v1/c2c/orderMatch/listUserOrderHistory', params);
+    final resp = await _signedGet(
+      '/sapi/v1/c2c/orderMatch/listUserOrderHistory',
+      params,
+    );
     return List<Map<String, dynamic>>.from(resp['data'] ?? []);
   }
 
@@ -59,9 +60,7 @@ class BinanceApiClient {
     DateTime? since,
     String transactionType = '0',
   }) async {
-    final params = <String, String>{
-      'transactionType': transactionType,
-    };
+    final params = <String, String>{'transactionType': transactionType};
     if (since != null) {
       params['beginTime'] = since.millisecondsSinceEpoch.toString();
     }
@@ -76,9 +75,7 @@ class BinanceApiClient {
     DateTime? since,
     String transactionType = '0',
   }) async {
-    final params = <String, String>{
-      'transactionType': transactionType,
-    };
+    final params = <String, String>{'transactionType': transactionType};
     if (since != null) {
       params['beginTime'] = since.millisecondsSinceEpoch.toString();
     }
@@ -223,8 +220,9 @@ class BinanceApiClient {
     params['timestamp'] = timestamp.toString();
     params['recvWindow'] = '5000';
 
-    final queryString =
-        params.entries.map((e) => '${e.key}=${e.value}').join('&');
+    final queryString = params.entries
+        .map((e) => '${e.key}=${e.value}')
+        .join('&');
     final signature = sign(queryString, creds.apiSecret);
     final fullQuery = '$queryString&signature=$signature';
 
@@ -252,8 +250,9 @@ class BinanceApiClient {
     params['timestamp'] = timestamp.toString();
     params['recvWindow'] = '5000';
 
-    final queryString =
-        params.entries.map((e) => '${e.key}=${e.value}').join('&');
+    final queryString = params.entries
+        .map((e) => '${e.key}=${e.value}')
+        .join('&');
     final signature = sign(queryString, creds.apiSecret);
 
     final uri = Uri.parse('$_baseUrl$path');

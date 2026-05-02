@@ -10,12 +10,7 @@ import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 /// Wrap the result in `Align(alignment: Alignment.topCenter)` (or similar)
 /// when embedding in a wider parent.
 class V3MiniPhoneFrame extends StatelessWidget {
-  const V3MiniPhoneFrame({
-    super.key,
-    this.child,
-    this.height = 260,
-    this.dark,
-  });
+  const V3MiniPhoneFrame({super.key, this.child, this.height = 260, this.dark});
 
   final Widget? child;
   final double height;
@@ -30,8 +25,9 @@ class V3MiniPhoneFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = dark ?? Theme.of(context).brightness == Brightness.dark;
     final bezel = isDark ? V3Tokens.bezelDark : V3Tokens.bezelLight;
-    final bezelInner =
-        isDark ? V3Tokens.bezelInnerDark : V3Tokens.bezelInnerLight;
+    final bezelInner = isDark
+        ? V3Tokens.bezelInnerDark
+        : V3Tokens.bezelInnerLight;
     // boxShadow varies by mode — dark uses a thin inner stroke, light uses
     // a soft drop shadow + hairline border, matching the v3 HTML.
     final shadows = isDark
@@ -71,8 +67,7 @@ class V3MiniPhoneFrame extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: bezelInner,
-          borderRadius:
-              const BorderRadius.vertical(top: Radius.circular(42)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(42)),
         ),
         padding: const EdgeInsets.fromLTRB(12, 14, 12, 0),
         child: Column(

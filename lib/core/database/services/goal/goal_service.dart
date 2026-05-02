@@ -30,8 +30,9 @@ class GoalService {
       return true;
     });
 
-    unawaited(FirebaseSyncService.instance
-        .pushGoal(goalInDb, trFilters: trFiltersInDb));
+    unawaited(
+      FirebaseSyncService.instance.pushGoal(goalInDb, trFilters: trFiltersInDb),
+    );
     return toReturn;
   }
 

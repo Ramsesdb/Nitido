@@ -8,7 +8,7 @@ class ListTransactionsTool implements AiTool {
   final TransactionService _transactionService;
 
   ListTransactionsTool({TransactionService? transactionService})
-      : _transactionService = transactionService ?? TransactionService.instance;
+    : _transactionService = transactionService ?? TransactionService.instance;
 
   @override
   String get name => 'list_transactions';
@@ -23,39 +23,39 @@ class ListTransactionsTool implements AiTool {
 
   @override
   Map<String, dynamic> get parametersSchema => {
-        'type': 'object',
-        'properties': {
-          'fromDate': {
-            'type': 'string',
-            'description': 'Fecha inicial inclusiva (ISO 8601 YYYY-MM-DD).',
-          },
-          'toDate': {
-            'type': 'string',
-            'description': 'Fecha final exclusiva (ISO 8601 YYYY-MM-DD).',
-          },
-          'accountIds': {
-            'type': 'array',
-            'items': {'type': 'string'},
-            'description': 'IDs de cuenta a incluir (vacio = todas).',
-          },
-          'categoryIds': {
-            'type': 'array',
-            'items': {'type': 'string'},
-            'description': 'IDs de categoria a incluir (vacio = todas).',
-          },
-          'type': {
-            'type': 'string',
-            'enum': ['income', 'expense', 'transfer'],
-            'description': 'Tipo de transaccion a filtrar.',
-          },
-          'limit': {
-            'type': 'integer',
-            'description': 'Maximo de resultados (por defecto 50, maximo 200).',
-            'default': 50,
-          },
-        },
-        'additionalProperties': false,
-      };
+    'type': 'object',
+    'properties': {
+      'fromDate': {
+        'type': 'string',
+        'description': 'Fecha inicial inclusiva (ISO 8601 YYYY-MM-DD).',
+      },
+      'toDate': {
+        'type': 'string',
+        'description': 'Fecha final exclusiva (ISO 8601 YYYY-MM-DD).',
+      },
+      'accountIds': {
+        'type': 'array',
+        'items': {'type': 'string'},
+        'description': 'IDs de cuenta a incluir (vacio = todas).',
+      },
+      'categoryIds': {
+        'type': 'array',
+        'items': {'type': 'string'},
+        'description': 'IDs de categoria a incluir (vacio = todas).',
+      },
+      'type': {
+        'type': 'string',
+        'enum': ['income', 'expense', 'transfer'],
+        'description': 'Tipo de transaccion a filtrar.',
+      },
+      'limit': {
+        'type': 'integer',
+        'description': 'Maximo de resultados (por defecto 50, maximo 200).',
+        'default': 50,
+      },
+    },
+    'additionalProperties': false,
+  };
 
   @override
   Future<AiToolResult> execute(Map<String, dynamic> args) async {
@@ -115,19 +115,21 @@ class ListTransactionsTool implements AiTool {
         .first;
 
     final items = transactions
-        .map((tx) => <String, dynamic>{
-              'id': tx.id,
-              'date': tx.date.toIso8601String(),
-              'type': tx.type.databaseValue,
-              'value': tx.value,
-              'currency': tx.account.currency.code,
-              'accountId': tx.account.id,
-              'accountName': tx.account.name,
-              'categoryId': tx.category?.id,
-              'categoryName': tx.category?.name,
-              'title': tx.title,
-              'notes': tx.notes,
-            })
+        .map(
+          (tx) => <String, dynamic>{
+            'id': tx.id,
+            'date': tx.date.toIso8601String(),
+            'type': tx.type.databaseValue,
+            'value': tx.value,
+            'currency': tx.account.currency.code,
+            'accountId': tx.account.id,
+            'accountName': tx.account.name,
+            'categoryId': tx.category?.id,
+            'categoryName': tx.category?.name,
+            'title': tx.title,
+            'notes': tx.notes,
+          },
+        )
         .toList();
 
     return AiToolResult.ok({

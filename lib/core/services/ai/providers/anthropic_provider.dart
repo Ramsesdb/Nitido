@@ -24,8 +24,8 @@ class AnthropicProvider implements AiProvider {
     required this.model,
     http.Client? client,
     Duration requestTimeout = const Duration(seconds: 20),
-  })  : _client = client ?? http.Client(),
-        _requestTimeout = requestTimeout;
+  }) : _client = client ?? http.Client(),
+       _requestTimeout = requestTimeout;
 
   static const _endpoint = 'https://api.anthropic.com/v1/messages';
   static const _anthropicVersion = '2023-06-01';
@@ -43,8 +43,9 @@ class AnthropicProvider implements AiProvider {
   /// and the remaining `messages` array. The returned messages keep their
   /// original `role` (only `user` / `assistant` are valid for Anthropic;
   /// any other role is dropped after extracting the system content).
-  static ({String? system, List<Map<String, String>> messages})
-      _splitMessages(List<Map<String, String>> input) {
+  static ({String? system, List<Map<String, String>> messages}) _splitMessages(
+    List<Map<String, String>> input,
+  ) {
     final systemBuf = StringBuffer();
     final out = <Map<String, String>>[];
     for (final msg in input) {
@@ -76,7 +77,9 @@ class AnthropicProvider implements AiProvider {
     }
 
     final split = _splitMessages(messages);
-    final resolvedModel = (model != null && model.isNotEmpty) ? model : this.model;
+    final resolvedModel = (model != null && model.isNotEmpty)
+        ? model
+        : this.model;
 
     final body = <String, dynamic>{
       'model': resolvedModel,

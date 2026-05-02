@@ -13,7 +13,7 @@ class BinanceCredentialsStore {
 
   /// Constructor for testing with a custom [FlutterSecureStorage] instance.
   BinanceCredentialsStore.forTesting(FlutterSecureStorage storage)
-      : _storage = storage;
+    : _storage = storage;
 
   FlutterSecureStorage _storage = const FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -30,10 +30,7 @@ class BinanceCredentialsStore {
   }
 
   /// Save Binance API credentials securely.
-  Future<void> save({
-    required String apiKey,
-    required String apiSecret,
-  }) async {
+  Future<void> save({required String apiKey, required String apiSecret}) async {
     final normalizedApiKey = _normalizeCredential(apiKey);
     final normalizedApiSecret = _normalizeCredential(apiSecret);
 

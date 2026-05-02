@@ -149,7 +149,6 @@ class _OutlinedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final buttonColor = borderColor ?? Theme.of(context).colorScheme.secondary;
 
     return AnimatedContainer(

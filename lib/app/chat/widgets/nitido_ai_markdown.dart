@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class NitidoAiMarkdown extends StatelessWidget {
@@ -17,8 +17,9 @@ class NitidoAiMarkdown extends StatelessWidget {
     r'(\*\*[^*]+\*\*)|(`[^`]+`)|(\$\s?[0-9]{1,3}(?:[.,][0-9]{3})*(?:[.,][0-9]{2})?)',
   );
   static final RegExp _pipeRow = RegExp(r'^\s*\|.*\|\s*$');
-  static final RegExp _pipeSep =
-      RegExp(r'^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$');
+  static final RegExp _pipeSep = RegExp(
+    r'^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)+\|?\s*$',
+  );
   static final RegExp _bulletRe = RegExp(r'^\s*(?:[-*•]|\d+[.)])\s+(.*)$');
 
   List<_Block> _parse(String raw) {
@@ -99,15 +100,13 @@ class NitidoAiMarkdown extends StatelessWidget {
       final code = match.group(2);
       final currency = match.group(3);
       if (bold != null) {
-        spans.add(TextSpan(
-          text: bold.substring(2, bold.length - 2),
-          style: s.bold,
-        ));
+        spans.add(
+          TextSpan(text: bold.substring(2, bold.length - 2), style: s.bold),
+        );
       } else if (code != null) {
-        spans.add(TextSpan(
-          text: code.substring(1, code.length - 1),
-          style: s.code,
-        ));
+        spans.add(
+          TextSpan(text: code.substring(1, code.length - 1), style: s.code),
+        );
       } else if (currency != null) {
         spans.add(TextSpan(text: currency, style: s.currency));
       }
@@ -147,7 +146,9 @@ class NitidoAiMarkdown extends StatelessWidget {
 
     final blocks = _parse(data);
     if (blocks.isEmpty) {
-      return SelectableText.rich(TextSpan(style: base, children: _spans(data, s)));
+      return SelectableText.rich(
+        TextSpan(style: base, children: _spans(data, s)),
+      );
     }
 
     final children = <Widget>[];
@@ -155,9 +156,11 @@ class NitidoAiMarkdown extends StatelessWidget {
       final b = blocks[i];
       if (i > 0) children.add(const SizedBox(height: 8));
       if (b is _ParagraphBlock) {
-        children.add(SelectableText.rich(
-          TextSpan(style: base, children: _spans(b.text, s)),
-        ));
+        children.add(
+          SelectableText.rich(
+            TextSpan(style: base, children: _spans(b.text, s)),
+          ),
+        );
       } else if (b is _BulletBlock) {
         children.add(_buildBullets(b, s, tokens));
       } else if (b is _TableBlock) {
@@ -226,34 +229,35 @@ class NitidoAiMarkdown extends StatelessWidget {
 
     final rows = <Widget>[];
     for (final row in displayRows) {
-      rows.add(Container(
-        margin: const EdgeInsets.symmetric(vertical: 3),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: tokens.surfaceAlt.withValues(alpha: 0.4),
-          border: Border.all(
-            color: tokens.border.withValues(alpha: 0.4),
-            width: 1,
+      rows.add(
+        Container(
+          margin: const EdgeInsets.symmetric(vertical: 3),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          decoration: BoxDecoration(
+            color: tokens.surfaceAlt.withValues(alpha: 0.4),
+            border: Border.all(
+              color: tokens.border.withValues(alpha: 0.4),
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(NitidoAiTokens.innerCardRadius),
           ),
-          borderRadius: BorderRadius.circular(NitidoAiTokens.innerCardRadius),
+          child: _rowContent(
+            header: b.header,
+            cells: row,
+            kickerStyle: kickerStyle,
+            valueStyle: valueStyle,
+            s: s,
+          ),
         ),
-        child: _rowContent(
-          header: b.header,
-          cells: row,
-          kickerStyle: kickerStyle,
-          valueStyle: valueStyle,
-          s: s,
-        ),
-      ));
+      );
     }
     if (overflow > 0) {
-      rows.add(Padding(
-        padding: const EdgeInsets.only(top: 4, left: 10),
-        child: Text(
-          '…y $overflow más',
-          style: kickerStyle,
+      rows.add(
+        Padding(
+          padding: const EdgeInsets.only(top: 4, left: 10),
+          child: Text('…y $overflow más', style: kickerStyle),
         ),
-      ));
+      );
     }
 
     return Column(
@@ -293,24 +297,26 @@ class NitidoAiMarkdown extends StatelessWidget {
     final items = <Widget>[];
     for (var i = 0; i < cells.length; i++) {
       final label = i < header.length ? header[i] : '';
-      items.add(Padding(
-        padding: EdgeInsets.only(top: i == 0 ? 0 : 4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (label.isNotEmpty)
-              Text(
-                label.toUpperCase(),
-                style: kickerStyle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+      items.add(
+        Padding(
+          padding: EdgeInsets.only(top: i == 0 ? 0 : 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (label.isNotEmpty)
+                Text(
+                  label.toUpperCase(),
+                  style: kickerStyle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              SelectableText.rich(
+                TextSpan(style: valueStyle, children: _spans(cells[i], s)),
               ),
-            SelectableText.rich(
-              TextSpan(style: valueStyle, children: _spans(cells[i], s)),
-            ),
-          ],
+            ],
+          ),
         ),
-      ));
+      );
     }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

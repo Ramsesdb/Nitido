@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cryptography/cryptography.dart';
@@ -93,4 +93,3 @@ class FirebaseCredentialsCipher {
     return utf8.decode(clear);
   }
 }
-

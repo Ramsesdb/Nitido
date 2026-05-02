@@ -63,8 +63,7 @@ class _ExchangeRateSelectorState extends State<ExchangeRateSelector> {
       _selected = _RateSource.manual;
     } else if (widget.initialSource == 'paralelo') {
       _selected = _RateSource.paralelo;
-    } else if (widget.initialRate != null &&
-        widget.initialSource == null) {
+    } else if (widget.initialRate != null && widget.initialSource == null) {
       // Existing TX with rate but no source tag -> treat as manual
       _selected = _RateSource.manual;
     } else {
@@ -93,7 +92,8 @@ class _ExchangeRateSelectorState extends State<ExchangeRateSelector> {
   /// Raw API rate in "VES per 1 foreign unit" direction (e.g. 479.78).
   /// Used for display only.
   double? get _bcvDisplayRate => _displayRateFor(widget.toCurrency, 'oficial');
-  double? get _paraleloDisplayRate => _displayRateFor(widget.toCurrency, 'paralelo');
+  double? get _paraleloDisplayRate =>
+      _displayRateFor(widget.toCurrency, 'paralelo');
   DateTime? get _lastFetch => DolarApiService.instance.lastFetchTime;
 
   /// Returns the raw DolarAPI rate for display purposes.
@@ -146,9 +146,7 @@ class _ExchangeRateSelectorState extends State<ExchangeRateSelector> {
         // Manual input is in human-friendly direction (VES per 1 foreign unit),
         // same as BCV/paralelo display. Invert for the callback.
         final manualRate = double.tryParse(_manualController.text);
-        rate = (manualRate != null && manualRate > 0)
-            ? 1.0 / manualRate
-            : null;
+        rate = (manualRate != null && manualRate > 0) ? 1.0 / manualRate : null;
         source = 'manual';
         break;
     }
@@ -375,8 +373,7 @@ class _ExchangeRateSelectorState extends State<ExchangeRateSelector> {
     // Display in human-friendly direction: "VES per 1 foreign unit"
     // e.g. "BCV (479.78 VES/USD)"
     final rateStr = displayRate.toStringAsFixed(2);
-    final currPair =
-        '${widget.fromCurrency}/${widget.toCurrency}';
+    final currPair = '${widget.fromCurrency}/${widget.toCurrency}';
 
     return ChoiceChip(
       label: Text('$label ($rateStr $currPair)'),

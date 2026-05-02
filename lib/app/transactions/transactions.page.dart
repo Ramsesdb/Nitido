@@ -1,4 +1,4 @@
-﻿// ignore_for_file: unnecessary_string_interpolations, prefer_single_quotes
+// ignore_for_file: unnecessary_string_interpolations, prefer_single_quotes
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -178,12 +178,16 @@ class TransactionsPageState extends State<TransactionsPage> {
             // level — no client-side filtering needed.
             Expanded(
               child: StreamBuilder<({List<String>? visible, List<Account>? all})>(
-                stream: Rx.combineLatest2<List<String>, List<Account>,
-                    ({List<String>? visible, List<Account>? all})>(
-                  HiddenModeService.instance.visibleAccountIdsStream,
-                  AccountService.instance.getAccounts(),
-                  (v, a) => (visible: v, all: a),
-                ),
+                stream:
+                    Rx.combineLatest2<
+                      List<String>,
+                      List<Account>,
+                      ({List<String>? visible, List<Account>? all})
+                    >(
+                      HiddenModeService.instance.visibleAccountIdsStream,
+                      AccountService.instance.getAccounts(),
+                      (v, a) => (visible: v, all: a),
+                    ),
                 builder: (context, hiddenSnapshot) {
                   final effectiveFilters = _applyHiddenAccountsFilter(
                     filters.copyWith(searchValue: searchController.text),
@@ -202,10 +206,7 @@ class TransactionsPageState extends State<TransactionsPage> {
                           final stat = snapshot.data;
                           final trCountAndBalance = stat == null
                               ? null
-                              : (
-                                  count: stat.numberOfRes,
-                                  value: stat.valueSum,
-                                );
+                              : (count: stat.numberOfRes, value: stat.valueSum);
                           final hasMissingRates =
                               stat?.hasMissingRates ?? false;
                           final missingCurrencies =
@@ -276,14 +277,13 @@ class TransactionsPageState extends State<TransactionsPage> {
                                           if (selectedTransactions
                                               .isNotEmpty) ...[
                                             CurrencyDisplayer(
-                                              amountToConvert:
-                                                  selectedTransactions
-                                                      .map(
-                                                        (e) =>
-                                                            e.getCurrentBalanceInPreferredCurrency() ??
-                                                            0.0,
-                                                      )
-                                                      .sum,
+                                              amountToConvert: selectedTransactions
+                                                  .map(
+                                                    (e) =>
+                                                        e.getCurrentBalanceInPreferredCurrency() ??
+                                                        0.0,
+                                                  )
+                                                  .sum,
                                               showDecimals: false,
                                             ),
                                             const Text(
@@ -298,9 +298,7 @@ class TransactionsPageState extends State<TransactionsPage> {
                                                 selectedTransactions.isEmpty,
                                             integerStyle:
                                                 selectedTransactions.isEmpty
-                                                ? const TextStyle(
-                                                    inherit: true,
-                                                  )
+                                                ? const TextStyle(inherit: true)
                                                 : smallerTextStyle,
                                           ),
                                           if (hasMissingRates) ...[
@@ -311,9 +309,9 @@ class TransactionsPageState extends State<TransactionsPage> {
                                               child: Icon(
                                                 Icons.info_outline,
                                                 size: 16,
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .error,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.error,
                                               ),
                                             ),
                                           ],
@@ -336,8 +334,7 @@ class TransactionsPageState extends State<TransactionsPage> {
                           ).withSafeBottom(context),
                           tileBuilder: (tr) => TransactionListTile(
                             transaction: tr,
-                            heroTag:
-                                'transactions-page__tr-icon-${tr.id}',
+                            heroTag: 'transactions-page__tr-icon-${tr.id}',
                             onLongPress: selectedTransactions.isNotEmpty
                                 ? null
                                 : () => toggleTransaction(tr),

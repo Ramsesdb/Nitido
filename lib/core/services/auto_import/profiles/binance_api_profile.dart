@@ -27,14 +27,14 @@ class BinanceApiProfile implements BankProfile {
 
   @override
   List<String> get knownSenders => const [
-        'binance:c2c_p2p',
-        'binance:fiat_order_deposit',
-        'binance:fiat_order_withdraw',
-        'binance:fiat_payment',
-        'binance:pay',
-        'binance:deposit',
-        'binance:withdraw',
-      ];
+    'binance:c2c_p2p',
+    'binance:fiat_order_deposit',
+    'binance:fiat_order_withdraw',
+    'binance:fiat_payment',
+    'binance:pay',
+    'binance:deposit',
+    'binance:withdraw',
+  ];
 
   @override
   int get profileVersion => 1;
@@ -140,13 +140,13 @@ class BinanceApiProfile implements BankProfile {
     required bool isDeposit,
   }) {
     final status = (item['status'] as String? ?? '').toLowerCase();
-    final isCompleted = status == 'successful' ||
-        status == 'completed' ||
-        status == 'success';
+    final isCompleted =
+        status == 'successful' || status == 'completed' || status == 'success';
     if (!isCompleted) return null;
 
     final fiatCurrency = item['fiatCurrency'] as String? ?? 'USD';
-    final amount = double.tryParse('${item['amount']}') ??
+    final amount =
+        double.tryParse('${item['amount']}') ??
         double.tryParse('${item['indicatedAmount']}') ??
         double.tryParse('${item['totalPrice']}') ??
         0.0;
@@ -162,7 +162,8 @@ class BinanceApiProfile implements BankProfile {
       currencyId: fiatCurrency == 'USD' ? 'USD' : fiatCurrency,
       date: date,
       type: isDeposit ? TransactionType.income : TransactionType.expense,
-      counterpartyName: (item['method'] as String?) ?? (item['sourceType'] as String?),
+      counterpartyName:
+          (item['method'] as String?) ?? (item['sourceType'] as String?),
       bankRef: item['orderNo'] as String?,
       rawText: event.rawText,
       channel: CaptureChannel.api,
@@ -226,8 +227,8 @@ class BinanceApiProfile implements BankProfile {
         : event.receivedAt;
 
     // Determine direction: PAY/PAYOUT → expense, RECEIVE/C2C → income
-    final transactionType =
-        (item['transactionType'] as String? ?? '').toUpperCase();
+    final transactionType = (item['transactionType'] as String? ?? '')
+        .toUpperCase();
     final type = (transactionType == 'PAY' || transactionType == 'PAYOUT')
         ? TransactionType.expense
         : TransactionType.income;
@@ -333,8 +334,7 @@ class BinanceApiProfile implements BankProfile {
 
   static const _stablecoins = {'USDT', 'USDC', 'BUSD', 'FDUSD'};
 
-  bool _isStablecoin(String coin) =>
-      _stablecoins.contains(coin.toUpperCase());
+  bool _isStablecoin(String coin) => _stablecoins.contains(coin.toUpperCase());
 
   /// Map stablecoins to 'USD'; leave other currencies as-is.
   String _resolveCurrencyId(String coin) {

@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/dashboard_layout.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/migrator.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/widget_descriptor.dart';
@@ -114,8 +114,11 @@ void main() {
       final result = DashboardLayoutMigrator.migrate(json);
 
       expect(result.isFutureVersion, isFalse);
-      expect(result.didMutate, isTrue,
-          reason: 'dropping unknown widget MUST trigger a write-back signal');
+      expect(
+        result.didMutate,
+        isTrue,
+        reason: 'dropping unknown widget MUST trigger a write-back signal',
+      );
       expect(result.layout.widgets.length, 1);
       expect(result.layout.widgets.single.instanceId, 'good');
     });

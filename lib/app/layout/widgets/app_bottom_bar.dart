@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:nitido/app/ai/ai_hub.page.dart';
@@ -81,10 +81,12 @@ class _AppBottomBarState extends State<AppBottomBar>
       if (mounted) _maybeAnimateTo(selectedNavItemIndex);
     });
 
-    final leftItems =
-        menuItems.length >= 2 ? menuItems.sublist(0, 2) : menuItems;
-    final rightItems =
-        menuItems.length > 2 ? menuItems.sublist(2) : <MainMenuDestination>[];
+    final leftItems = menuItems.length >= 2
+        ? menuItems.sublist(0, 2)
+        : menuItems;
+    final rightItems = menuItems.length > 2
+        ? menuItems.sublist(2)
+        : <MainMenuDestination>[];
 
     return StreamBuilder<int>(
       stream: PendingImportService.instance.watchPendingCount(),
@@ -92,8 +94,7 @@ class _AppBottomBarState extends State<AppBottomBar>
       builder: (context, snapshot) {
         final pendingCount = snapshot.data ?? 0;
         final cs = Theme.of(context).colorScheme;
-        final vpBottom =
-            MediaQuery.of(context).viewPadding.bottom;
+        final vpBottom = MediaQuery.of(context).viewPadding.bottom;
         // 28px is the visual offset that looks correct on gesture-nav
         // phones (where the system bar is transparent and ≤28px tall).
         // On 3-button nav (vpBottom ≈ 48px) the opaque system bar is
@@ -132,10 +133,13 @@ class _AppBottomBarState extends State<AppBottomBar>
                           // Slot center X = (i + 0.5) * (width / 5).
                           // Indices in menuItems → slot:
                           //   left items take slots 0,1; right items 3,4.
-                          final isCenterSelected = selectedNavItemIndex >= 0 &&
+                          final isCenterSelected =
+                              selectedNavItemIndex >= 0 &&
                               selectedNavItemIndex < menuItems.length &&
-                              _slotForMenuIndex(selectedNavItemIndex,
-                                      menuItems.length) ==
+                              _slotForMenuIndex(
+                                    selectedNavItemIndex,
+                                    menuItems.length,
+                                  ) ==
                                   2;
 
                           return Stack(
@@ -147,13 +151,16 @@ class _AppBottomBarState extends State<AppBottomBar>
                                     painter: _BlobPainter(
                                       animation: _blobController,
                                       previousSlot: _slotForMenuIndex(
-                                          _previousIndex, menuItems.length),
+                                        _previousIndex,
+                                        menuItems.length,
+                                      ),
                                       currentSlot: _slotForMenuIndex(
-                                          _currentIndex, menuItems.length),
+                                        _currentIndex,
+                                        menuItems.length,
+                                      ),
                                       slotWidth: width / 5,
                                       barHeight: AppBottomBar._barHeight,
-                                      color: cs.primary
-                                          .withValues(alpha: 0.20),
+                                      color: cs.primary.withValues(alpha: 0.20),
                                       hidden: isCenterSelected,
                                     ),
                                   ),
@@ -167,9 +174,9 @@ class _AppBottomBarState extends State<AppBottomBar>
                                       item: e,
                                       selected: idx == selectedNavItemIndex,
                                       cs: cs,
-                                      pendingCount: e.id ==
-                                              AppMenuDestinationsID
-                                                  .transactions
+                                      pendingCount:
+                                          e.id ==
+                                              AppMenuDestinationsID.transactions
                                           ? pendingCount
                                           : 0,
                                       onTap: () => tabsPageKey.currentState
@@ -183,9 +190,9 @@ class _AppBottomBarState extends State<AppBottomBar>
                                       item: e,
                                       selected: idx == selectedNavItemIndex,
                                       cs: cs,
-                                      pendingCount: e.id ==
-                                              AppMenuDestinationsID
-                                                  .transactions
+                                      pendingCount:
+                                          e.id ==
+                                              AppMenuDestinationsID.transactions
                                           ? pendingCount
                                           : 0,
                                       onTap: () => tabsPageKey.currentState
@@ -269,7 +276,8 @@ class _BlobPainter extends CustomPainter {
     // bulged width never invades neighbour slots.
     final blobWidth = (slotWidth * 0.94).clamp(72.0, 104.0);
 
-    final isInTransit = animation.value > 0.0 &&
+    final isInTransit =
+        animation.value > 0.0 &&
         animation.value < 1.0 &&
         previousSlot != currentSlot;
 
@@ -354,10 +362,12 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final iconColor =
-        selected ? cs.primary : cs.onSurfaceVariant.withValues(alpha: 0.85);
-    final labelColor =
-        selected ? cs.primary : cs.onSurfaceVariant.withValues(alpha: 0.7);
+    final iconColor = selected
+        ? cs.primary
+        : cs.onSurfaceVariant.withValues(alpha: 0.85);
+    final labelColor = selected
+        ? cs.primary
+        : cs.onSurfaceVariant.withValues(alpha: 0.7);
 
     Widget icon = Icon(
       selected ? (item.selectedIcon ?? item.icon) : item.icon,
@@ -387,8 +397,7 @@ class _NavItem extends StatelessWidget {
                 maxLines: 1,
                 style: TextStyle(
                   fontSize: 10,
-                  fontWeight:
-                      selected ? FontWeight.w600 : FontWeight.w400,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
                   color: labelColor,
                 ),
               ),
@@ -495,7 +504,11 @@ class _FloatingAiSectionState extends State<_FloatingAiSection>
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 48),
                 padding: const EdgeInsets.only(
-                    left: 14, top: 8, bottom: 8, right: 4),
+                  left: 14,
+                  top: 8,
+                  bottom: 8,
+                  right: 4,
+                ),
                 decoration: BoxDecoration(
                   color: cs.surfaceContainerHighest,
                   borderRadius: BorderRadius.circular(14),
@@ -578,8 +591,7 @@ class _FloatingAiSectionState extends State<_FloatingAiSection>
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color:
-                            cs.primary.withValues(alpha: _glowAnim.value),
+                        color: cs.primary.withValues(alpha: _glowAnim.value),
                         blurRadius: 14 + 6 * _glowAnim.value,
                         spreadRadius: 1.5 * _glowAnim.value,
                       ),

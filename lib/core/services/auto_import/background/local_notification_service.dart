@@ -28,15 +28,13 @@ class LocalNotificationService {
   /// Notification ID for the transient "pending imports" notification.
   static const int pendingNotificationId = 8881;
 
-  static final LocalNotificationService instance =
-      LocalNotificationService._();
+  static final LocalNotificationService instance = LocalNotificationService._();
 
   LocalNotificationService._();
 
   /// For testing: create an instance with a custom plugin.
-  LocalNotificationService.forTesting({
-    FlutterLocalNotificationsPlugin? plugin,
-  }) : _pluginOverride = plugin;
+  LocalNotificationService.forTesting({FlutterLocalNotificationsPlugin? plugin})
+    : _pluginOverride = plugin;
 
   FlutterLocalNotificationsPlugin? _pluginOverride;
   FlutterLocalNotificationsPlugin? _plugin;
@@ -54,9 +52,7 @@ class LocalNotificationService {
   /// Initialize the local notifications plugin and create Android channels.
   ///
   /// Safe to call multiple times — subsequent calls are no-ops.
-  Future<void> initialize({
-    void Function(NotificationResponse)? onTap,
-  }) async {
+  Future<void> initialize({void Function(NotificationResponse)? onTap}) async {
     if (_initialized) return;
     if (kIsWeb) return;
 
@@ -73,9 +69,10 @@ class LocalNotificationService {
 
       // Create notification channels (Android only)
       if (Platform.isAndroid) {
-        final androidPlugin =
-            plugin.resolvePlatformSpecificImplementation<
-                AndroidFlutterLocalNotificationsPlugin>();
+        final androidPlugin = plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
 
         if (androidPlugin != null) {
           // Low-importance channel for the foreground service

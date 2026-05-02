@@ -19,10 +19,7 @@ class DedupeChecker {
   final AppDB db;
   final PendingImportService pendingImportService;
 
-  DedupeChecker._({
-    required this.db,
-    required this.pendingImportService,
-  });
+  DedupeChecker._({required this.db, required this.pendingImportService});
 
   static final DedupeChecker instance = DedupeChecker._(
     db: AppDB.instance,
@@ -54,15 +51,18 @@ class DedupeChecker {
         '${proposal.accountId != null ? "AND accountId=${proposal.accountId}" : "(no accountId scope)"}',
       );
       // Check pending_imports by bankRef (+ accountId when available) — prevents re-classifying same proposal each poll.
-      final pendingByRef = await (db.select(db.pendingImports)
-            ..where((p) => proposal.accountId != null
-                ? buildDriftExpr([
-                    p.bankRef.equals(proposal.bankRef!),
-                    p.accountId.equals(proposal.accountId!),
-                  ])
-                : p.bankRef.equals(proposal.bankRef!))
-            ..limit(1))
-          .getSingleOrNull();
+      final pendingByRef =
+          await (db.select(db.pendingImports)
+                ..where(
+                  (p) => proposal.accountId != null
+                      ? buildDriftExpr([
+                          p.bankRef.equals(proposal.bankRef!),
+                          p.accountId.equals(proposal.accountId!),
+                        ])
+                      : p.bankRef.equals(proposal.bankRef!),
+                )
+                ..limit(1))
+              .getSingleOrNull();
       debugPrint(
         '[DEDUPE-DBG] pendingByRef result: '
         '${pendingByRef == null ? "NULL (no match)" : "FOUND id=${pendingByRef.id} bankRef=${pendingByRef.bankRef} accountId=${pendingByRef.accountId} status=${pendingByRef.status}"}',
@@ -73,24 +73,30 @@ class DedupeChecker {
       }
 
       // Legacy path: also defer to the service helper for any non-account-scoped match.
-      debugPrint('[DEDUPE-DBG] querying findByBankRef (legacy, no account scope) bankRef=${proposal.bankRef}');
-      final existingImport =
-          await pendingImportService.findByBankRef(proposal.bankRef!);
+      debugPrint(
+        '[DEDUPE-DBG] querying findByBankRef (legacy, no account scope) bankRef=${proposal.bankRef}',
+      );
+      final existingImport = await pendingImportService.findByBankRef(
+        proposal.bankRef!,
+      );
       debugPrint(
         '[DEDUPE-DBG] findByBankRef result: '
         '${existingImport == null ? "NULL (no match)" : "FOUND id=${existingImport.id} bankRef=${existingImport.bankRef} accountId=${existingImport.accountId} status=${existingImport.status}"}',
       );
       if (existingImport != null) {
-        debugPrint('[DEDUPE-DBG] decision=DUPLICATE via findByBankRef (legacy)');
+        debugPrint(
+          '[DEDUPE-DBG] decision=DUPLICATE via findByBankRef (legacy)',
+        );
         return true;
       }
 
       // Check transactions table for bankRef in notes
       final refPattern = 'ref=${proposal.bankRef}';
-      final txByRef = await (db.select(db.transactions)
-            ..where((t) => t.notes.contains(refPattern))
-            ..limit(1))
-          .getSingleOrNull();
+      final txByRef =
+          await (db.select(db.transactions)
+                ..where((t) => t.notes.contains(refPattern))
+                ..limit(1))
+              .getSingleOrNull();
       debugPrint(
         '[DEDUPE-DBG] txByRef("$refPattern") result: '
         '${txByRef == null ? "NULL" : "FOUND id=${txByRef.id}"}',
@@ -128,25 +134,27 @@ class DedupeChecker {
     // 2. Fallback: no bankRef. Widen to +- 4h and additionally match on
     //    counterparty when the proposal has one.
     if (proposal.accountId != null) {
-      final windowStart =
-          proposal.date.subtract(const Duration(hours: 4));
+      final windowStart = proposal.date.subtract(const Duration(hours: 4));
       final windowEnd = proposal.date.add(const Duration(hours: 4));
 
-      final matchingTxs = await (db.select(db.transactions)
-            ..where((t) => buildDriftExpr([
-                  t.accountID.equals(proposal.accountId!),
-                  t.date.isBiggerOrEqualValue(windowStart),
-                  t.date.isSmallerOrEqualValue(windowEnd),
-                ]))
-            ..limit(20))
-          .get();
+      final matchingTxs =
+          await (db.select(db.transactions)
+                ..where(
+                  (t) => buildDriftExpr([
+                    t.accountID.equals(proposal.accountId!),
+                    t.date.isBiggerOrEqualValue(windowStart),
+                    t.date.isSmallerOrEqualValue(windowEnd),
+                  ]),
+                )
+                ..limit(20))
+              .get();
 
-      final proposalCounterparty =
-          proposal.counterpartyName?.trim().toLowerCase();
+      final proposalCounterparty = proposal.counterpartyName
+          ?.trim()
+          .toLowerCase();
 
       for (final tx in matchingTxs) {
-        final amountMatches =
-            (tx.value.abs() - proposal.amount).abs() < 0.01;
+        final amountMatches = (tx.value.abs() - proposal.amount).abs() < 0.01;
         if (!amountMatches) continue;
 
         // Transactions don't carry a `counterpartyName` column — best-effort
@@ -172,15 +180,18 @@ class DedupeChecker {
       // `counterpartyName` directly, which gives us a cleaner signal than
       // the notes heuristic above.
       if (proposalCounterparty != null && proposalCounterparty.isNotEmpty) {
-        final pendingMatch = await (db.select(db.pendingImports)
-              ..where((p) => buildDriftExpr([
-                    p.accountId.equals(proposal.accountId!),
-                    p.date.isBiggerOrEqualValue(windowStart),
-                    p.date.isSmallerOrEqualValue(windowEnd),
-                    p.amount.equals(proposal.amount),
-                  ]))
-              ..limit(5))
-            .get();
+        final pendingMatch =
+            await (db.select(db.pendingImports)
+                  ..where(
+                    (p) => buildDriftExpr([
+                      p.accountId.equals(proposal.accountId!),
+                      p.date.isBiggerOrEqualValue(windowStart),
+                      p.date.isSmallerOrEqualValue(windowEnd),
+                      p.amount.equals(proposal.amount),
+                    ]),
+                  )
+                  ..limit(5))
+                .get();
         for (final p in pendingMatch) {
           final pc = (p.counterpartyName ?? '').trim().toLowerCase();
           if (pc == proposalCounterparty) return true;
@@ -207,22 +218,23 @@ class DedupeChecker {
 
     if (proposal.accountId == null) return false;
 
-    final windowStart =
-        proposal.date.subtract(const Duration(hours: 24));
+    final windowStart = proposal.date.subtract(const Duration(hours: 24));
     final windowEnd = proposal.date.add(const Duration(hours: 24));
 
-    final candidates = await (db.select(db.transactions)
-          ..where((t) => buildDriftExpr([
-                t.accountID.equals(proposal.accountId!),
-                t.date.isBiggerOrEqualValue(windowStart),
-                t.date.isSmallerOrEqualValue(windowEnd),
-              ]))
-          ..limit(20))
-        .get();
+    final candidates =
+        await (db.select(db.transactions)
+              ..where(
+                (t) => buildDriftExpr([
+                  t.accountID.equals(proposal.accountId!),
+                  t.date.isBiggerOrEqualValue(windowStart),
+                  t.date.isSmallerOrEqualValue(windowEnd),
+                ]),
+              )
+              ..limit(20))
+            .get();
 
     for (final tx in candidates) {
-      final amountMatches =
-          (tx.value.abs() - proposal.amount).abs() < 0.01;
+      final amountMatches = (tx.value.abs() - proposal.amount).abs() < 0.01;
       if (amountMatches) return true;
     }
 

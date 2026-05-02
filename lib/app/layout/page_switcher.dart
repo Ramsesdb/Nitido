@@ -73,9 +73,7 @@ class PageSwitcherState extends State<PageSwitcher> {
             }
 
             return NewTransactionButton(
-              isExtended: BreakPoint.of(
-                context,
-              ).isLargerThan(BreakpointID.md),
+              isExtended: BreakPoint.of(context).isLargerThan(BreakpointID.md),
             );
           },
         ),

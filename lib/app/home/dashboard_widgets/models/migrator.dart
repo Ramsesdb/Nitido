@@ -52,9 +52,7 @@ class DashboardLayoutMigrator {
   };
 
   /// Run all applicable migration steps and dedup duplicate ids.
-  static DashboardLayoutMigrationResult migrate(
-    Map<String, dynamic> rawJson,
-  ) {
+  static DashboardLayoutMigrationResult migrate(Map<String, dynamic> rawJson) {
     var json = Map<String, dynamic>.from(rawJson);
     var didMutate = false;
 

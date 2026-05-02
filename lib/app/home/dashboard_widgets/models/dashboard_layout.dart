@@ -19,10 +19,7 @@ class DashboardLayout {
   final int schemaVersion;
   final List<WidgetDescriptor> widgets;
 
-  const DashboardLayout({
-    required this.schemaVersion,
-    required this.widgets,
-  });
+  const DashboardLayout({required this.schemaVersion, required this.widgets});
 
   /// Empty layout pinned to [currentSchemaVersion]. Used as the seed value
   /// for `BehaviorSubject` and as the "fall through" when persisted JSON is

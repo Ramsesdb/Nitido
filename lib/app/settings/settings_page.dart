@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:nitido/app/calculator/calculator.page.dart';
@@ -25,7 +25,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   Future<void> _runPersonalVESeeder() async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -52,11 +51,13 @@ class _SettingsPageState extends State<SettingsPage> {
     if (confirmed != true || !mounted) return;
 
     // Show loading overlay
-    unawaited(showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    ));
+    unawaited(
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      ),
+    );
 
     try {
       await PersonalVESeeder.seedAll();
@@ -85,7 +86,6 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: t.settings.hidden_mode.title,
               subtitle: t.settings.hidden_mode.menu_descr,
               icon: Icons.visibility_off_outlined,
-              onTap: () =>
-                  RouteUtils.pushRoute(const HiddenModeSettingsPage()),
+              onTap: () => RouteUtils.pushRoute(const HiddenModeSettingsPage()),
             ),
             const Divider(),
 
@@ -161,8 +160,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: t.settings.auto_import.menu_title,
               subtitle: 'Captura automatica de SMS, notificaciones y APIs',
               icon: Icons.auto_mode,
-              onTap: () => RouteUtils.pushRoute(
-                  const AutoImportSettingsPage()),
+              onTap: () => RouteUtils.pushRoute(const AutoImportSettingsPage()),
             ),
             const Divider(),
 

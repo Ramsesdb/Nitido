@@ -107,23 +107,23 @@ class _DashboardPageState extends State<DashboardPage>
     _rateSourceSubscription = UserSettingService.instance
         .getSettingFromDB(SettingKey.preferredRateSource)
         .listen((value) {
-      if (!mounted) return;
-      if (value == 'bcv' || value == 'paralelo') {
-        if (_rateSource != value) setState(() => _rateSource = value!);
-      }
-    });
+          if (!mounted) return;
+          if (value == 'bcv' || value == 'paralelo') {
+            if (_rateSource != value) setState(() => _rateSource = value!);
+          }
+        });
 
     // Phase 6.5/6.8 — drive a rebuild whenever the policy changes so
     // descendant widgets (which subscribe to the same stream
     // independently) get a fresh frame in step with the chip's new
     // gating. We don't need to retain the value locally — the
     // descendants own the state.
-    _policySubscription = CurrencyDisplayPolicyResolver.instance
-        .watch()
-        .listen((_) {
-      if (!mounted) return;
-      setState(() {});
-    });
+    _policySubscription = CurrencyDisplayPolicyResolver.instance.watch().listen(
+      (_) {
+        if (!mounted) return;
+        setState(() {});
+      },
+    );
 
     // Kick off the layout load + fallback gate. This is fire-and-forget —
     // the StreamBuilder downstream observes the BehaviorSubject directly,
@@ -255,9 +255,7 @@ class _DashboardPageState extends State<DashboardPage>
         final ui = Translations.of(ctx).ui_actions;
         return AlertDialog(
           title: Text(t.remove_widget_title),
-          content: Text(
-            t.remove_widget_message.replaceAll('{name}', name),
-          ),
+          content: Text(t.remove_widget_message.replaceAll('{name}', name)),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
@@ -648,7 +646,9 @@ class _DashboardPageState extends State<DashboardPage>
       backgroundColor: AppColors.of(context).onHeader.withValues(alpha: 0.08),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
-        side: BorderSide(color: AppColors.of(context).onHeader.withValues(alpha: 0.2)),
+        side: BorderSide(
+          color: AppColors.of(context).onHeader.withValues(alpha: 0.2),
+        ),
       ),
       onPressed: () {
         // Hidden Mode restricts the period picker to bounded ranges so the
@@ -726,7 +726,9 @@ class _DashboardPageState extends State<DashboardPage>
               onLongPress: _handleSecretTap,
               child: UserAvatarDisplay(
                 avatar: appStateSettings[SettingKey.avatar],
-                backgroundColor: AppColors.of(context).onHeader.withValues(alpha: 0.15),
+                backgroundColor: AppColors.of(
+                  context,
+                ).onHeader.withValues(alpha: 0.15),
                 border: Border.all(
                   width: 2,
                   color: AppColors.of(context).onHeader.withValues(alpha: 0.5),
@@ -819,9 +821,7 @@ class _DashboardPageState extends State<DashboardPage>
             const SizedBox(width: 10),
             Expanded(
               child: Text(
-                Translations.of(
-                  context,
-                ).home.dashboard_widgets.edit_banner,
+                Translations.of(context).home.dashboard_widgets.edit_banner,
                 style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,

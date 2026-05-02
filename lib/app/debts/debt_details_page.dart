@@ -1,4 +1,4 @@
-﻿// ignore_for_file: prefer_single_quotes
+// ignore_for_file: prefer_single_quotes
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -159,8 +159,7 @@ class DebtDetailsPage extends StatelessWidget {
         final remainingAmount = data.remaining;
         final totalAmount = data.total;
         final collectedAmount = totalAmount - remainingAmount;
-        final progress =
-            totalAmount <= 0 ? 0.0 : collectedAmount / totalAmount;
+        final progress = totalAmount <= 0 ? 0.0 : collectedAmount / totalAmount;
 
         final color = debt.type.color(context);
         final int? daysLeft = debt.endDate?.difference(DateTime.now()).inDays;
@@ -313,9 +312,10 @@ class DebtDetailsPage extends StatelessWidget {
                               : Text(
                                   t.debts.details.no_deadline,
                                   style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onSurface.withValues(alpha: 0.45),
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.45),
                                     fontStyle: FontStyle.italic,
                                   ),
                                 ),

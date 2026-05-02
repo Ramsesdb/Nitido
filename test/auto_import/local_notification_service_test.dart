@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/auto_import/background/local_notification_service.dart';
 
 void main() {
@@ -46,14 +46,8 @@ void main() {
     });
 
     test('channel descriptions are non-empty', () {
-      expect(
-        LocalNotificationService.captureChannelDesc.isNotEmpty,
-        isTrue,
-      );
-      expect(
-        LocalNotificationService.pendingChannelDesc.isNotEmpty,
-        isTrue,
-      );
+      expect(LocalNotificationService.captureChannelDesc.isNotEmpty, isTrue);
+      expect(LocalNotificationService.pendingChannelDesc.isNotEmpty, isTrue);
     });
 
     test('notification IDs are distinct', () {

@@ -28,16 +28,16 @@ class Slide03RateSource extends StatelessWidget {
         children: [
           Text(
             '¿Qué tasa de cambio usar?',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Puedes cambiarla cuando quieras desde ajustes.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: V3Tokens.space24),
           V3RateTile(

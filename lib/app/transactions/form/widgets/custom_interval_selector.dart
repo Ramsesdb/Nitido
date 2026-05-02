@@ -58,10 +58,7 @@ class _IntervalSelectorPageState extends State<IntervalSelectorPage> {
   }
 
   Widget buildRadioButton(RuleUntilMode item, Widget title) {
-    return RadioListTile<RuleUntilMode>(
-      value: item,
-      title: title,
-    );
+    return RadioListTile<RuleUntilMode>(value: item, title: title);
   }
 
   @override
@@ -118,76 +115,122 @@ class _IntervalSelectorPageState extends State<IntervalSelectorPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 2, 0, 12),
-              child: Text(
-                t.general.time.ranges.it_repeat,
-                style: Theme.of(context).textTheme.labelLarge,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 2, 0, 12),
+                child: Text(
+                  t.general.time.ranges.it_repeat,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 16),
-              child: Form(
-                key: _formKey,
-                child: Row(
-                  children: [
-                    Flexible(
-                      flex: 1,
-                      child: TextFormField(
-                        initialValue: intervalEach.toStringAsFixed(0),
-                        decoration: InputDecoration(
-                          labelText: '${t.general.time.each} *',
-                          helperText: '',
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 2,
+                  horizontal: 16,
+                ),
+                child: Form(
+                  key: _formKey,
+                  child: Row(
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: TextFormField(
+                          initialValue: intervalEach.toStringAsFixed(0),
+                          decoration: InputDecoration(
+                            labelText: '${t.general.time.each} *',
+                            helperText: '',
+                          ),
+                          onChanged: (value) {
+                            if (fieldValidator(
+                                  value,
+                                  validator: ValidatorType.int,
+                                  isRequired: true,
+                                ) ==
+                                null) {
+                              setState(() {
+                                intervalEach = int.parse(value);
+                              });
+                            }
+                          },
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          keyboardType: TextInputType.number,
+                          validator: (value) => fieldValidator(
+                            value,
+                            validator: ValidatorType.int,
+                            isRequired: true,
+                          ),
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                         ),
-                        onChanged: (value) {
-                          if (fieldValidator(
-                                value,
-                                validator: ValidatorType.int,
-                                isRequired: true,
-                              ) ==
-                              null) {
-                            setState(() {
-                              intervalEach = int.parse(value);
-                            });
-                          }
-                        },
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        keyboardType: TextInputType.number,
-                        validator: (value) => fieldValidator(
-                          value,
-                          validator: ValidatorType.int,
-                          isRequired: true,
-                        ),
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    Flexible(
-                      flex: 2,
-                      child: DropdownButtonFormField(
-                        initialValue: intervalPeriod,
-                        decoration: InputDecoration(
-                          labelText: '${t.general.time.periodicity.display} *',
-                          helperText: '',
-                        ),
-                        items: List.generate(
-                          Periodicity.values.length,
-                          (index) => DropdownMenuItem(
-                            value: Periodicity.values[index],
-                            child: Text(
-                              Periodicity.values[index].periodText(
-                                context,
-                                isPlural: intervalEach > 1,
+                      const SizedBox(width: 12),
+                      Flexible(
+                        flex: 2,
+                        child: DropdownButtonFormField(
+                          initialValue: intervalPeriod,
+                          decoration: InputDecoration(
+                            labelText:
+                                '${t.general.time.periodicity.display} *',
+                            helperText: '',
+                          ),
+                          items: List.generate(
+                            Periodicity.values.length,
+                            (index) => DropdownMenuItem(
+                              value: Periodicity.values[index],
+                              child: Text(
+                                Periodicity.values[index].periodText(
+                                  context,
+                                  isPlural: intervalEach > 1,
+                                ),
                               ),
                             ),
                           ),
+                          onChanged: (value) {
+                            if (value == null) return;
+                            setState(() {
+                              intervalPeriod = value;
+                            });
+                          },
                         ),
-                        onChanged: (value) {
-                          if (value == null) return;
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(height: 24, thickness: 3),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(18, 12, 0, 12),
+                child: Text(
+                  t.general.time.ranges.it_ends,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+              buildRadioButton(
+                RuleUntilMode.infinity,
+                Text(t.general.time.ranges.forever),
+              ),
+              const Divider(height: 12, indent: 64),
+              buildRadioButton(
+                RuleUntilMode.date,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(child: Text(t.general.time.until_date)),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: DateTimeFormField(
+                        decoration: InputDecoration(
+                          suffixIcon: const Icon(Icons.event),
+                          labelText: '${t.general.time.datetime} *',
+                          isDense: true,
+                        ),
+                        mode: DateTimeFieldPickerMode.date,
+                        initialDate: endDate,
+                        enabled: ruleUntilMode == RuleUntilMode.date,
+                        dateFormat: DateFormat.yMMMd(),
+                        onDateSelected: (DateTime value) {
                           setState(() {
-                            intervalPeriod = value;
+                            endDate = value;
                           });
                         },
                       ),
@@ -195,83 +238,43 @@ class _IntervalSelectorPageState extends State<IntervalSelectorPage> {
                   ],
                 ),
               ),
-            ),
-            const Divider(height: 24, thickness: 3),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 12, 0, 12),
-              child: Text(
-                t.general.time.ranges.it_ends,
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-            ),
-            buildRadioButton(
-              RuleUntilMode.infinity,
-              Text(t.general.time.ranges.forever),
-            ),
-            const Divider(height: 12, indent: 64),
-            buildRadioButton(
-              RuleUntilMode.date,
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(child: Text(t.general.time.until_date)),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: DateTimeFormField(
-                      decoration: InputDecoration(
-                        suffixIcon: const Icon(Icons.event),
-                        labelText: '${t.general.time.datetime} *',
-                        isDense: true,
+              const Divider(height: 12, indent: 64),
+              buildRadioButton(
+                RuleUntilMode.nTimes,
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(child: Text(t.general.time.after)),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          isDense: true,
+                          labelText:
+                              '${t.general.time.periodicity.repeat(n: remainingIterations)} *',
+                        ),
+                        initialValue: remainingIterations.toStringAsFixed(0),
+                        enabled: ruleUntilMode == RuleUntilMode.nTimes,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        onChanged: (value) {
+                          if (value.isNotEmpty && int.tryParse(value) != null) {
+                            remainingIterations = int.parse(value);
+                          }
+                        },
+                        keyboardType: TextInputType.number,
+                        validator: (value) => fieldValidator(
+                          value,
+                          validator: ValidatorType.int,
+                          isRequired: ruleUntilMode == RuleUntilMode.nTimes,
+                        ),
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                       ),
-                      mode: DateTimeFieldPickerMode.date,
-                      initialDate: endDate,
-                      enabled: ruleUntilMode == RuleUntilMode.date,
-                      dateFormat: DateFormat.yMMMd(),
-                      onDateSelected: (DateTime value) {
-                        setState(() {
-                          endDate = value;
-                        });
-                      },
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const Divider(height: 12, indent: 64),
-            buildRadioButton(
-              RuleUntilMode.nTimes,
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(child: Text(t.general.time.after)),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        isDense: true,
-                        labelText:
-                            '${t.general.time.periodicity.repeat(n: remainingIterations)} *',
-                      ),
-                      initialValue: remainingIterations.toStringAsFixed(0),
-                      enabled: ruleUntilMode == RuleUntilMode.nTimes,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onChanged: (value) {
-                        if (value.isNotEmpty && int.tryParse(value) != null) {
-                          remainingIterations = int.parse(value);
-                        }
-                      },
-                      keyboardType: TextInputType.number,
-                      validator: (value) => fieldValidator(
-                        value,
-                        validator: ValidatorType.int,
-                        isRequired: ruleUntilMode == RuleUntilMode.nTimes,
-                      ),
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                    ),
-                  ),
-                ],
-              ),
-            ),
             ],
           ),
         ),

@@ -43,16 +43,16 @@ class ExchangeRateService {
     required String source,
   }) async {
     // Look for existing rate with same currency + date + source
-    final existing = await (db.select(db.exchangeRates)
-          ..where(
-            (e) =>
-                e.currencyCode.equals(currencyCode) &
-                e.date.date
-                    .equals(DateFormat('yyyy-MM-dd').format(date)) &
-                e.source.equals(source),
-          )
-          ..limit(1))
-        .getSingleOrNull();
+    final existing =
+        await (db.select(db.exchangeRates)
+              ..where(
+                (e) =>
+                    e.currencyCode.equals(currencyCode) &
+                    e.date.date.equals(DateFormat('yyyy-MM-dd').format(date)) &
+                    e.source.equals(source),
+              )
+              ..limit(1))
+            .getSingleOrNull();
 
     final toInsert = ExchangeRateInDB(
       id: existing?.id ?? generateUUID(),
@@ -130,7 +130,8 @@ class ExchangeRateService {
     return db
         .getExchangeRates(
           predicate: (e, currency) {
-            var condition = e.currencyCode.equals(currencyCode) &
+            var condition =
+                e.currencyCode.equals(currencyCode) &
                 e.date.isSmallerOrEqualValue(date!);
             if (source != null) {
               condition = condition & e.source.equals(source);
@@ -152,8 +153,10 @@ class ExchangeRateService {
   }) {
     date ??= DateTime.now();
 
-    return getLastExchangeRateOf(currencyCode: fromCurrency, date: date)
-        .map((event) => event == null ? null : event.exchangeRate * amount);
+    return getLastExchangeRateOf(
+      currencyCode: fromCurrency,
+      date: date,
+    ).map((event) => event == null ? null : event.exchangeRate * amount);
   }
 
   /// Same as [calculateExchangeRateToPreferredCurrency] but returns 0 when
@@ -240,24 +243,20 @@ class ExchangeRateService {
       source: source,
     );
 
-    return Rx.combineLatest2(
-      fromExchangeRate,
-      toExchangeRate,
-      (from, to) {
-        final base = _baseCurrency;
-        // A missing row is legitimate ONLY for the base currency (which
-        // has no row by storage convention). For any other currency,
-        // null means "tasa no configurada" — propagate as null.
-        final double? fromRate =
-            from?.exchangeRate ?? (fromCurrency == base ? 1.0 : null);
-        final double? toRate =
-            to?.exchangeRate ?? (toCurrency == base ? 1.0 : null);
-        if (fromRate == null || toRate == null || toRate == 0) {
-          return null;
-        }
-        return (fromRate / toRate) * amount;
-      },
-    );
+    return Rx.combineLatest2(fromExchangeRate, toExchangeRate, (from, to) {
+      final base = _baseCurrency;
+      // A missing row is legitimate ONLY for the base currency (which
+      // has no row by storage convention). For any other currency,
+      // null means "tasa no configurada" — propagate as null.
+      final double? fromRate =
+          from?.exchangeRate ?? (fromCurrency == base ? 1.0 : null);
+      final double? toRate =
+          to?.exchangeRate ?? (toCurrency == base ? 1.0 : null);
+      if (fromRate == null || toRate == null || toRate == 0) {
+        return null;
+      }
+      return (fromRate / toRate) * amount;
+    });
   }
 
   /// Resolve the storage base currency from app state. Returns `'VES'`
@@ -314,16 +313,18 @@ class ExchangeRateService {
 
     while (!current.isAfter(end)) {
       // Check if rate already exists for this date + currency + source
-      final existing = await (db.select(db.exchangeRates)
-            ..where(
-              (e) =>
-                  e.currencyCode.equals(storeCurrencyCode) &
-                  e.date.date
-                      .equals(DateFormat('yyyy-MM-dd').format(current)) &
-                  e.source.equals(source),
-            )
-            ..limit(1))
-          .getSingleOrNull();
+      final existing =
+          await (db.select(db.exchangeRates)
+                ..where(
+                  (e) =>
+                      e.currencyCode.equals(storeCurrencyCode) &
+                      e.date.date.equals(
+                        DateFormat('yyyy-MM-dd').format(current),
+                      ) &
+                      e.source.equals(source),
+                )
+                ..limit(1))
+              .getSingleOrNull();
 
       if (existing == null) {
         try {

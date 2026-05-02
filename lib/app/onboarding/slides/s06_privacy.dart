@@ -3,11 +3,7 @@ import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_slide_template.dart';
 
 class Slide06Privacy extends StatelessWidget {
-  const Slide06Privacy({
-    super.key,
-    required this.onNext,
-    this.onSkip,
-  });
+  const Slide06Privacy({super.key, required this.onNext, this.onSkip});
 
   final VoidCallback onNext;
   final VoidCallback? onSkip;
@@ -23,34 +19,37 @@ class Slide06Privacy extends StatelessWidget {
         children: [
           Text(
             'Tu privacidad es prioridad',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Cómo manejamos tus datos.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: V3Tokens.space24),
           const _PrivacyBullet(
             icon: Icons.phone_android,
             title: 'Procesamiento en tu dispositivo',
-            body: 'Las notificaciones se leen y parsean localmente. No salen de tu teléfono.',
+            body:
+                'Las notificaciones se leen y parsean localmente. No salen de tu teléfono.',
           ),
           const SizedBox(height: V3Tokens.space16),
           const _PrivacyBullet(
             icon: Icons.lock_outline,
             title: 'Sin envío a terceros',
-            body: 'No compartimos tu información con anunciantes ni agregadores.',
+            body:
+                'No compartimos tu información con anunciantes ni agregadores.',
           ),
           const SizedBox(height: V3Tokens.space16),
           const _PrivacyBullet(
             icon: Icons.filter_alt_outlined,
             title: 'Solo tus bancos',
-            body: 'Solo leemos notificaciones que coinciden con patrones conocidos (BDV, Zinli, Binance, etc.).',
+            body:
+                'Solo leemos notificaciones que coinciden con patrones conocidos (BDV, Zinli, Binance, etc.).',
           ),
         ],
       ),
@@ -92,16 +91,16 @@ class _PrivacyBullet extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 2),
               Text(
                 body,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
               ),
             ],
           ),

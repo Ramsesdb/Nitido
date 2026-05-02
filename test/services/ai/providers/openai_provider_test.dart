@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -38,9 +38,11 @@ void main() {
         client: client,
       );
 
-      final result = await provider.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      final result = await provider.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
 
       expect(result, 'hello world');
 
@@ -79,8 +81,9 @@ void main() {
         maxTokens: 256,
       );
 
-      final payload = jsonDecode((client.lastRequest as http.Request).body)
-          as Map<String, dynamic>;
+      final payload =
+          jsonDecode((client.lastRequest as http.Request).body)
+              as Map<String, dynamic>;
       expect(payload['model'], 'gpt-4.1');
       expect(payload['temperature'], 0.42);
       expect(payload['max_tokens'], 256);
@@ -93,9 +96,11 @@ void main() {
         model: 'gpt-4o-mini',
         client: client,
       );
-      final result = await provider.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      final result = await provider.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
       expect(result, isNull);
     });
 

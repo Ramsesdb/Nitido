@@ -35,8 +35,9 @@ class _BudgetPredictionWidgetState extends State<BudgetPredictionWidget> {
       _result = null;
     });
 
-    final prediction =
-        await BudgetPredictionService.instance.getPrediction(widget.budget);
+    final prediction = await BudgetPredictionService.instance.getPrediction(
+      widget.budget,
+    );
 
     if (!mounted) return;
 
@@ -62,8 +63,8 @@ class _BudgetPredictionWidgetState extends State<BudgetPredictionWidget> {
       child: Text(
         _result!.text,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }

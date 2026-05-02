@@ -34,25 +34,20 @@ class _CaptureDiagnosticsPageState extends State<CaptureDiagnosticsPage> {
     return locale == AppLocale.es;
   }
 
-  String _tr({required String es, required String en}) =>
-      _isSpanish ? es : en;
+  String _tr({required String es, required String en}) => _isSpanish ? es : en;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(_tr(
-          es: 'Diagnóstico de capturas',
-          en: 'Capture diagnostics',
-        )),
+        title: Text(
+          _tr(es: 'Diagnóstico de capturas', en: 'Capture diagnostics'),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.copy_all_outlined),
-            tooltip: _tr(
-              es: 'Copiar diagnóstico',
-              en: 'Copy diagnostic',
-            ),
+            tooltip: _tr(es: 'Copiar diagnóstico', en: 'Copy diagnostic'),
             onPressed: _copyDiagnostic,
           ),
           IconButton(
@@ -109,16 +104,19 @@ class _CaptureDiagnosticsPageState extends State<CaptureDiagnosticsPage> {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: Text(_tr(
-            es: '¿Limpiar log de capturas?',
-            en: 'Clear capture log?',
-          )),
-          content: Text(_tr(
-            es: 'Esta acción elimina los eventos almacenados localmente. '
-                'No afecta transacciones ni propuestas ya guardadas.',
-            en: 'This removes locally stored diagnostic events. It does not '
-                'affect saved transactions or proposals.',
-          )),
+          title: Text(
+            _tr(es: '¿Limpiar log de capturas?', en: 'Clear capture log?'),
+          ),
+          content: Text(
+            _tr(
+              es:
+                  'Esta acción elimina los eventos almacenados localmente. '
+                  'No afecta transacciones ni propuestas ya guardadas.',
+              en:
+                  'This removes locally stored diagnostic events. It does not '
+                  'affect saved transactions or proposals.',
+            ),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
@@ -140,10 +138,7 @@ class _CaptureDiagnosticsPageState extends State<CaptureDiagnosticsPage> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(_tr(
-              es: 'Log limpiado',
-              en: 'Log cleared',
-            )),
+            content: Text(_tr(es: 'Log limpiado', en: 'Log cleared')),
           ),
         );
       }
@@ -156,10 +151,12 @@ class _CaptureDiagnosticsPageState extends State<CaptureDiagnosticsPage> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(_tr(
-            es: 'Diagnóstico copiado al portapapeles',
-            en: 'Diagnostic copied to clipboard',
-          )),
+          content: Text(
+            _tr(
+              es: 'Diagnóstico copiado al portapapeles',
+              en: 'Diagnostic copied to clipboard',
+            ),
+          ),
         ),
       );
     }
@@ -170,10 +167,7 @@ class _DiagnosticsHeader extends StatelessWidget {
   final CaptureEventCounters counters;
   final bool isSpanish;
 
-  const _DiagnosticsHeader({
-    required this.counters,
-    required this.isSpanish,
-  });
+  const _DiagnosticsHeader({required this.counters, required this.isSpanish});
 
   String _tr({required String es, required String en}) => isSpanish ? es : en;
 
@@ -186,10 +180,7 @@ class _DiagnosticsHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _tr(
-              es: 'Actividad últimas 24 h',
-              en: 'Activity last 24 h',
-            ),
+            _tr(es: 'Actividad últimas 24 h', en: 'Activity last 24 h'),
             style: theme.textTheme.labelLarge?.copyWith(
               color: theme.colorScheme.primary,
               fontWeight: FontWeight.w600,
@@ -306,10 +297,7 @@ class _CaptureEventTile extends StatelessWidget {
   final CaptureEvent event;
   final bool isSpanish;
 
-  const _CaptureEventTile({
-    required this.event,
-    required this.isSpanish,
-  });
+  const _CaptureEventTile({required this.event, required this.isSpanish});
 
   String _tr({required String es, required String en}) => isSpanish ? es : en;
 
@@ -405,7 +393,7 @@ class _CaptureEventTile extends StatelessWidget {
             theme,
             _tr(es: 'Monto', en: 'Amount'),
             '${event.parsedAmount!.toStringAsFixed(2)} '
-                '${event.parsedCurrency ?? ''}',
+            '${event.parsedCurrency ?? ''}',
           ),
         _detailRow(
           theme,
@@ -583,31 +571,38 @@ class _HealthCard extends StatelessWidget {
                           const SizedBox(height: 4),
                           Text(
                             _tr(
-                              es: 'Último evento: '
+                              es:
+                                  'Último evento: '
                                   '${_fmt(lastEvent)}',
-                              en: 'Last event: '
+                              en:
+                                  'Last event: '
                                   '${_fmt(lastEvent)}',
                             ),
                             style: TextStyle(color: fg, fontSize: 12.5),
                           ),
                           Text(
                             _tr(
-                              es: 'Último parseo OK: '
+                              es:
+                                  'Último parseo OK: '
                                   '${_fmt(lastSuccess)}',
-                              en: 'Last parsed OK: '
+                              en:
+                                  'Last parsed OK: '
                                   '${_fmt(lastSuccess)}',
                             ),
                             style: TextStyle(color: fg, fontSize: 12.5),
                           ),
                           ValueListenableBuilder<DateTime?>(
                             valueListenable: CaptureHealthMonitor
-                                .instance.lastResubscribeAtNotifier,
+                                .instance
+                                .lastResubscribeAtNotifier,
                             builder: (context, ts, _) {
                               return Text(
                                 _tr(
-                                  es: 'Última reconexión automática: '
+                                  es:
+                                      'Última reconexión automática: '
                                       '${_fmt(ts)}',
-                                  en: 'Last auto-reconnect: '
+                                  en:
+                                      'Last auto-reconnect: '
                                       '${_fmt(ts)}',
                                 ),
                                 style: TextStyle(color: fg, fontSize: 12.5),
@@ -631,10 +626,9 @@ class _HealthCard extends StatelessWidget {
     final messenger = ScaffoldMessenger.of(context);
     messenger.showSnackBar(
       SnackBar(
-        content: Text(_tr(
-          es: 'Reparando listener...',
-          en: 'Repairing listener...',
-        )),
+        content: Text(
+          _tr(es: 'Reparando listener...', en: 'Repairing listener...'),
+        ),
         duration: const Duration(seconds: 30),
       ),
     );
@@ -673,30 +667,21 @@ class _HealthCard extends StatelessWidget {
           Colors.amber.shade50,
           Colors.amber.shade900,
           Icons.warning_amber_outlined,
-          _tr(
-            es: 'Sin eventos recientes',
-            en: 'No recent events',
-          ),
+          _tr(es: 'Sin eventos recientes', en: 'No recent events'),
         );
       case CaptureHealthStatus.unsubscribed:
         return (
           Colors.red.shade50,
           Colors.red.shade900,
           Icons.link_off,
-          _tr(
-            es: 'Listener desconectado',
-            en: 'Listener disconnected',
-          ),
+          _tr(es: 'Listener desconectado', en: 'Listener disconnected'),
         );
       case CaptureHealthStatus.permissionMissing:
         return (
           Colors.red.shade50,
           Colors.red.shade900,
           Icons.lock_outline,
-          _tr(
-            es: 'Permiso revocado',
-            en: 'Permission missing',
-          ),
+          _tr(es: 'Permiso revocado', en: 'Permission missing'),
         );
       case CaptureHealthStatus.unknown:
         return (
@@ -719,16 +704,10 @@ class _HealthCard extends StatelessWidget {
       );
     }
     if (diff.inHours < 24) {
-      return _tr(
-        es: 'hace ${diff.inHours} h',
-        en: '${diff.inHours} h ago',
-      );
+      return _tr(es: 'hace ${diff.inHours} h', en: '${diff.inHours} h ago');
     }
     if (diff.inDays < 7) {
-      return _tr(
-        es: 'hace ${diff.inDays} d',
-        en: '${diff.inDays} d ago',
-      );
+      return _tr(es: 'hace ${diff.inDays} d', en: '${diff.inDays} d ago');
     }
     return '${ts.year}-${ts.month.toString().padLeft(2, '0')}-'
         '${ts.day.toString().padLeft(2, '0')}';

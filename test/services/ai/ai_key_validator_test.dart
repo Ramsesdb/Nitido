@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/ai/ai_key_validator.dart';
 import 'package:nitido/core/services/ai/ai_provider_type.dart';
 
@@ -12,8 +12,14 @@ void main() {
     });
 
     test('OpenAI requires sk- prefix', () {
-      expect(AiKeyValidator.validate(AiProviderType.openai, 'sk-abc123'), isNull);
-      expect(AiKeyValidator.validate(AiProviderType.openai, 'pk-abc'), isNotNull);
+      expect(
+        AiKeyValidator.validate(AiProviderType.openai, 'sk-abc123'),
+        isNull,
+      );
+      expect(
+        AiKeyValidator.validate(AiProviderType.openai, 'pk-abc'),
+        isNotNull,
+      );
     });
 
     test('Anthropic requires sk-ant- prefix', () {

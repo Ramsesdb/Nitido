@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/rate_providers/rate_provider.dart';
 import 'package:nitido/core/services/rate_providers/dolar_api_provider.dart';
@@ -59,38 +59,29 @@ void main() {
         final provider = DolarApiProvider();
         // A date in the past should always return null without network call
         final yesterday = DateTime.now().subtract(const Duration(days: 1));
-        final result = await provider.fetchRate(
-          date: yesterday,
-          source: 'bcv',
-        );
+        final result = await provider.fetchRate(date: yesterday, source: 'bcv');
         expect(result, isNull);
       },
     );
 
-    test(
-      'FakeTodayOnlyProvider returns rate for today',
-      () async {
-        final provider = FakeTodayOnlyProvider(fixedRate: 478.5);
-        final result = await provider.fetchRate(
-          date: DateTime.now(),
-          source: 'bcv',
-        );
-        expect(result, isNotNull);
-        expect(result!.rate, 478.5);
-        expect(result.source, 'bcv');
-        expect(result.providerName, 'FakeToday');
-      },
-    );
+    test('FakeTodayOnlyProvider returns rate for today', () async {
+      final provider = FakeTodayOnlyProvider(fixedRate: 478.5);
+      final result = await provider.fetchRate(
+        date: DateTime.now(),
+        source: 'bcv',
+      );
+      expect(result, isNotNull);
+      expect(result!.rate, 478.5);
+      expect(result.source, 'bcv');
+      expect(result.providerName, 'FakeToday');
+    });
 
     test(
       'FakeTodayOnlyProvider returns null for past dates (mirrors DolarApiProvider behavior)',
       () async {
         final provider = FakeTodayOnlyProvider(fixedRate: 478.5);
         final pastDate = DateTime(2025, 1, 15);
-        final result = await provider.fetchRate(
-          date: pastDate,
-          source: 'bcv',
-        );
+        final result = await provider.fetchRate(date: pastDate, source: 'bcv');
         expect(result, isNull);
       },
     );
@@ -115,44 +106,40 @@ void main() {
       },
     );
 
-    test(
-      'RateResult stores all fields correctly',
-      () {
-        final now = DateTime.now();
-        final result = RateResult(
-          rate: 627.3,
-          fetchedAt: now,
-          providerName: 'DolarApi',
-          source: 'paralelo',
-        );
-        expect(result.rate, 627.3);
-        expect(result.fetchedAt, now);
-        expect(result.providerName, 'DolarApi');
-        expect(result.source, 'paralelo');
-      },
-    );
+    test('RateResult stores all fields correctly', () {
+      final now = DateTime.now();
+      final result = RateResult(
+        rate: 627.3,
+        fetchedAt: now,
+        providerName: 'DolarApi',
+        source: 'paralelo',
+      );
+      expect(result.rate, 627.3);
+      expect(result.fetchedAt, now);
+      expect(result.providerName, 'DolarApi');
+      expect(result.source, 'paralelo');
+    });
   });
 
   group('Exchange rate calculation logic (pure)', () {
     // These test the mathematical logic that ExchangeRateService.calculateExchangeRate
     // would use, without requiring Drift DB setup.
 
-    test(
-      'calculateExchangeRate returns null when either rate is missing',
-      () {
-        // Simulating: from has rate, to is null
-        final double fromRate = 478.0;
-        final double? toRate = null;
+    test('calculateExchangeRate returns null when either rate is missing', () {
+      // Simulating: from has rate, to is null
+      final double fromRate = 478.0;
+      final double? toRate = null;
 
-        final result = (toRate != null)
-            ? (fromRate / toRate) * 1
-            : null;
+      final result = (toRate != null) ? (fromRate / toRate) * 1 : null;
 
-        expect(result, isNull,
-          reason: 'Must return null when rate is unavailable, '
-              'NOT silently default to 1.0 (which was the original bug)');
-      },
-    );
+      expect(
+        result,
+        isNull,
+        reason:
+            'Must return null when rate is unavailable, '
+            'NOT silently default to 1.0 (which was the original bug)',
+      );
+    });
 
     test(
       'calculateExchangeRate computes correctly when both rates exist (USD to VES)',
@@ -183,9 +170,13 @@ void main() {
         final keyBcv = '$currencyCode|$dateFmt|$sourceBcv';
         final keyParalelo = '$currencyCode|$dateFmt|$sourceParalelo';
 
-        expect(keyBcv, isNot(equals(keyParalelo)),
-          reason: 'BCV and paralelo rates for the same day must have '
-              'different composite keys to coexist in the DB');
+        expect(
+          keyBcv,
+          isNot(equals(keyParalelo)),
+          reason:
+              'BCV and paralelo rates for the same day must have '
+              'different composite keys to coexist in the DB',
+        );
       },
     );
   });
@@ -258,61 +249,56 @@ void main() {
       );
     });
 
-    test(
-      'concrete rate USD→VES with preferred=USD (base=USD)',
-      () {
-        // base=USD → USD has no row, gets 1.0; VES row = 40
-        // result = (1 / 40) * 100 = 2.5 (USD-equivalent of 100 VES)
-        // Inverse direction (USD→VES, amount=100): (1.0 / 40) * 100 = 2.5
-        // (this matches the actual storage convention: VES row stores
-        // "1 VES = 1/X USD", so 1 USD = X VES is the inverse).
-        // For the dashboard the typical lookup is VES→USD.
-        final result = compute(
-          fromRow: 1.0 / 40,
-          toRow: null,
-          fromCurrency: 'VES',
-          toCurrency: 'USD',
-          baseCurrency: 'USD',
-          amount: 1000.0,
-        );
-        // 1000 VES * (1/40) / 1 = 25 USD
-        expect(result, closeTo(25.0, 0.0001));
-      },
-    );
+    test('concrete rate USD→VES with preferred=USD (base=USD)', () {
+      // base=USD → USD has no row, gets 1.0; VES row = 40
+      // result = (1 / 40) * 100 = 2.5 (USD-equivalent of 100 VES)
+      // Inverse direction (USD→VES, amount=100): (1.0 / 40) * 100 = 2.5
+      // (this matches the actual storage convention: VES row stores
+      // "1 VES = 1/X USD", so 1 USD = X VES is the inverse).
+      // For the dashboard the typical lookup is VES→USD.
+      final result = compute(
+        fromRow: 1.0 / 40,
+        toRow: null,
+        fromCurrency: 'VES',
+        toCurrency: 'USD',
+        baseCurrency: 'USD',
+        amount: 1000.0,
+      );
+      // 1000 VES * (1/40) / 1 = 25 USD
+      expect(result, closeTo(25.0, 0.0001));
+    });
 
-    test(
-      'concrete rate USD→VES with preferred=VES (base=VES)',
-      () {
-        // base=VES → VES has no row, gets 1.0; USD row = 40 (VES per USD)
-        // result = (40 / 1) * 1 = 40 VES per USD
-        final result = compute(
-          fromRow: 40.0,
-          toRow: null,
-          fromCurrency: 'USD',
-          toCurrency: 'VES',
-          baseCurrency: 'VES',
-          amount: 1.0,
-        );
-        expect(result, 40.0);
-      },
-    );
+    test('concrete rate USD→VES with preferred=VES (base=VES)', () {
+      // base=VES → VES has no row, gets 1.0; USD row = 40 (VES per USD)
+      // result = (40 / 1) * 1 = 40 VES per USD
+      final result = compute(
+        fromRow: 40.0,
+        toRow: null,
+        fromCurrency: 'USD',
+        toCurrency: 'VES',
+        baseCurrency: 'VES',
+        amount: 1.0,
+      );
+      expect(result, 40.0);
+    });
 
-    test(
-      'missing rate returns null (NOT 1.0) — the original bug',
-      () {
-        // base=USD → JPY has no row; JPY != base, so null
-        final result = compute(
-          fromRow: null,
-          toRow: null,
-          fromCurrency: 'USD',
-          toCurrency: 'JPY',
-          baseCurrency: 'USD',
-        );
-        expect(result, isNull,
-            reason: 'JPY is not the base; missing row MUST be null, '
-                'not silently 1.0');
-      },
-    );
+    test('missing rate returns null (NOT 1.0) — the original bug', () {
+      // base=USD → JPY has no row; JPY != base, so null
+      final result = compute(
+        fromRow: null,
+        toRow: null,
+        fromCurrency: 'USD',
+        toCurrency: 'JPY',
+        baseCurrency: 'USD',
+      );
+      expect(
+        result,
+        isNull,
+        reason:
+            'JPY is not the base; missing row MUST be null, '
+            'not silently 1.0',
+      );
+    });
 
     test(
       'missing fromCurrency rate returns null even when base==toCurrency',

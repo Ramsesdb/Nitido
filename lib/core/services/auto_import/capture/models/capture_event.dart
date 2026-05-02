@@ -182,19 +182,19 @@ class CaptureEvent {
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'timestamp': timestamp.toIso8601String(),
-        'source': source.name,
-        'packageName': packageName,
-        'sender': sender,
-        'title': title,
-        'content': content,
-        'status': status.name,
-        'reason': reason,
-        'matchedProfile': matchedProfile,
-        'parsedAmount': parsedAmount,
-        'parsedCurrency': parsedCurrency,
-      };
+    'id': id,
+    'timestamp': timestamp.toIso8601String(),
+    'source': source.name,
+    'packageName': packageName,
+    'sender': sender,
+    'title': title,
+    'content': content,
+    'status': status.name,
+    'reason': reason,
+    'matchedProfile': matchedProfile,
+    'parsedAmount': parsedAmount,
+    'parsedCurrency': parsedCurrency,
+  };
 
   static CaptureEvent fromJson(Map<String, dynamic> json) {
     return CaptureEvent(

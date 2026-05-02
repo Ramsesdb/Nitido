@@ -56,16 +56,15 @@ class _CapturePermissionsPageState extends State<CapturePermissionsPage>
     final isAndroid = !kIsWeb && Platform.isAndroid;
     return Scaffold(
       appBar: AppBar(
-        title: Text(_tr(
-          es: 'Permisos del listener',
-          en: 'Listener permissions',
-        )),
+        title: Text(
+          _tr(es: 'Permisos del listener', en: 'Listener permissions'),
+        ),
       ),
       body: ValueListenableBuilder<CapturePermissionsState>(
         valueListenable: PermissionCoordinator.instance.stateNotifier,
         builder: (context, state, _) {
-          final quirkInstructions =
-              DeviceQuirksService.instance.instructionsFor(state.quirk);
+          final quirkInstructions = DeviceQuirksService.instance
+              .instructionsFor(state.quirk);
           return ListView(
             padding: const EdgeInsets.only(bottom: 32),
             children: [
@@ -77,11 +76,13 @@ class _CapturePermissionsPageState extends State<CapturePermissionsPage>
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: Text(
                   _tr(
-                    es: 'Para que la captura automática sobreviva en '
+                    es:
+                        'Para que la captura automática sobreviva en '
                         'segundo plano necesitamos varios permisos. '
                         'Verificá cada uno — en Xiaomi y otros OEMs hay '
                         'pasos adicionales fuera de Android.',
-                    en: 'For auto-capture to survive in the background we '
+                    en:
+                        'For auto-capture to survive in the background we '
                         'need several permissions. Check each one — on '
                         'Xiaomi and other OEMs there are extra steps '
                         'beyond stock Android.',
@@ -107,16 +108,20 @@ class _CapturePermissionsPageState extends State<CapturePermissionsPage>
                     en: 'Notification access',
                   ),
                   desc: _tr(
-                    es: 'Permite leer notificaciones de apps bancarias. '
+                    es:
+                        'Permite leer notificaciones de apps bancarias. '
                         'Sin esto no hay captura push.',
-                    en: 'Lets us read notifications from banking apps. '
+                    en:
+                        'Lets us read notifications from banking apps. '
                         'Without this there is no push capture.',
                   ),
                   granted: state.notificationListener,
                   ctaLabel: _tr(es: 'Conceder', en: 'Grant'),
                   onGrant: () async {
-                    await _guard(() => PermissionCoordinator.instance
-                        .requestNotificationListener());
+                    await _guard(
+                      () => PermissionCoordinator.instance
+                          .requestNotificationListener(),
+                    );
                   },
                 ),
                 _PermissionTile(
@@ -126,16 +131,20 @@ class _CapturePermissionsPageState extends State<CapturePermissionsPage>
                     en: 'System notifications',
                   ),
                   desc: _tr(
-                    es: 'Requerido en Android 13+ para mostrar el aviso '
+                    es:
+                        'Requerido en Android 13+ para mostrar el aviso '
                         'persistente del servicio en background.',
-                    en: 'Required on Android 13+ to show the foreground '
+                    en:
+                        'Required on Android 13+ to show the foreground '
                         'service sticky notification.',
                   ),
                   granted: state.postNotifications,
                   ctaLabel: _tr(es: 'Conceder', en: 'Grant'),
                   onGrant: () async {
-                    await _guard(() => PermissionCoordinator.instance
-                        .requestPostNotifications());
+                    await _guard(
+                      () => PermissionCoordinator.instance
+                          .requestPostNotifications(),
+                    );
                   },
                 ),
                 _PermissionTile(
@@ -145,9 +154,11 @@ class _CapturePermissionsPageState extends State<CapturePermissionsPage>
                     en: 'Unrestricted battery',
                   ),
                   desc: _tr(
-                    es: 'Android entra en Doze si no está en la lista '
+                    es:
+                        'Android entra en Doze si no está en la lista '
                         'blanca; el foreground service queda ahogado.',
-                    en: 'Android enters Doze otherwise; the foreground '
+                    en:
+                        'Android enters Doze otherwise; the foreground '
                         'service gets throttled.',
                   ),
                   granted: state.batteryOptimizationsIgnored,
@@ -201,24 +212,24 @@ class _CapturePermissionsPageState extends State<CapturePermissionsPage>
                         ? null
                         : () async {
                             final messenger = ScaffoldMessenger.of(context);
-                            await _guard(() =>
-                                PermissionCoordinator.instance.refresh());
+                            await _guard(
+                              () => PermissionCoordinator.instance.refresh(),
+                            );
                             if (!mounted) return;
                             messenger.showSnackBar(
                               SnackBar(
-                                content: Text(_tr(
-                                  es: 'Estado actualizado',
-                                  en: 'State refreshed',
-                                )),
+                                content: Text(
+                                  _tr(
+                                    es: 'Estado actualizado',
+                                    en: 'State refreshed',
+                                  ),
+                                ),
                                 duration: const Duration(seconds: 2),
                               ),
                             );
                           },
                     icon: const Icon(Icons.refresh),
-                    label: Text(_tr(
-                      es: 'Verificar ahora',
-                      en: 'Verify now',
-                    )),
+                    label: Text(_tr(es: 'Verificar ahora', en: 'Verify now')),
                   ),
                 ),
               ],
@@ -272,20 +283,20 @@ class _StatusBanner extends StatelessWidget {
 
     final title = ok
         ? (isSpanish
-            ? 'Listo, el listener puede funcionar'
-            : 'All set — the listener can run')
+              ? 'Listo, el listener puede funcionar'
+              : 'All set — the listener can run')
         : (isSpanish ? 'Faltan permisos' : 'Missing permissions');
     final subtitle = ok
         ? (isSpanish
-            ? 'Los tres permisos críticos están activos.'
-            : 'All three critical permissions are active.')
+              ? 'Los tres permisos críticos están activos.'
+              : 'All three critical permissions are active.')
         : allGranted
-            ? (isSpanish
-                ? 'Falta confirmar pasos específicos del fabricante.'
-                : 'OEM-specific steps still pending confirmation.')
-            : (isSpanish
-                ? 'Activá cada ítem rojo para estabilizar el listener.'
-                : 'Grant each red item to stabilize the listener.');
+        ? (isSpanish
+              ? 'Falta confirmar pasos específicos del fabricante.'
+              : 'OEM-specific steps still pending confirmation.')
+        : (isSpanish
+              ? 'Activá cada ítem rojo para estabilizar el listener.'
+              : 'Grant each red item to stabilize the listener.');
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),

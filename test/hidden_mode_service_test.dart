@@ -1,4 +1,4 @@
-﻿import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/database/services/user-setting/hidden_mode_service.dart';
 import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
@@ -86,10 +86,7 @@ void main() {
 
     test('changePin requires the old PIN and replaces the hash', () async {
       await service.setPin('111111');
-      expect(
-        () => service.changePin('999999', '222222'),
-        throwsStateError,
-      );
+      expect(() => service.changePin('999999', '222222'), throwsStateError);
 
       await service.changePin('111111', '222222');
       expect(await service.unlock('111111'), isFalse);
@@ -105,8 +102,9 @@ void main() {
       expect(await service.unlock('123456'), isTrue);
       expect(service.isLocked, isFalse);
 
-      final future = service.isLockedStream
-          .firstWhere((locked) => locked == true);
+      final future = service.isLockedStream.firstWhere(
+        (locked) => locked == true,
+      );
       service.lock();
       expect(await future, isTrue);
       expect(service.isLocked, isTrue);
@@ -116,8 +114,9 @@ void main() {
       await service.setPin('123456');
       expect(service.isLocked, isTrue);
 
-      final future = service.isLockedStream
-          .firstWhere((locked) => locked == false);
+      final future = service.isLockedStream.firstWhere(
+        (locked) => locked == false,
+      );
       expect(await service.unlock('123456'), isTrue);
       expect(await future, isFalse);
     });
@@ -136,10 +135,7 @@ void main() {
       await service.setPin('123456');
       expect(await service.hasPin(), isTrue);
 
-      expect(
-        () => service.disableHiddenMode('000000'),
-        throwsStateError,
-      );
+      expect(() => service.disableHiddenMode('000000'), throwsStateError);
       expect(await service.hasPin(), isTrue);
 
       await service.disableHiddenMode('123456');

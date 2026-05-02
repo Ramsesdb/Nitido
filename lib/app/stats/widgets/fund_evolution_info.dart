@@ -79,39 +79,40 @@ class FundEvolutionInfo extends StatelessWidget {
                               ),
                             if (accounts != null)
                               StreamBuilder(
-                                stream: Rx.combineLatest2<
-                                  double,
-                                  double,
-                                  ({double converted, double native})
-                                >(
-                                  accountService.getAccountsMoney(
-                                    accountIds: accounts.map((e) => e.id),
-                                    trFilters: filters,
-                                    date: dateRange.endDate,
-                                  ),
-                                  accountService.getAccountsMoney(
-                                    accountIds: accounts.map((e) => e.id),
-                                    trFilters: filters,
-                                    date: dateRange.endDate,
-                                    convertToPreferredCurrency: false,
-                                  ),
-                                  (converted, native) => (
-                                    converted: converted,
-                                    native: native,
-                                  ),
-                                ),
+                                stream:
+                                    Rx.combineLatest2<
+                                      double,
+                                      double,
+                                      ({double converted, double native})
+                                    >(
+                                      accountService.getAccountsMoney(
+                                        accountIds: accounts.map((e) => e.id),
+                                        trFilters: filters,
+                                        date: dateRange.endDate,
+                                      ),
+                                      accountService.getAccountsMoney(
+                                        accountIds: accounts.map((e) => e.id),
+                                        trFilters: filters,
+                                        date: dateRange.endDate,
+                                        convertToPreferredCurrency: false,
+                                      ),
+                                      (converted, native) => (
+                                        converted: converted,
+                                        native: native,
+                                      ),
+                                    ),
                                 builder: (context, snapshot) {
                                   if (!snapshot.hasData) {
                                     return const Bone(width: 70, height: 40);
                                   }
 
                                   final preferredCurrency =
-                                      appStateSettings[SettingKey.preferredCurrency] ??
+                                      appStateSettings[SettingKey
+                                          .preferredCurrency] ??
                                       'USD';
-                                  final selectedCurrencies =
-                                      accounts
-                                          .map((e) => e.currencyId)
-                                          .toSet();
+                                  final selectedCurrencies = accounts
+                                      .map((e) => e.currencyId)
+                                      .toSet();
 
                                   final singleNativeCurrencyCode =
                                       selectedCurrencies.length == 1
@@ -457,7 +458,10 @@ class _FundEvolutionLineChartState extends State<FundEvolutionLineChart> {
                                       lineColor.withAlpha(1),
                                     ]
                                   : [Colors.grey, Colors.grey.lighten(0.3)]
-                                        .map((color) => color.withValues(alpha: 0.15))
+                                        .map(
+                                          (color) =>
+                                              color.withValues(alpha: 0.15),
+                                        )
                                         .toList(),
                             ),
                           ),

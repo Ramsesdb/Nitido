@@ -13,11 +13,7 @@ import '../theme/v3_tokens.dart';
 ///
 /// `onChanged == null` disables the control (lower opacity, no taps).
 class V3Switch extends StatelessWidget {
-  const V3Switch({
-    super.key,
-    required this.value,
-    required this.onChanged,
-  });
+  const V3Switch({super.key, required this.value, required this.onChanged});
 
   final bool value;
   final ValueChanged<bool>? onChanged;
@@ -34,12 +30,14 @@ class V3Switch extends StatelessWidget {
     final bool disabled = onChanged == null;
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final Color offTrack =
-        isDark ? V3Tokens.borderStrongDark : V3Tokens.borderStrongLight;
+    final Color offTrack = isDark
+        ? V3Tokens.borderStrongDark
+        : V3Tokens.borderStrongLight;
     final Color trackColor = value ? V3Tokens.accent : offTrack;
 
-    final double thumbLeft =
-        value ? (_trackWidth - _thumbSize - _thumbInset) : _thumbInset;
+    final double thumbLeft = value
+        ? (_trackWidth - _thumbSize - _thumbInset)
+        : _thumbInset;
 
     return Opacity(
       opacity: disabled ? 0.4 : 1.0,

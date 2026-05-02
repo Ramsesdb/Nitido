@@ -6,7 +6,7 @@ class GetBudgetsTool implements AiTool {
   final BudgetServive _budgetService;
 
   GetBudgetsTool({BudgetServive? budgetService})
-      : _budgetService = budgetService ?? BudgetServive.instance;
+    : _budgetService = budgetService ?? BudgetServive.instance;
 
   @override
   String get name => 'get_budgets';
@@ -21,17 +21,17 @@ class GetBudgetsTool implements AiTool {
 
   @override
   Map<String, dynamic> get parametersSchema => {
-        'type': 'object',
-        'properties': {
-          'includeInactive': {
-            'type': 'boolean',
-            'description':
-                'Si true, incluye presupuestos pasados o futuros. Default false.',
-            'default': false,
-          },
-        },
-        'additionalProperties': false,
-      };
+    'type': 'object',
+    'properties': {
+      'includeInactive': {
+        'type': 'boolean',
+        'description':
+            'Si true, incluye presupuestos pasados o futuros. Default false.',
+        'default': false,
+      },
+    },
+    'additionalProperties': false,
+  };
 
   @override
   Future<AiToolResult> execute(Map<String, dynamic> args) async {
@@ -61,9 +61,6 @@ class GetBudgetsTool implements AiTool {
       });
     }
 
-    return AiToolResult.ok({
-      'count': items.length,
-      'budgets': items,
-    });
+    return AiToolResult.ok({'count': items.length, 'budgets': items});
   }
 }

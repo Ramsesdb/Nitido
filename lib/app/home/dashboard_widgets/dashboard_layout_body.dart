@@ -60,8 +60,7 @@ class DashboardLayoutBody extends StatelessWidget {
       if (!shouldRender) continue;
 
       final built = spec.builder(context, descriptor, editing: false);
-      final useHalfWidth =
-          isWide && descriptor.size == WidgetSize.medium;
+      final useHalfWidth = isWide && descriptor.size == WidgetSize.medium;
       slots.add(
         DashboardLayoutSlot(
           instanceId: descriptor.instanceId,

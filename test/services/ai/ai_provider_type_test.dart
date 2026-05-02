@@ -1,25 +1,36 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/ai/ai_provider_type.dart';
 
 void main() {
   group('AiProviderType metadata', () {
     test('every provider has a non-empty displayName and defaultModel', () {
       for (final t in AiProviderType.values) {
-        expect(t.displayName, isNotEmpty,
-            reason: '${t.name} should have displayName');
-        expect(t.defaultModel, isNotEmpty,
-            reason: '${t.name} should have defaultModel');
+        expect(
+          t.displayName,
+          isNotEmpty,
+          reason: '${t.name} should have displayName',
+        );
+        expect(
+          t.defaultModel,
+          isNotEmpty,
+          reason: '${t.name} should have defaultModel',
+        );
       }
     });
 
-    test('default model is contained in models for non free-text providers',
-        () {
-      for (final t in AiProviderType.values) {
-        if (t.allowsFreeTextModel) continue;
-        expect(t.models, contains(t.defaultModel),
-            reason: '${t.name} default must appear in catalog');
-      }
-    });
+    test(
+      'default model is contained in models for non free-text providers',
+      () {
+        for (final t in AiProviderType.values) {
+          if (t.allowsFreeTextModel) continue;
+          expect(
+            t.models,
+            contains(t.defaultModel),
+            reason: '${t.name} default must appear in catalog',
+          );
+        }
+      },
+    );
 
     test('user-pinned defaults match the spec', () {
       expect(AiProviderType.openai.defaultModel, 'gpt-4o-mini');
@@ -31,7 +42,11 @@ void main() {
     test('Anthropic catalog includes the three 2026 aliases', () {
       expect(
         AiProviderType.anthropic.models,
-        containsAll(['claude-haiku-4-5', 'claude-sonnet-4-6', 'claude-opus-4-7']),
+        containsAll([
+          'claude-haiku-4-5',
+          'claude-sonnet-4-6',
+          'claude-opus-4-7',
+        ]),
       );
     });
 

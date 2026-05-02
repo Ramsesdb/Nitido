@@ -3,22 +3,38 @@ import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_slide_template.dart';
 
 class GoalOption {
-  const GoalOption({
-    required this.id,
-    required this.label,
-    required this.icon,
-  });
+  const GoalOption({required this.id, required this.label, required this.icon});
   final String id;
   final String label;
   final IconData icon;
 }
 
 const kOnboardingGoals = <GoalOption>[
-  GoalOption(id: 'track_expenses', label: 'Organizar mis gastos', icon: Icons.receipt_long),
-  GoalOption(id: 'save_usd', label: 'Ahorrar en dólares', icon: Icons.attach_money),
-  GoalOption(id: 'reduce_debt', label: 'Pagar mis deudas', icon: Icons.trending_down),
-  GoalOption(id: 'budget', label: 'Crear un presupuesto', icon: Icons.pie_chart),
-  GoalOption(id: 'analyze', label: 'Finanzas en pareja o negocio', icon: Icons.groups_outlined),
+  GoalOption(
+    id: 'track_expenses',
+    label: 'Organizar mis gastos',
+    icon: Icons.receipt_long,
+  ),
+  GoalOption(
+    id: 'save_usd',
+    label: 'Ahorrar en dólares',
+    icon: Icons.attach_money,
+  ),
+  GoalOption(
+    id: 'reduce_debt',
+    label: 'Pagar mis deudas',
+    icon: Icons.trending_down,
+  ),
+  GoalOption(
+    id: 'budget',
+    label: 'Crear un presupuesto',
+    icon: Icons.pie_chart,
+  ),
+  GoalOption(
+    id: 'analyze',
+    label: 'Finanzas en pareja o negocio',
+    icon: Icons.groups_outlined,
+  ),
 ];
 
 class Slide01Goals extends StatelessWidget {
@@ -43,16 +59,16 @@ class Slide01Goals extends StatelessWidget {
         children: [
           Text(
             '¿Qué deseas lograr?',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Selecciona uno o más. Personalizamos tu pantalla principal.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: V3Tokens.space24),
           Column(
@@ -94,9 +110,11 @@ class _GoalRow extends StatelessWidget {
     final Color borderColor = selected
         ? V3Tokens.accent.withValues(alpha: 0.4)
         : (isDark
-            ? const Color(0x0FFFFFFF) // ~0.06 alpha white
-            : const Color(0x0F000000)); // ~0.06 alpha black
-    final Color bg = selected ? scheme.surfaceContainerHighest : Colors.transparent;
+              ? const Color(0x0FFFFFFF) // ~0.06 alpha white
+              : const Color(0x0F000000)); // ~0.06 alpha black
+    final Color bg = selected
+        ? scheme.surfaceContainerHighest
+        : Colors.transparent;
     final Color fg = scheme.onSurface;
 
     return InkWell(
@@ -104,10 +122,7 @@ class _GoalRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(V3Tokens.radiusMd),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(
-          horizontal: 14,
-          vertical: 16,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(V3Tokens.radiusMd),
@@ -161,11 +176,7 @@ class _GoalCheckbox extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: selected
-          ? const Icon(
-              Icons.check_rounded,
-              size: 16,
-              color: Color(0xFF0A0A0A),
-            )
+          ? const Icon(Icons.check_rounded, size: 16, color: Color(0xFF0A0A0A))
           : null,
     );
   }

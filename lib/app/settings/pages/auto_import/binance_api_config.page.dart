@@ -64,9 +64,7 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Configurar Binance API'),
-      ),
+      appBar: AppBar(title: const Text('Configurar Binance API')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -78,8 +76,10 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.warning_amber_rounded,
-                      color: Colors.amber.shade800),
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.amber.shade800,
+                  ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text.rich(
@@ -98,8 +98,7 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
                                 'Nunca marques "Habilitar retiros" ni "Trading" '
                                 '-- si se filtra, no podran mover tus fondos. '
                                 'Las credenciales se guardan encriptadas en el dispositivo.',
-                            style:
-                                TextStyle(color: Colors.amber.shade900),
+                            style: TextStyle(color: Colors.amber.shade900),
                           ),
                         ],
                       ),
@@ -120,8 +119,7 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Estado actual',
-                        style: theme.textTheme.titleSmall),
+                    Text('Estado actual', style: theme.textTheme.titleSmall),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -131,7 +129,9 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
                           child: Text(
                             'API Key: ${_maskedApiKey ?? '...'}',
                             style: const TextStyle(
-                                fontFamily: 'monospace', fontSize: 13),
+                              fontFamily: 'monospace',
+                              fontSize: 13,
+                            ),
                           ),
                         ),
                       ],
@@ -141,8 +141,10 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
                       children: [
                         const Icon(Icons.lock, size: 18),
                         const SizedBox(width: 8),
-                        const Text('API Secret: configurado',
-                            style: TextStyle(fontSize: 13)),
+                        const Text(
+                          'API Secret: configurado',
+                          style: TextStyle(fontSize: 13),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 12),
@@ -162,8 +164,7 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
           ],
 
           // Form
-          Text('Nuevas credenciales',
-              style: theme.textTheme.titleSmall),
+          Text('Nuevas credenciales', style: theme.textTheme.titleSmall),
           const SizedBox(height: 12),
 
           TextFormField(
@@ -174,10 +175,9 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
                 icon: Icon(
-                    _obscureApiKey
-                        ? Icons.visibility_off
-                        : Icons.visibility,
-                    size: 20),
+                  _obscureApiKey ? Icons.visibility_off : Icons.visibility,
+                  size: 20,
+                ),
                 onPressed: () {
                   setState(() => _obscureApiKey = !_obscureApiKey);
                 },
@@ -206,8 +206,7 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.wifi_tethering, size: 18),
-            label: Text(
-                _isTesting ? 'Probando...' : 'Probar conexion'),
+            label: Text(_isTesting ? 'Probando...' : 'Probar conexion'),
           ),
 
           // Test result
@@ -258,7 +257,9 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
                     width: 18,
                     height: 18,
                     child: CircularProgressIndicator(
-                        strokeWidth: 2, color: Colors.white),
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
                   )
                 : const Icon(Icons.save),
             label: const Text('Guardar'),
@@ -287,8 +288,10 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
       }
     } else {
       // Save credentials first so the client can use them
-      await BinanceCredentialsStore.instance
-          .save(apiKey: apiKey, apiSecret: apiSecret);
+      await BinanceCredentialsStore.instance.save(
+        apiKey: apiKey,
+        apiSecret: apiSecret,
+      );
       setState(() {
         _hasSavedCredentials = true;
         _maskedApiKey = _maskApiKey(apiKey);
@@ -307,8 +310,7 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
 
       if (mounted) {
         setState(() {
-          _testResultMessage =
-              'Conexion exitosa -- cuenta Binance accesible.';
+          _testResultMessage = 'Conexion exitosa -- cuenta Binance accesible.';
           _testResultSuccess = true;
         });
       }
@@ -346,17 +348,19 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
     final apiSecret = _apiSecretController.text.trim();
 
     if (apiKey.isEmpty || apiSecret.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ingresa API Key y Secret')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Ingresa API Key y Secret')));
       return;
     }
 
     setState(() => _isSaving = true);
 
     try {
-      await BinanceCredentialsStore.instance
-          .save(apiKey: apiKey, apiSecret: apiSecret);
+      await BinanceCredentialsStore.instance.save(
+        apiKey: apiKey,
+        apiSecret: apiSecret,
+      );
 
       if (mounted) {
         setState(() {
@@ -368,8 +372,9 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
         });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content:
-                Text('Credenciales guardadas. Binance API listo para usar.'),
+            content: Text(
+              'Credenciales guardadas. Binance API listo para usar.',
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -377,9 +382,9 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _isSaving = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error al guardar: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error al guardar: $e')));
       }
     }
   }
@@ -390,7 +395,8 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
       builder: (ctx) => AlertDialog(
         title: const Text('Eliminar credenciales'),
         content: const Text(
-            'Se eliminaran las credenciales de Binance del dispositivo.'),
+          'Se eliminaran las credenciales de Binance del dispositivo.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -413,10 +419,9 @@ class _BinanceApiConfigPageState extends State<BinanceApiConfigPage> {
         _hasSavedCredentials = false;
         _maskedApiKey = null;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Credenciales eliminadas')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Credenciales eliminadas')));
     }
   }
 }
-

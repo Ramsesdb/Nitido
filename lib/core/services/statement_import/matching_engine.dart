@@ -7,7 +7,7 @@ import 'package:nitido/core/services/statement_import/models/matching_result.dar
 
 class MatchingEngine {
   MatchingEngine({TransactionService? transactionService})
-      : _transactionService = transactionService ?? TransactionService.instance;
+    : _transactionService = transactionService ?? TransactionService.instance;
 
   final TransactionService _transactionService;
 
@@ -71,22 +71,23 @@ class MatchingEngine {
         }
       }
 
-      final isPreFresh = trackedSince != null && row.date.isBefore(trackedSince);
+      final isPreFresh =
+          trackedSince != null && row.date.isBefore(trackedSince);
 
       if (best != null) {
         consumed.add(best.id);
-        results.add(MatchingResult(
-          row: row,
-          existsInApp: true,
-          isPreFresh: isPreFresh,
-          matchedTransactionId: best.id,
-        ));
+        results.add(
+          MatchingResult(
+            row: row,
+            existsInApp: true,
+            isPreFresh: isPreFresh,
+            matchedTransactionId: best.id,
+          ),
+        );
       } else {
-        results.add(MatchingResult(
-          row: row,
-          existsInApp: false,
-          isPreFresh: isPreFresh,
-        ));
+        results.add(
+          MatchingResult(row: row, existsInApp: false, isPreFresh: isPreFresh),
+        );
       }
     }
 

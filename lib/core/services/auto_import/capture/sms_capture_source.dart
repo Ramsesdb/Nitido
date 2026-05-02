@@ -25,10 +25,8 @@ class SmsCaptureSource implements CaptureSource {
 
   bool _listening = false;
 
-  SmsCaptureSource({
-    required this.allowlistSenders,
-    Telephony? telephony,
-  }) : _telephony = telephony ?? Telephony.instance;
+  SmsCaptureSource({required this.allowlistSenders, Telephony? telephony})
+    : _telephony = telephony ?? Telephony.instance;
 
   @override
   CaptureChannel get channel => CaptureChannel.sms;
@@ -91,12 +89,14 @@ class SmsCaptureSource implements CaptureSource {
     // Only allow messages from known bank shortcodes
     if (!allowlistSenders.contains(sender)) return;
 
-    _controller.add(RawCaptureEvent(
-      rawText: body,
-      sender: sender,
-      receivedAt: DateTime.now(),
-      channel: CaptureChannel.sms,
-    ));
+    _controller.add(
+      RawCaptureEvent(
+        rawText: body,
+        sender: sender,
+        receivedAt: DateTime.now(),
+        channel: CaptureChannel.sms,
+      ),
+    );
   }
 
   /// Clean up the stream controller.

@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -62,113 +62,107 @@ void main() {
       return out;
     }
 
-    test(
-      'calculator source files contain none of the coupling tokens',
-      () {
-        // Resolve the calculator directory relative to the test runner's
-        // working directory (the project root when invoked via
-        // `flutter test`). The Glob search at sub-agent time confirmed
-        // 7 .dart files exist under this path.
-        final calculatorDir = Directory('lib/app/calculator');
-        final files = readDartFilesUnder(calculatorDir);
+    test('calculator source files contain none of the coupling tokens', () {
+      // Resolve the calculator directory relative to the test runner's
+      // working directory (the project root when invoked via
+      // `flutter test`). The Glob search at sub-agent time confirmed
+      // 7 .dart files exist under this path.
+      final calculatorDir = Directory('lib/app/calculator');
+      final files = readDartFilesUnder(calculatorDir);
 
-        expect(
-          files,
-          isNotEmpty,
-          reason: 'Calculator directory must exist and contain .dart files',
-        );
+      expect(
+        files,
+        isNotEmpty,
+        reason: 'Calculator directory must exist and contain .dart files',
+      );
 
-        final offenders = <String, List<String>>{};
-        files.forEach((path, contents) {
-          for (final token in couplingTokens) {
-            if (contents.contains(token)) {
-              offenders.putIfAbsent(path, () => []).add(token);
-            }
+      final offenders = <String, List<String>>{};
+      files.forEach((path, contents) {
+        for (final token in couplingTokens) {
+          if (contents.contains(token)) {
+            offenders.putIfAbsent(path, () => []).add(token);
           }
-        });
+        }
+      });
 
+      expect(
+        offenders,
+        isEmpty,
+        reason:
+            'Calculator MUST remain decoupled from CurrencyDisplayPolicy '
+            '(design §8). Found coupling tokens in:\n$offenders',
+      );
+    });
+
+    test('calculator UI-only RateSource is distinct from the database '
+        'RateSource enum', () {
+      // The calculator has its own `RateSource` enum (UI-only) that
+      // intentionally diverges from the database canonical enum. Both
+      // files must continue to exist and remain independent.
+      final uiRateSource = File('lib/app/calculator/models/rate_source.dart');
+      final dbRateSource = File(
+        'lib/core/services/rate_providers/rate_source.dart',
+      );
+
+      expect(
+        uiRateSource.existsSync(),
+        isTrue,
+        reason: 'Calculator must keep its UI-only RateSource enum.',
+      );
+      expect(
+        dbRateSource.existsSync(),
+        isTrue,
+        reason: 'Database RateSource enum must continue to exist.',
+      );
+
+      // The UI-only file must NOT import the DB-side enum (that would
+      // collapse the two into one and break design §8's "intentionally
+      // independent rate source" rationale).
+      final uiContents = uiRateSource.readAsStringSync();
+      expect(
+        uiContents.contains(
+          "import 'package:nitido/core/services/rate_providers/rate_source.dart'",
+        ),
+        isFalse,
+        reason:
+            'Calculator RateSource MUST NOT import the database '
+            'RateSource — they are intentionally independent (design §8).',
+      );
+    });
+
+    test('calculator does not import the rate provider chain', () {
+      // Per Phase 7 audit: the calculator reads rates only from
+      // `DolarApiService`, never from `RateProviderChain`. A future
+      // refactor that couples the two would change the calculator's
+      // public surface — surface this as a test failure.
+      final calculatorDir = Directory('lib/app/calculator');
+      final files = readDartFilesUnder(calculatorDir);
+
+      for (final entry in files.entries) {
         expect(
-          offenders,
-          isEmpty,
-          reason:
-              'Calculator MUST remain decoupled from CurrencyDisplayPolicy '
-              '(design §8). Found coupling tokens in:\n$offenders',
-        );
-      },
-    );
-
-    test(
-      'calculator UI-only RateSource is distinct from the database '
-      'RateSource enum',
-      () {
-        // The calculator has its own `RateSource` enum (UI-only) that
-        // intentionally diverges from the database canonical enum. Both
-        // files must continue to exist and remain independent.
-        final uiRateSource =
-            File('lib/app/calculator/models/rate_source.dart');
-        final dbRateSource =
-            File('lib/core/services/rate_providers/rate_source.dart');
-
-        expect(uiRateSource.existsSync(), isTrue,
-            reason: 'Calculator must keep its UI-only RateSource enum.');
-        expect(dbRateSource.existsSync(), isTrue,
-            reason: 'Database RateSource enum must continue to exist.');
-
-        // The UI-only file must NOT import the DB-side enum (that would
-        // collapse the two into one and break design §8's "intentionally
-        // independent rate source" rationale).
-        final uiContents = uiRateSource.readAsStringSync();
-        expect(
-          uiContents.contains(
-            "import 'package:nitido/core/services/rate_providers/rate_source.dart'",
-          ),
+          entry.value.contains('rate_provider_chain.dart'),
           isFalse,
           reason:
-              'Calculator RateSource MUST NOT import the database '
-              'RateSource — they are intentionally independent (design §8).',
+              '${entry.key} imports rate_provider_chain — calculator '
+              'must remain on DolarApiService per design §8.',
         );
-      },
-    );
+      }
+    });
 
-    test(
-      'calculator does not import the rate provider chain',
-      () {
-        // Per Phase 7 audit: the calculator reads rates only from
-        // `DolarApiService`, never from `RateProviderChain`. A future
-        // refactor that couples the two would change the calculator's
-        // public surface — surface this as a test failure.
-        final calculatorDir = Directory('lib/app/calculator');
-        final files = readDartFilesUnder(calculatorDir);
+    test('calculator does not consume CurrencyDisplayPolicyResolver', () {
+      final calculatorDir = Directory('lib/app/calculator');
+      final files = readDartFilesUnder(calculatorDir);
 
-        for (final entry in files.entries) {
-          expect(
-            entry.value.contains('rate_provider_chain.dart'),
-            isFalse,
-            reason:
-                '${entry.key} imports rate_provider_chain — calculator '
-                'must remain on DolarApiService per design §8.',
-          );
-        }
-      },
-    );
-
-    test(
-      'calculator does not consume CurrencyDisplayPolicyResolver',
-      () {
-        final calculatorDir = Directory('lib/app/calculator');
-        final files = readDartFilesUnder(calculatorDir);
-
-        for (final entry in files.entries) {
-          expect(
-            entry.value.contains('CurrencyDisplayPolicyResolver'),
-            isFalse,
-            reason:
-                '${entry.key} references CurrencyDisplayPolicyResolver — '
-                'calculator is intentionally decoupled (design §8 + '
-                'Phase 7 audit).',
-          );
-        }
-      },
-    );
+      for (final entry in files.entries) {
+        expect(
+          entry.value.contains('CurrencyDisplayPolicyResolver'),
+          isFalse,
+          reason:
+              '${entry.key} references CurrencyDisplayPolicyResolver — '
+              'calculator is intentionally decoupled (design §8 + '
+              'Phase 7 audit).',
+        );
+      }
+    });
   });
 }

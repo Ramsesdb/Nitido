@@ -13,7 +13,7 @@ import 'package:nitido/core/services/voice/voice_service.dart';
 /// `NexusAiService`, `AutoCategorizationService`, etc.
 class SpeechToTextVoiceService implements VoiceService {
   SpeechToTextVoiceService({stt.SpeechToText? engine})
-      : _engine = engine ?? stt.SpeechToText();
+    : _engine = engine ?? stt.SpeechToText();
 
   /// Shared singleton. Use this everywhere except tests (which use
   /// `FakeVoiceService`).
@@ -119,14 +119,15 @@ class SpeechToTextVoiceService implements VoiceService {
     try {
       final available = await _engine.locales();
       if (available.isEmpty) {
-        debugPrint('VoiceService: engine reports NO available locales '
-            '(Android 11+ <queries> missing?)');
+        debugPrint(
+          'VoiceService: engine reports NO available locales '
+          '(Android 11+ <queries> missing?)',
+        );
         return requested;
       }
       String norm(String s) => s.toLowerCase().replaceAll('-', '_');
       final reqN = norm(requested);
-      final reqLang =
-          reqN.contains('_') ? reqN.split('_').first : reqN;
+      final reqLang = reqN.contains('_') ? reqN.split('_').first : reqN;
 
       // 1. exact
       for (final l in available) {

@@ -30,10 +30,13 @@ class PendingImportService {
   /// insert wins; the second is treated as a no-op so the auto-import
   /// pipeline keeps running.
   Future<int?> insertPendingImport(PendingImportsCompanion companion) async {
-    final bankRefVal = companion.bankRef.present ? companion.bankRef.value : '<absent>';
+    final bankRefVal = companion.bankRef.present
+        ? companion.bankRef.value
+        : '<absent>';
     final idVal = companion.id.present ? companion.id.value : '<absent>';
-    final accountIdVal =
-        companion.accountId.present ? companion.accountId.value : '<absent>';
+    final accountIdVal = companion.accountId.present
+        ? companion.accountId.value
+        : '<absent>';
     debugPrint(
       '[DEDUPE-DBG] PendingImportService.insertPendingImport BEGIN '
       'id=$idVal bankRef=$bankRefVal accountId=$accountIdVal',
@@ -51,7 +54,8 @@ class PendingImportService {
       // sniff the message for safety because the extended code surface varies
       // between sqlite3 versions and Drift wrappings.
       final msg = e.message.toLowerCase();
-      final isUniqueViolation = e.extendedResultCode == 2067 ||
+      final isUniqueViolation =
+          e.extendedResultCode == 2067 ||
           (e.extendedResultCode == 19 && msg.contains('unique')) ||
           msg.contains('unique constraint');
 
@@ -87,10 +91,7 @@ class PendingImportService {
   }) {
     final query = db.select(db.pendingImports)
       ..orderBy([
-        (t) => OrderingTerm(
-              expression: t.createdAt,
-              mode: OrderingMode.desc,
-            ),
+        (t) => OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
       ]);
 
     if (status != null) {
@@ -109,9 +110,7 @@ class PendingImportService {
     TransactionProposalStatus newStatus, {
     String? createdTransactionId,
   }) {
-    return (db.update(db.pendingImports)
-          ..where((t) => t.id.equals(id)))
-        .write(
+    return (db.update(db.pendingImports)..where((t) => t.id.equals(id))).write(
       PendingImportsCompanion(
         status: Value(newStatus.dbValue),
         createdTransactionId: createdTransactionId != null
@@ -143,7 +142,9 @@ class PendingImportService {
     final query = db.selectOnly(db.pendingImports)
       ..addColumns([countExpr])
       ..where(
-        db.pendingImports.status.equals(TransactionProposalStatus.pending.dbValue),
+        db.pendingImports.status.equals(
+          TransactionProposalStatus.pending.dbValue,
+        ),
       );
 
     // `map().watchSingle()` emite cada vez que cambia el conteo. Usamos un
@@ -186,12 +187,11 @@ class PendingImportService {
   }) {
     final cutoff = DateTime.now().subtract(olderThan);
 
-    return (db.delete(db.pendingImports)
-          ..where(
-            (t) =>
-                t.status.equals(TransactionProposalStatus.rejected.dbValue) &
-                t.createdAt.isSmallerThanValue(cutoff),
-          ))
+    return (db.delete(db.pendingImports)..where(
+          (t) =>
+              t.status.equals(TransactionProposalStatus.rejected.dbValue) &
+              t.createdAt.isSmallerThanValue(cutoff),
+        ))
         .go();
   }
 }

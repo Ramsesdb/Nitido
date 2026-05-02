@@ -34,8 +34,7 @@ class Slide04InitialAccounts extends StatefulWidget {
   final VoidCallback? onSkip;
 
   @override
-  State<Slide04InitialAccounts> createState() =>
-      _Slide04InitialAccountsState();
+  State<Slide04InitialAccounts> createState() => _Slide04InitialAccountsState();
 }
 
 class _Slide04InitialAccountsState extends State<Slide04InitialAccounts> {
@@ -44,9 +43,7 @@ class _Slide04InitialAccountsState extends State<Slide04InitialAccounts> {
   List<BankOption> get _filteredBanks {
     if (_query.isEmpty) return kBanks;
     final lower = _query.toLowerCase();
-    return kBanks
-        .where((b) => b.name.toLowerCase().contains(lower))
-        .toList();
+    return kBanks.where((b) => b.name.toLowerCase().contains(lower)).toList();
   }
 
   @override
@@ -63,19 +60,17 @@ class _Slide04InitialAccountsState extends State<Slide04InitialAccounts> {
         children: [
           Text(
             'Tus cuentas',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Selecciona los bancos y billeteras que usas. '
             'Creamos las cuentas por ti.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: V3Tokens.space16),
 
@@ -92,41 +87,29 @@ class _Slide04InitialAccountsState extends State<Slide04InitialAccounts> {
               hintStyle: V3Tokens.uiStyle(
                 size: 14,
                 weight: FontWeight.w400,
-                color: isDark
-                    ? V3Tokens.mutedDark
-                    : V3Tokens.mutedLight,
+                color: isDark ? V3Tokens.mutedDark : V3Tokens.mutedLight,
               ),
               prefixIcon: Icon(
                 Icons.search_rounded,
                 size: 20,
-                color: isDark
-                    ? V3Tokens.mutedDark
-                    : V3Tokens.mutedLight,
+                color: isDark ? V3Tokens.mutedDark : V3Tokens.mutedLight,
               ),
               filled: true,
-              fillColor: isDark
-                  ? V3Tokens.pillBgDark
-                  : V3Tokens.pillBgLight,
+              fillColor: isDark ? V3Tokens.pillBgDark : V3Tokens.pillBgLight,
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 10,
               ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  V3Tokens.radiusPill,
-                ),
+                borderRadius: BorderRadius.circular(V3Tokens.radiusPill),
                 borderSide: BorderSide.none,
               ),
               enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  V3Tokens.radiusPill,
-                ),
+                borderRadius: BorderRadius.circular(V3Tokens.radiusPill),
                 borderSide: BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  V3Tokens.radiusPill,
-                ),
+                borderRadius: BorderRadius.circular(V3Tokens.radiusPill),
                 borderSide: BorderSide(
                   color: V3Tokens.accent.withAlpha(102),
                   width: 1.5,
@@ -139,18 +122,14 @@ class _Slide04InitialAccountsState extends State<Slide04InitialAccounts> {
           // ── Bank list ─────────────────────────────────────────────
           if (filtered.isEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: V3Tokens.space24,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: V3Tokens.space24),
               child: Center(
                 child: Text(
                   'No se encontraron resultados',
                   style: V3Tokens.uiStyle(
                     size: 13,
                     weight: FontWeight.w500,
-                    color: isDark
-                        ? V3Tokens.faintDark
-                        : V3Tokens.faintLight,
+                    color: isDark ? V3Tokens.faintDark : V3Tokens.faintLight,
                   ),
                 ),
               ),
@@ -162,23 +141,16 @@ class _Slide04InitialAccountsState extends State<Slide04InitialAccounts> {
                   if (i > 0) const SizedBox(height: 7),
                   _BankRow(
                     bank: filtered[i],
-                    selected: widget.selectedBankIds
-                        .contains(filtered[i].id),
-                    onTap: () =>
-                        widget.onToggleBank(filtered[i].id),
+                    selected: widget.selectedBankIds.contains(filtered[i].id),
+                    onTap: () => widget.onToggleBank(filtered[i].id),
                     showAlsoUsd:
                         widget.currencyMode == 'DUAL' &&
-                            filtered[i].supportsBoth &&
-                            widget.selectedBankIds
-                                .contains(filtered[i].id),
+                        filtered[i].supportsBoth &&
+                        widget.selectedBankIds.contains(filtered[i].id),
                     alsoUsdValue:
-                        widget.alsoUsdForBank[filtered[i].id] ??
-                            false,
+                        widget.alsoUsdForBank[filtered[i].id] ?? false,
                     onToggleAlsoUsd: (v) =>
-                        widget.onToggleAlsoUsd(
-                      filtered[i].id,
-                      v,
-                    ),
+                        widget.onToggleAlsoUsd(filtered[i].id, v),
                   ),
                 ],
               ],
@@ -249,10 +221,7 @@ class _BankRow extends StatelessWidget {
                       ),
                     ),
                   ),
-                  V3Switch(
-                    value: alsoUsdValue,
-                    onChanged: onToggleAlsoUsd,
-                  ),
+                  V3Switch(value: alsoUsdValue, onChanged: onToggleAlsoUsd),
                 ],
               ),
             ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class NitidoAiOrb extends StatefulWidget {
@@ -111,11 +111,7 @@ class _NitidoAiOrbState extends State<NitidoAiOrb>
               color: tokens.bubbleAi,
             ),
           ),
-          Icon(
-            Icons.auto_awesome,
-            size: size * 0.34,
-            color: tokens.accent,
-          ),
+          Icon(Icons.auto_awesome, size: size * 0.34, color: tokens.accent),
         ],
       ),
     );

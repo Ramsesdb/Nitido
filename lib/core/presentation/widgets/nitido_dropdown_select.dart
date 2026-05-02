@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 class NitidoDropdownSelect<T> extends StatefulWidget {
   const NitidoDropdownSelect({
@@ -127,10 +127,11 @@ class NitidoDropdownSelectState<T> extends State<NitidoDropdownSelect<T>> {
                         ? widget.getLabel!(value)
                         : value.toString(),
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface
-                          .withValues(alpha: 
-                            _isItemDisabled(value) || !widget.enabled ? 0.3 : 1,
-                          ),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(
+                        alpha: _isItemDisabled(value) || !widget.enabled
+                            ? 0.3
+                            : 1,
+                      ),
                     ),
                   ),
                 );
@@ -157,8 +158,8 @@ class NitidoDropdownSelectState<T> extends State<NitidoDropdownSelect<T>> {
                             : value.toString(),
                         style: TextStyle(
                           color: (Theme.of(context).colorScheme.onSurface)
-                              .withValues(alpha: 
-                                _isItemDisabled(value) || !widget.enabled
+                              .withValues(
+                                alpha: _isItemDisabled(value) || !widget.enabled
                                     ? 0.3
                                     : 1,
                               ),
@@ -204,9 +205,9 @@ class SelectorContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color:
             backgroundColor ??
-            Theme.of(
-              context,
-            ).colorScheme.surfaceContainerHigh.withValues(alpha: enabled ? 1 : 0.75),
+            Theme.of(context).colorScheme.surfaceContainerHigh.withValues(
+              alpha: enabled ? 1 : 0.75,
+            ),
         borderRadius: BorderRadiusDirectional.circular(10),
       ),
       child: child,

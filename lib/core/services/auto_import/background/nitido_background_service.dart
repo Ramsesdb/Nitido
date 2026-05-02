@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
@@ -24,9 +24,8 @@ class NitidoBackgroundService {
   NitidoBackgroundService._();
 
   /// For testing: create an instance with a custom service.
-  NitidoBackgroundService.forTesting({
-    FlutterBackgroundService? service,
-  }) : _serviceOverride = service;
+  NitidoBackgroundService.forTesting({FlutterBackgroundService? service})
+    : _serviceOverride = service;
 
   FlutterBackgroundService? _serviceOverride;
 
@@ -58,25 +57,18 @@ class NitidoBackgroundService {
           isForegroundMode: true,
           foregroundServiceNotificationId:
               LocalNotificationService.foregroundNotificationId,
-          notificationChannelId:
-              LocalNotificationService.captureChannelId,
+          notificationChannelId: LocalNotificationService.captureChannelId,
           initialNotificationTitle: 'Nitido',
           initialNotificationContent: 'Capturando movimientos bancarios',
           foregroundServiceTypes: [AndroidForegroundType.specialUse],
         ),
-        iosConfiguration: IosConfiguration(
-          autoStart: false,
-        ),
+        iosConfiguration: IosConfiguration(autoStart: false),
       );
 
       _initialized = true;
-      debugPrint(
-        'NitidoBackgroundService: configured',
-      );
+      debugPrint('NitidoBackgroundService: configured');
     } catch (e) {
-      debugPrint(
-        'NitidoBackgroundService: Failed to configure: $e',
-      );
+      debugPrint('NitidoBackgroundService: Failed to configure: $e');
     }
   }
 
@@ -97,9 +89,7 @@ class NitidoBackgroundService {
 
     try {
       await _service.startService();
-      debugPrint(
-        'NitidoBackgroundService: Background service started',
-      );
+      debugPrint('NitidoBackgroundService: Background service started');
     } catch (e) {
       debugPrint(
         'NitidoBackgroundService: Failed to start background service: $e',
@@ -116,9 +106,7 @@ class NitidoBackgroundService {
 
     try {
       _service.invoke('stop');
-      debugPrint(
-        'NitidoBackgroundService: Background service stop requested',
-      );
+      debugPrint('NitidoBackgroundService: Background service stop requested');
     } catch (e) {
       debugPrint(
         'NitidoBackgroundService: Failed to stop background service: $e',
@@ -187,9 +175,7 @@ Future<void> _onStart(ServiceInstance service) async {
   // Initialize Flutter bindings in the background isolate
   WidgetsFlutterBinding.ensureInitialized();
 
-  debugPrint(
-    'NitidoBackgroundService: Background isolate started',
-  );
+  debugPrint('NitidoBackgroundService: Background isolate started');
 
   // Wait for the main isolate to finish its own DB init before touching SQLite.
   // Without this delay the two isolates race on the same DB file, causing
@@ -244,9 +230,7 @@ Future<void> _onStart(ServiceInstance service) async {
 
   // Listen for commands from the main isolate
   service.on('stop').listen((event) async {
-    debugPrint(
-      'NitidoBackgroundService: Received stop command',
-    );
+    debugPrint('NitidoBackgroundService: Received stop command');
     await orchestrator.stop();
     await service.stopSelf();
   });
@@ -262,9 +246,7 @@ Future<void> _onStart(ServiceInstance service) async {
         channels: {CaptureChannel.sms, CaptureChannel.api},
       );
     } catch (e) {
-      debugPrint(
-        'NitidoBackgroundService: Error restarting orchestrator: $e',
-      );
+      debugPrint('NitidoBackgroundService: Error restarting orchestrator: $e');
     }
   });
 

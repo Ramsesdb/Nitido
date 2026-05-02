@@ -204,7 +204,9 @@ class _AccountSelectorModalState extends State<AccountSelectorModal>
             groupValue: selectedAccounts.firstOrNull?.id,
             onChanged: (value) {
               if (value == null) return;
-              final account = allAccounts.firstWhereOrNull((a) => a.id == value);
+              final account = allAccounts.firstWhereOrNull(
+                (a) => a.id == value,
+              );
               if (account == null) return;
               if (!widget.allowMultiSelection) {
                 if (_popping) return;

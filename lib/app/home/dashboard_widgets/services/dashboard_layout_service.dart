@@ -197,9 +197,7 @@ class DashboardLayoutService {
         updateGlobalState: true,
       );
     } catch (e) {
-      Logger.printDebug(
-        '[DashboardLayoutService] Error persisting layout: $e',
-      );
+      Logger.printDebug('[DashboardLayoutService] Error persisting layout: $e');
     }
   }
 

@@ -20,7 +20,13 @@ import 'package:nitido/core/services/auto_import/capture/capture_source.dart';
 /// Cursors (last-sync timestamps) are persisted in [SharedPreferences].
 class BinanceApiCaptureSource implements CaptureSource {
   static const String _binanceAccountName = 'Binance';
-  static const Set<String> _stablecoins = {'USD', 'USDT', 'USDC', 'BUSD', 'FDUSD'};
+  static const Set<String> _stablecoins = {
+    'USD',
+    'USDT',
+    'USDC',
+    'BUSD',
+    'FDUSD',
+  };
 
   final BinanceApiClient _client;
   final BinanceCredentialsStore _credentialsStore;
@@ -38,10 +44,9 @@ class BinanceApiCaptureSource implements CaptureSource {
     BinanceCredentialsStore? credentialsStore,
     SharedPreferences? prefsOverride,
     this.pollInterval = const Duration(minutes: 5),
-  })  : _client = client ?? BinanceApiClient(),
-        _credentialsStore =
-            credentialsStore ?? BinanceCredentialsStore.instance,
-        _prefsOverride = prefsOverride;
+  }) : _client = client ?? BinanceApiClient(),
+       _credentialsStore = credentialsStore ?? BinanceCredentialsStore.instance,
+       _prefsOverride = prefsOverride;
 
   @override
   CaptureChannel get channel => CaptureChannel.api;
@@ -160,7 +165,8 @@ class BinanceApiCaptureSource implements CaptureSource {
       cursorKey: 'binance_lastsync_withdraw',
       sender: 'binance:withdraw',
       fetch: (since) => _client.getCapitalWithdrawals(since: since),
-      getTimestamp: (item) => item['insertTime'] as int? ?? item['applyTime'] as int?,
+      getTimestamp: (item) =>
+          item['insertTime'] as int? ?? item['applyTime'] as int?,
     );
 
     await _syncEstimatedBalanceToBinanceAccount();
@@ -170,16 +176,18 @@ class BinanceApiCaptureSource implements CaptureSource {
     try {
       final db = AppDB.instance;
 
-      final accountRows = await db.customSelect(
-        '''
+      final accountRows = await db
+          .customSelect(
+            '''
         SELECT id, iniValue, currencyId
         FROM accounts
         WHERE LOWER(name) = LOWER(?)
         LIMIT 1
         ''',
-        variables: [Variable.withString(_binanceAccountName)],
-        readsFrom: {db.accounts},
-      ).get();
+            variables: [Variable.withString(_binanceAccountName)],
+            readsFrom: {db.accounts},
+          )
+          .get();
 
       if (accountRows.isEmpty) {
         return;
@@ -188,25 +196,28 @@ class BinanceApiCaptureSource implements CaptureSource {
       final account = accountRows.first.data;
       final accountId = account['id'] as String;
       final currentIniValue = (account['iniValue'] as num?)?.toDouble() ?? 0.0;
-      final currencyId = (account['currencyId'] as String?)?.toUpperCase() ?? '';
+      final currencyId =
+          (account['currencyId'] as String?)?.toUpperCase() ?? '';
 
       // Keep this sync only for USD-like Binance account setups.
       if (currencyId != 'USD') {
         return;
       }
 
-      final txCountRows = await db.customSelect(
-        '''
+      final txCountRows = await db
+          .customSelect(
+            '''
         SELECT COUNT(1) AS txCount
         FROM transactions
         WHERE accountID = ? OR receivingAccountID = ?
         ''',
-        variables: [
-          Variable.withString(accountId),
-          Variable.withString(accountId),
-        ],
-        readsFrom: {db.transactions},
-      ).get();
+            variables: [
+              Variable.withString(accountId),
+              Variable.withString(accountId),
+            ],
+            readsFrom: {db.transactions},
+          )
+          .get();
 
       final txCount = (txCountRows.first.data['txCount'] as int?) ?? 0;
 
@@ -228,8 +239,9 @@ class BinanceApiCaptureSource implements CaptureSource {
         );
       }
 
-      final spotBalances =
-          List<Map<String, dynamic>>.from(spot['balances'] as List? ?? const []);
+      final spotBalances = List<Map<String, dynamic>>.from(
+        spot['balances'] as List? ?? const [],
+      );
 
       final Map<String, double> amountByAsset = {};
 
@@ -341,12 +353,14 @@ class BinanceApiCaptureSource implements CaptureSource {
             ? DateTime.fromMillisecondsSinceEpoch(ts)
             : DateTime.now();
 
-        _controller.add(RawCaptureEvent(
-          rawText: jsonEncode(item),
-          sender: sender,
-          receivedAt: receivedAt,
-          channel: CaptureChannel.api,
-        ));
+        _controller.add(
+          RawCaptureEvent(
+            rawText: jsonEncode(item),
+            sender: sender,
+            receivedAt: receivedAt,
+            channel: CaptureChannel.api,
+          ),
+        );
 
         if (ts != null && ts > maxTimestamp) {
           maxTimestamp = ts;

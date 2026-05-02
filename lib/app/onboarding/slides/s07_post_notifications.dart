@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_mini_phone_frame.dart';
@@ -6,10 +6,7 @@ import 'package:nitido/app/onboarding/widgets/v3_slide_template.dart';
 import 'package:nitido/core/services/auto_import/capture/permission_coordinator.dart';
 
 class Slide07PostNotifications extends StatefulWidget {
-  const Slide07PostNotifications({
-    super.key,
-    required this.onNext,
-  });
+  const Slide07PostNotifications({super.key, required this.onNext});
 
   final VoidCallback onNext;
 
@@ -113,7 +110,9 @@ class _Slide07PostNotificationsState extends State<Slide07PostNotifications>
       return const Center(child: CircularProgressIndicator());
     }
     return V3SlideTemplate(
-      primaryLabel: _deniedPermanently ? 'Abrir ajustes' : 'Permitir notificaciones',
+      primaryLabel: _deniedPermanently
+          ? 'Abrir ajustes'
+          : 'Permitir notificaciones',
       onPrimary: _request,
       secondaryLabel: 'Omitir',
       onSecondary: widget.onNext,
@@ -122,16 +121,16 @@ class _Slide07PostNotificationsState extends State<Slide07PostNotifications>
         children: [
           Text(
             'Permite que Nitido te avise',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Te notificaremos cuando capturemos una transacción nueva o si necesitamos tu atención. Puedes desactivarlo después en Ajustes.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
           Align(
@@ -158,8 +157,8 @@ class _Slide07PostNotificationsState extends State<Slide07PostNotifications>
                     child: Text(
                       'El permiso fue denegado permanentemente. Ábrelo en Ajustes → Notificaciones para activarlo.',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: scheme.onSurfaceVariant,
-                          ),
+                        color: scheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],
@@ -224,22 +223,22 @@ class _NotifPreview extends StatelessWidget {
                 Text(
                   'Nitido',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    color: scheme.onSurfaceVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'Nueva transacción registrada',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
                 ),
                 Text(
                   'Capturamos un pago de Bs. 250,00 desde tu BDV.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: scheme.onSurfaceVariant,
-                      ),
+                    color: scheme.onSurfaceVariant,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/models/currency/currency_display_policy.dart';
 import 'package:nitido/core/services/rate_providers/rate_refresh_service.dart';
 
@@ -70,10 +70,7 @@ void main() {
       );
       expect(
         pairs,
-        equals({
-          (from: 'VES', to: 'USD'),
-          (from: 'EUR', to: 'USD'),
-        }),
+        equals({(from: 'VES', to: 'USD'), (from: 'EUR', to: 'USD')}),
       );
     });
 
@@ -94,10 +91,7 @@ void main() {
       );
       expect(
         pairs,
-        equals({
-          (from: 'GBP', to: 'EUR'),
-          (from: 'USD', to: 'EUR'),
-        }),
+        equals({(from: 'GBP', to: 'EUR'), (from: 'USD', to: 'EUR')}),
       );
     });
 
@@ -109,10 +103,7 @@ void main() {
       );
       expect(
         pairs,
-        equals({
-          (from: 'EUR', to: 'USD'),
-          (from: 'JPY', to: 'USD'),
-        }),
+        equals({(from: 'EUR', to: 'USD'), (from: 'JPY', to: 'USD')}),
       );
     });
 

@@ -6,6 +6,7 @@ class NitidoAnimatedLogo extends StatefulWidget {
   final String? subtitle;
   final double iconSize;
   final double fontSize;
+
   /// true  → estrella cae desde arriba (Pixar-style) y luego guiña — welcome screen
   /// false → solo guiña (ya está colocada) — onboarding
   final bool animateIn;
@@ -28,7 +29,8 @@ class _NitidoAnimatedLogoState extends State<NitidoAnimatedLogo>
   late final AnimationController _controller;
   late final Animation<double> starScaleAnim;
   late final Animation<double> starOpacityAnim;
-  late final Animation<double> starDropAnim; // Y offset en px: negativo = arriba
+  late final Animation<double>
+  starDropAnim; // Y offset en px: negativo = arriba
   late final AnimationController _levitateController;
   late final Animation<double> levitateAnim;
 
@@ -44,40 +46,50 @@ class _NitidoAnimatedLogoState extends State<NitidoAnimatedLogo>
 
       // Estrella cae 60px desde arriba con rebote al aterrizar
       starDropAnim = Tween<double>(begin: -60.0, end: 0.0)
-          .chain(CurveTween(
-            curve: const Interval(0.0, 0.38, curve: Curves.bounceOut),
-          ))
+          .chain(
+            CurveTween(
+              curve: const Interval(0.0, 0.38, curve: Curves.bounceOut),
+            ),
+          )
           .animate(_controller);
 
       // Escala pequeña → 1 mientras cae (aparece al mismo tiempo)
       starScaleAnim = Tween<double>(begin: 0.1, end: 1.0)
-          .chain(CurveTween(
-            curve: const Interval(0.0, 0.28, curve: Curves.easeOut),
-          ))
+          .chain(
+            CurveTween(curve: const Interval(0.0, 0.28, curve: Curves.easeOut)),
+          )
           .animate(_controller);
 
       // Guiña dos veces después de aterrizar
       starOpacityAnim = TweenSequence<double>([
         TweenSequenceItem(tween: ConstantTween(1.0), weight: 45),
         TweenSequenceItem(
-          tween: Tween(begin: 1.0, end: 0.0)
-              .chain(CurveTween(curve: Curves.easeIn)),
+          tween: Tween(
+            begin: 1.0,
+            end: 0.0,
+          ).chain(CurveTween(curve: Curves.easeIn)),
           weight: 8,
         ),
         TweenSequenceItem(
-          tween: Tween(begin: 0.0, end: 1.0)
-              .chain(CurveTween(curve: Curves.easeOut)),
+          tween: Tween(
+            begin: 0.0,
+            end: 1.0,
+          ).chain(CurveTween(curve: Curves.easeOut)),
           weight: 9,
         ),
         TweenSequenceItem(tween: ConstantTween(1.0), weight: 8),
         TweenSequenceItem(
-          tween: Tween(begin: 1.0, end: 0.0)
-              .chain(CurveTween(curve: Curves.easeIn)),
+          tween: Tween(
+            begin: 1.0,
+            end: 0.0,
+          ).chain(CurveTween(curve: Curves.easeIn)),
           weight: 8,
         ),
         TweenSequenceItem(
-          tween: Tween(begin: 0.0, end: 1.0)
-              .chain(CurveTween(curve: Curves.easeOut)),
+          tween: Tween(
+            begin: 0.0,
+            end: 1.0,
+          ).chain(CurveTween(curve: Curves.easeOut)),
           weight: 9,
         ),
         TweenSequenceItem(tween: ConstantTween(1.0), weight: 13),
@@ -87,9 +99,10 @@ class _NitidoAnimatedLogoState extends State<NitidoAnimatedLogo>
         vsync: this,
         duration: const Duration(milliseconds: 2500),
       );
-      levitateAnim = Tween<double>(begin: -2.5, end: 2.5)
-          .chain(CurveTween(curve: Curves.easeInOut))
-          .animate(_levitateController);
+      levitateAnim = Tween<double>(
+        begin: -2.5,
+        end: 2.5,
+      ).chain(CurveTween(curve: Curves.easeInOut)).animate(_levitateController);
     } else {
       // Onboarding: solo parpadeo, sin caída
       _controller = AnimationController(
@@ -103,24 +116,32 @@ class _NitidoAnimatedLogoState extends State<NitidoAnimatedLogo>
       starOpacityAnim = TweenSequence<double>([
         TweenSequenceItem(tween: ConstantTween(1.0), weight: 20),
         TweenSequenceItem(
-          tween: Tween(begin: 1.0, end: 0.0)
-              .chain(CurveTween(curve: Curves.easeIn)),
+          tween: Tween(
+            begin: 1.0,
+            end: 0.0,
+          ).chain(CurveTween(curve: Curves.easeIn)),
           weight: 12,
         ),
         TweenSequenceItem(
-          tween: Tween(begin: 0.0, end: 1.0)
-              .chain(CurveTween(curve: Curves.easeOut)),
+          tween: Tween(
+            begin: 0.0,
+            end: 1.0,
+          ).chain(CurveTween(curve: Curves.easeOut)),
           weight: 13,
         ),
         TweenSequenceItem(tween: ConstantTween(1.0), weight: 15),
         TweenSequenceItem(
-          tween: Tween(begin: 1.0, end: 0.0)
-              .chain(CurveTween(curve: Curves.easeIn)),
+          tween: Tween(
+            begin: 1.0,
+            end: 0.0,
+          ).chain(CurveTween(curve: Curves.easeIn)),
           weight: 12,
         ),
         TweenSequenceItem(
-          tween: Tween(begin: 0.0, end: 1.0)
-              .chain(CurveTween(curve: Curves.easeOut)),
+          tween: Tween(
+            begin: 0.0,
+            end: 1.0,
+          ).chain(CurveTween(curve: Curves.easeOut)),
           weight: 13,
         ),
         TweenSequenceItem(tween: ConstantTween(1.0), weight: 15),
@@ -130,9 +151,10 @@ class _NitidoAnimatedLogoState extends State<NitidoAnimatedLogo>
         vsync: this,
         duration: const Duration(milliseconds: 2500),
       );
-      levitateAnim = Tween<double>(begin: -2.5, end: 2.5)
-          .chain(CurveTween(curve: Curves.easeInOut))
-          .animate(_levitateController);
+      levitateAnim = Tween<double>(
+        begin: -2.5,
+        end: 2.5,
+      ).chain(CurveTween(curve: Curves.easeInOut)).animate(_levitateController);
     }
 
     _controller.forward().then((_) {
@@ -189,9 +211,15 @@ class _NitidoAnimatedLogoState extends State<NitidoAnimatedLogo>
                   right: 0,
                   child: Center(
                     child: AnimatedBuilder(
-                      animation: Listenable.merge([_controller, _levitateController]),
+                      animation: Listenable.merge([
+                        _controller,
+                        _levitateController,
+                      ]),
                       builder: (_, child) => Transform.translate(
-                        offset: Offset(0, starDropAnim.value + levitateAnim.value),
+                        offset: Offset(
+                          0,
+                          starDropAnim.value + levitateAnim.value,
+                        ),
                         child: ScaleTransition(
                           scale: starScaleAnim,
                           child: FadeTransition(

@@ -62,9 +62,21 @@ class CalculatorKeypad extends StatelessWidget {
     //   * equals                  → _CellKind.primary (accent fuerte)
     final rows = <List<_CellSpec>>[
       [
-        _CellSpec.digit(KeypadKey.digit7, '7', t.calculator.keypad.a11y.digit_n(n: '7')),
-        _CellSpec.digit(KeypadKey.digit8, '8', t.calculator.keypad.a11y.digit_n(n: '8')),
-        _CellSpec.digit(KeypadKey.digit9, '9', t.calculator.keypad.a11y.digit_n(n: '9')),
+        _CellSpec.digit(
+          KeypadKey.digit7,
+          '7',
+          t.calculator.keypad.a11y.digit_n(n: '7'),
+        ),
+        _CellSpec.digit(
+          KeypadKey.digit8,
+          '8',
+          t.calculator.keypad.a11y.digit_n(n: '8'),
+        ),
+        _CellSpec.digit(
+          KeypadKey.digit9,
+          '9',
+          t.calculator.keypad.a11y.digit_n(n: '9'),
+        ),
         _CellSpec.action(
           KeypadKey.backspace,
           icon: Icons.backspace_outlined,
@@ -72,9 +84,21 @@ class CalculatorKeypad extends StatelessWidget {
         ),
       ],
       [
-        _CellSpec.digit(KeypadKey.digit4, '4', t.calculator.keypad.a11y.digit_n(n: '4')),
-        _CellSpec.digit(KeypadKey.digit5, '5', t.calculator.keypad.a11y.digit_n(n: '5')),
-        _CellSpec.digit(KeypadKey.digit6, '6', t.calculator.keypad.a11y.digit_n(n: '6')),
+        _CellSpec.digit(
+          KeypadKey.digit4,
+          '4',
+          t.calculator.keypad.a11y.digit_n(n: '4'),
+        ),
+        _CellSpec.digit(
+          KeypadKey.digit5,
+          '5',
+          t.calculator.keypad.a11y.digit_n(n: '5'),
+        ),
+        _CellSpec.digit(
+          KeypadKey.digit6,
+          '6',
+          t.calculator.keypad.a11y.digit_n(n: '6'),
+        ),
         _CellSpec.action(
           KeypadKey.minus,
           label: '−',
@@ -82,9 +106,21 @@ class CalculatorKeypad extends StatelessWidget {
         ),
       ],
       [
-        _CellSpec.digit(KeypadKey.digit1, '1', t.calculator.keypad.a11y.digit_n(n: '1')),
-        _CellSpec.digit(KeypadKey.digit2, '2', t.calculator.keypad.a11y.digit_n(n: '2')),
-        _CellSpec.digit(KeypadKey.digit3, '3', t.calculator.keypad.a11y.digit_n(n: '3')),
+        _CellSpec.digit(
+          KeypadKey.digit1,
+          '1',
+          t.calculator.keypad.a11y.digit_n(n: '1'),
+        ),
+        _CellSpec.digit(
+          KeypadKey.digit2,
+          '2',
+          t.calculator.keypad.a11y.digit_n(n: '2'),
+        ),
+        _CellSpec.digit(
+          KeypadKey.digit3,
+          '3',
+          t.calculator.keypad.a11y.digit_n(n: '3'),
+        ),
         _CellSpec.action(
           KeypadKey.plus,
           label: '+',
@@ -97,7 +133,11 @@ class CalculatorKeypad extends StatelessWidget {
           label: 'C',
           a11y: t.calculator.keypad.a11y.clear,
         ),
-        _CellSpec.digit(KeypadKey.digit0, '0', t.calculator.keypad.a11y.digit_n(n: '0')),
+        _CellSpec.digit(
+          KeypadKey.digit0,
+          '0',
+          t.calculator.keypad.a11y.digit_n(n: '0'),
+        ),
         _CellSpec.digit(
           KeypadKey.decimal,
           decimalSep,

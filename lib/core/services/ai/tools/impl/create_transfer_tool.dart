@@ -21,9 +21,8 @@ class CreateTransferTool implements AiTool {
     this.execMode = AiToolExecMode.commit,
     AccountService? accountService,
     TransactionService? transactionService,
-  })  : _accountService = accountService ?? AccountService.instance,
-        _transactionService =
-            transactionService ?? TransactionService.instance;
+  }) : _accountService = accountService ?? AccountService.instance,
+       _transactionService = transactionService ?? TransactionService.instance;
 
   @override
   String get name => 'create_transfer';
@@ -39,42 +38,38 @@ class CreateTransferTool implements AiTool {
 
   @override
   Map<String, dynamic> get parametersSchema => {
-        'type': 'object',
-        'properties': {
-          'amount': {
-            'type': 'number',
-            'description':
-                'Monto absoluto positivo que sale de la cuenta origen.',
-          },
-          'fromAccountId': {
-            'type': 'string',
-            'description': 'ID de la cuenta origen.',
-          },
-          'toAccountId': {
-            'type': 'string',
-            'description': 'ID de la cuenta destino.',
-          },
-          'valueInDestiny': {
-            'type': 'number',
-            'description':
-                'Monto que llega a la cuenta destino, cuando las monedas difieren.',
-          },
-          'title': {
-            'type': 'string',
-            'description': 'Titulo corto opcional.',
-          },
-          'notes': {
-            'type': 'string',
-            'description': 'Notas extendidas opcionales.',
-          },
-          'date': {
-            'type': 'string',
-            'description': 'Fecha ISO 8601; por defecto ahora.',
-          },
-        },
-        'required': ['amount', 'fromAccountId', 'toAccountId'],
-        'additionalProperties': false,
-      };
+    'type': 'object',
+    'properties': {
+      'amount': {
+        'type': 'number',
+        'description': 'Monto absoluto positivo que sale de la cuenta origen.',
+      },
+      'fromAccountId': {
+        'type': 'string',
+        'description': 'ID de la cuenta origen.',
+      },
+      'toAccountId': {
+        'type': 'string',
+        'description': 'ID de la cuenta destino.',
+      },
+      'valueInDestiny': {
+        'type': 'number',
+        'description':
+            'Monto que llega a la cuenta destino, cuando las monedas difieren.',
+      },
+      'title': {'type': 'string', 'description': 'Titulo corto opcional.'},
+      'notes': {
+        'type': 'string',
+        'description': 'Notas extendidas opcionales.',
+      },
+      'date': {
+        'type': 'string',
+        'description': 'Fecha ISO 8601; por defecto ahora.',
+      },
+    },
+    'required': ['amount', 'fromAccountId', 'toAccountId'],
+    'additionalProperties': false,
+  };
 
   @override
   Future<AiToolResult> execute(Map<String, dynamic> args) async {
@@ -108,8 +103,7 @@ class CreateTransferTool implements AiTool {
     }
 
     final accounts = await _accountService.getAccounts().first;
-    final fromMatches =
-        accounts.where((a) => a.id == fromAccountId).toList();
+    final fromMatches = accounts.where((a) => a.id == fromAccountId).toList();
     final toMatches = accounts.where((a) => a.id == toAccountId).toList();
     if (fromMatches.isEmpty) {
       return AiToolResult.error(
@@ -126,7 +120,8 @@ class CreateTransferTool implements AiTool {
     final from = fromMatches.first;
     final to = toMatches.first;
 
-    final valueInDestiny = (args['valueInDestiny'] as num?)?.toDouble() ??
+    final valueInDestiny =
+        (args['valueInDestiny'] as num?)?.toDouble() ??
         (from.currency.code == to.currency.code ? amount : null);
     if (from.currency.code != to.currency.code && valueInDestiny == null) {
       return AiToolResult.error(

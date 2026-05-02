@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:nitido/app/accounts/all_accounts_page.dart';
@@ -59,26 +59,126 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
     final t = Translations.of(context);
     final sections = t.more.sections;
     return [
-      _SearchItem(label: t.currencies.currency_manager, section: sections.configuration, icon: Icons.currency_exchange, onTap: () => RouteUtils.pushRoute(const CurrencyManagerPage())),
-      _SearchItem(label: t.more.ai.title, section: sections.configuration, icon: Icons.auto_awesome, onTap: () => RouteUtils.pushRoute(const AiSettingsPage())),
-      _SearchItem(label: t.settings.auto_import.menu_title, section: sections.configuration, icon: Icons.bolt_outlined, onTap: () => RouteUtils.pushRoute(const AutoImportSettingsPage())),
-      _SearchItem(label: t.settings.appearance.menu_title, section: sections.configuration, icon: Icons.palette_outlined, onTap: () => RouteUtils.pushRoute(const AppareanceSettingsPage())),
-      _SearchItem(label: t.settings.transactions.menu_title, section: sections.configuration, icon: Icons.swap_horiz, onTap: () => RouteUtils.pushRoute(const TransactionsSettingsPage())),
-      _SearchItem(label: t.settings.hidden_mode.title, section: sections.configuration, icon: Icons.lock_outline, onTap: () => RouteUtils.pushRoute(const HiddenModeSettingsPage())),
-      _SearchItem(label: t.settings.security.biometric.section_title, section: sections.configuration, icon: Icons.fingerprint_outlined, onTap: () => RouteUtils.pushRoute(const AppLockSettingsPage())),
-      _SearchItem(label: t.settings.general.menu_title, section: sections.configuration, icon: Icons.language, onTap: () => RouteUtils.pushRoute(const GeneralSettingsPage())),
-      _SearchItem(label: t.backup.export.title, section: sections.data, icon: Icons.upload_outlined, onTap: () => RouteUtils.pushRoute(const BackupSettingsPage())),
-      _SearchItem(label: t.backup.import.title, section: sections.data, icon: Icons.download_outlined, onTap: () => RouteUtils.pushRoute(const BackupSettingsPage())),
-      _SearchItem(label: t.more.account.firebase_sync, section: sections.data, icon: Icons.cloud_sync_outlined, onTap: () => RouteUtils.pushRoute(const BackupSettingsPage())),
-      _SearchItem(label: t.calculator.title, section: sections.tools, icon: Icons.calculate_outlined, onTap: () => RouteUtils.pushRoute(const CalculatorPage())),
-      _SearchItem(label: t.more.about_us.display, section: sections.about, icon: Icons.info_outline, onTap: () => RouteUtils.pushRoute(const AboutPage())),
-      _SearchItem(label: t.general.accounts, section: sections.management, icon: Icons.account_balance_wallet_rounded, onTap: () => RouteUtils.pushRoute(const AllAccountsPage())),
-      _SearchItem(label: t.general.categories, section: sections.management, icon: Icons.category_rounded, onTap: () => RouteUtils.pushRoute(const CategoriesListPage())),
-      _SearchItem(label: t.tags.display(n: 2), section: sections.management, icon: Icons.label_outline_rounded, onTap: () => RouteUtils.pushRoute(const TagListPage())),
-      _SearchItem(label: t.debts.display(n: 2), section: sections.management, icon: Icons.payments_rounded, onTap: () => RouteUtils.pushRoute(const DebtsPage())),
-      _SearchItem(label: t.goals.title, section: sections.management, icon: Goal.icon, onTap: () => RouteUtils.pushRoute(const GoalsPage())),
-      _SearchItem(label: t.budgets.title, section: sections.management, icon: Icons.pie_chart_rounded, onTap: () => RouteUtils.pushRoute(const BudgetsPage())),
-      _SearchItem(label: t.recurrent_transactions.title_short, section: sections.management, icon: Icons.repeat_rounded, onTap: () => RouteUtils.pushRoute(const RecurrentTransactionPage())),
+      _SearchItem(
+        label: t.currencies.currency_manager,
+        section: sections.configuration,
+        icon: Icons.currency_exchange,
+        onTap: () => RouteUtils.pushRoute(const CurrencyManagerPage()),
+      ),
+      _SearchItem(
+        label: t.more.ai.title,
+        section: sections.configuration,
+        icon: Icons.auto_awesome,
+        onTap: () => RouteUtils.pushRoute(const AiSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.settings.auto_import.menu_title,
+        section: sections.configuration,
+        icon: Icons.bolt_outlined,
+        onTap: () => RouteUtils.pushRoute(const AutoImportSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.settings.appearance.menu_title,
+        section: sections.configuration,
+        icon: Icons.palette_outlined,
+        onTap: () => RouteUtils.pushRoute(const AppareanceSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.settings.transactions.menu_title,
+        section: sections.configuration,
+        icon: Icons.swap_horiz,
+        onTap: () => RouteUtils.pushRoute(const TransactionsSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.settings.hidden_mode.title,
+        section: sections.configuration,
+        icon: Icons.lock_outline,
+        onTap: () => RouteUtils.pushRoute(const HiddenModeSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.settings.security.biometric.section_title,
+        section: sections.configuration,
+        icon: Icons.fingerprint_outlined,
+        onTap: () => RouteUtils.pushRoute(const AppLockSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.settings.general.menu_title,
+        section: sections.configuration,
+        icon: Icons.language,
+        onTap: () => RouteUtils.pushRoute(const GeneralSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.backup.export.title,
+        section: sections.data,
+        icon: Icons.upload_outlined,
+        onTap: () => RouteUtils.pushRoute(const BackupSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.backup.import.title,
+        section: sections.data,
+        icon: Icons.download_outlined,
+        onTap: () => RouteUtils.pushRoute(const BackupSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.more.account.firebase_sync,
+        section: sections.data,
+        icon: Icons.cloud_sync_outlined,
+        onTap: () => RouteUtils.pushRoute(const BackupSettingsPage()),
+      ),
+      _SearchItem(
+        label: t.calculator.title,
+        section: sections.tools,
+        icon: Icons.calculate_outlined,
+        onTap: () => RouteUtils.pushRoute(const CalculatorPage()),
+      ),
+      _SearchItem(
+        label: t.more.about_us.display,
+        section: sections.about,
+        icon: Icons.info_outline,
+        onTap: () => RouteUtils.pushRoute(const AboutPage()),
+      ),
+      _SearchItem(
+        label: t.general.accounts,
+        section: sections.management,
+        icon: Icons.account_balance_wallet_rounded,
+        onTap: () => RouteUtils.pushRoute(const AllAccountsPage()),
+      ),
+      _SearchItem(
+        label: t.general.categories,
+        section: sections.management,
+        icon: Icons.category_rounded,
+        onTap: () => RouteUtils.pushRoute(const CategoriesListPage()),
+      ),
+      _SearchItem(
+        label: t.tags.display(n: 2),
+        section: sections.management,
+        icon: Icons.label_outline_rounded,
+        onTap: () => RouteUtils.pushRoute(const TagListPage()),
+      ),
+      _SearchItem(
+        label: t.debts.display(n: 2),
+        section: sections.management,
+        icon: Icons.payments_rounded,
+        onTap: () => RouteUtils.pushRoute(const DebtsPage()),
+      ),
+      _SearchItem(
+        label: t.goals.title,
+        section: sections.management,
+        icon: Goal.icon,
+        onTap: () => RouteUtils.pushRoute(const GoalsPage()),
+      ),
+      _SearchItem(
+        label: t.budgets.title,
+        section: sections.management,
+        icon: Icons.pie_chart_rounded,
+        onTap: () => RouteUtils.pushRoute(const BudgetsPage()),
+      ),
+      _SearchItem(
+        label: t.recurrent_transactions.title_short,
+        section: sections.management,
+        icon: Icons.repeat_rounded,
+        onTap: () => RouteUtils.pushRoute(const RecurrentTransactionPage()),
+      ),
     ];
   }
 
@@ -112,14 +212,24 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
       } catch (_) {}
     }
 
-    await AppDataService.instance.setItem(AppDataKey.onboarded, null, updateGlobalState: true);
-    await AppDataService.instance.setItem(AppDataKey.introSeen, null, updateGlobalState: true);
+    await AppDataService.instance.setItem(
+      AppDataKey.onboarded,
+      null,
+      updateGlobalState: true,
+    );
+    await AppDataService.instance.setItem(
+      AppDataKey.introSeen,
+      null,
+      updateGlobalState: true,
+    );
 
     if (mounted) {
-      unawaited(Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-        (route) => false,
-      ));
+      unawaited(
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+          (route) => false,
+        ),
+      );
     }
   }
 
@@ -134,19 +244,27 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
           'Si ya tienes cuentas creadas, no se insertará nada (idempotente).',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: const Text('Cancelar')),
-          FilledButton(onPressed: () => Navigator.of(ctx).pop(true), child: const Text('Insertar')),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Insertar'),
+          ),
         ],
       ),
     );
 
     if (confirmed != true || !mounted) return;
 
-    unawaited(showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => const Center(child: CircularProgressIndicator()),
-    ));
+    unawaited(
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => const Center(child: CircularProgressIndicator()),
+      ),
+    );
 
     try {
       await PersonalVESeeder.seedAll();
@@ -184,9 +302,14 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
         title: Text(t.more.data.delete_all_header1),
         content: Text(t.more.data.delete_all_message1),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text(t.ui_actions.cancel)),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(t.ui_actions.cancel),
+          ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.of(context).danger),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.of(context).danger,
+            ),
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(t.ui_actions.confirm),
           ),
@@ -201,9 +324,14 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
         title: Text(t.more.data.delete_all_header2),
         content: Text(t.more.data.delete_all_message2),
         actions: [
-          TextButton(onPressed: () => Navigator.of(ctx).pop(false), child: Text(t.ui_actions.cancel)),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(t.ui_actions.cancel),
+          ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.of(context).danger),
+            style: FilledButton.styleFrom(
+              backgroundColor: AppColors.of(context).danger,
+            ),
             onPressed: () => Navigator.of(ctx).pop(true),
             child: Text(t.ui_actions.confirm),
           ),
@@ -278,13 +406,41 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
     final isExtraLarge = BreakPoint.of(context).isLargerThan(BreakpointID.lg);
 
     final items = [
-      _ActionItem(title: t.general.accounts, icon: Icons.account_balance_wallet_rounded, onTap: () => RouteUtils.pushRoute(const AllAccountsPage())),
-      _ActionItem(title: t.general.categories, icon: Icons.category_rounded, onTap: () => RouteUtils.pushRoute(const CategoriesListPage())),
-      _ActionItem(title: t.tags.display(n: 2), icon: Icons.label_outline_rounded, onTap: () => RouteUtils.pushRoute(const TagListPage())),
-      _ActionItem(title: t.debts.display(n: 2), icon: Icons.payments_rounded, onTap: () => RouteUtils.pushRoute(const DebtsPage())),
-      _ActionItem(title: t.goals.title, icon: Goal.icon, onTap: () => RouteUtils.pushRoute(const GoalsPage())),
-      _ActionItem(title: t.budgets.title, icon: Icons.pie_chart_rounded, onTap: () => RouteUtils.pushRoute(const BudgetsPage())),
-      _ActionItem(title: t.recurrent_transactions.title_short, icon: Icons.repeat_rounded, onTap: () => RouteUtils.pushRoute(const RecurrentTransactionPage())),
+      _ActionItem(
+        title: t.general.accounts,
+        icon: Icons.account_balance_wallet_rounded,
+        onTap: () => RouteUtils.pushRoute(const AllAccountsPage()),
+      ),
+      _ActionItem(
+        title: t.general.categories,
+        icon: Icons.category_rounded,
+        onTap: () => RouteUtils.pushRoute(const CategoriesListPage()),
+      ),
+      _ActionItem(
+        title: t.tags.display(n: 2),
+        icon: Icons.label_outline_rounded,
+        onTap: () => RouteUtils.pushRoute(const TagListPage()),
+      ),
+      _ActionItem(
+        title: t.debts.display(n: 2),
+        icon: Icons.payments_rounded,
+        onTap: () => RouteUtils.pushRoute(const DebtsPage()),
+      ),
+      _ActionItem(
+        title: t.goals.title,
+        icon: Goal.icon,
+        onTap: () => RouteUtils.pushRoute(const GoalsPage()),
+      ),
+      _ActionItem(
+        title: t.budgets.title,
+        icon: Icons.pie_chart_rounded,
+        onTap: () => RouteUtils.pushRoute(const BudgetsPage()),
+      ),
+      _ActionItem(
+        title: t.recurrent_transactions.title_short,
+        icon: Icons.repeat_rounded,
+        onTap: () => RouteUtils.pushRoute(const RecurrentTransactionPage()),
+      ),
     ];
 
     int maxColumns = isExtraLarge ? 6 : (isLarge ? 4 : 3);
@@ -300,16 +456,22 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
       if (idx + size > items.length) break;
       final chunk = items.sublist(idx, idx + size);
       idx += size;
-      rows.add(Row(
-        spacing: 8,
-        children: chunk.map((item) => Expanded(
-          child: SettingCardItem(
-            title: item.title,
-            icon: item.icon,
-            onTap: item.onTap,
-          ),
-        )).toList(),
-      ));
+      rows.add(
+        Row(
+          spacing: 8,
+          children: chunk
+              .map(
+                (item) => Expanded(
+                  child: SettingCardItem(
+                    title: item.title,
+                    icon: item.icon,
+                    onTap: item.onTap,
+                  ),
+                ),
+              )
+              .toList(),
+        ),
+      );
     }
     return rows;
   }
@@ -323,8 +485,13 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
 
     final filteredItems = _searchQuery.isEmpty
         ? <_SearchItem>[]
-        : _searchItems.where((item) =>
-            item.label.toLowerCase().contains(_searchQuery.toLowerCase())).toList();
+        : _searchItems
+              .where(
+                (item) => item.label.toLowerCase().contains(
+                  _searchQuery.toLowerCase(),
+                ),
+              )
+              .toList();
 
     return PageFramework(
       title: t.more.title_long,
@@ -336,7 +503,9 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
           children: [
             const ProfileHeroCard(),
             const NitidoAiHeroCard(),
-            SettingsSearchBar(onChanged: (q) => setState(() => _searchQuery = q)),
+            SettingsSearchBar(
+              onChanged: (q) => setState(() => _searchQuery = q),
+            ),
 
             if (_searchQuery.isNotEmpty) ...[
               if (filteredItems.isEmpty)
@@ -350,15 +519,25 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
                   ),
                 )
               else
-                ...filteredItems.map((item) => ListTile(
-                  leading: Icon(item.icon, color: Theme.of(context).colorScheme.primary),
-                  title: Text(item.label),
-                  subtitle: Text(item.section, style: TextStyle(color: appColors.textHint)),
-                  trailing: Icon(Icons.chevron_right, color: appColors.textHint),
-                  onTap: item.onTap,
-                )),
+                ...filteredItems.map(
+                  (item) => ListTile(
+                    leading: Icon(
+                      item.icon,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    title: Text(item.label),
+                    subtitle: Text(
+                      item.section,
+                      style: TextStyle(color: appColors.textHint),
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: appColors.textHint,
+                    ),
+                    onTap: item.onTap,
+                  ),
+                ),
             ] else ...[
-
               // Quick access
               _sectionHeader(t.more.sections.quick_access),
               const SettingsQuickAccess(),
@@ -370,24 +549,79 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
               // Configuración
               _sectionHeader(t.more.sections.configuration),
               _settingsCard([
-                _settingsTile(icon: Icons.currency_exchange, title: t.currencies.currency_manager, onTap: () => RouteUtils.pushRoute(const CurrencyManagerPage())),
-                _settingsTile(icon: Icons.auto_awesome, title: t.more.ai.title, onTap: () => RouteUtils.pushRoute(const AiSettingsPage())),
-                _settingsTile(icon: Icons.bolt_outlined, title: t.settings.auto_import.menu_title, onTap: () => RouteUtils.pushRoute(const AutoImportSettingsPage())),
-                _settingsTile(icon: Icons.palette_outlined, title: t.settings.appearance.menu_title, onTap: () => RouteUtils.pushRoute(const AppareanceSettingsPage())),
-                _settingsTile(icon: Icons.swap_horiz, title: t.settings.transactions.menu_title, onTap: () => RouteUtils.pushRoute(const TransactionsSettingsPage())),
-                _settingsTile(icon: Icons.lock_outline, title: t.settings.hidden_mode.title, onTap: () => RouteUtils.pushRoute(const HiddenModeSettingsPage())),
-                _settingsTile(icon: Icons.fingerprint_outlined, title: t.settings.security.biometric.section_title, onTap: () => RouteUtils.pushRoute(const AppLockSettingsPage())),
-                _settingsTile(icon: Icons.language, title: t.settings.general.menu_title, onTap: () => RouteUtils.pushRoute(const GeneralSettingsPage())),
+                _settingsTile(
+                  icon: Icons.currency_exchange,
+                  title: t.currencies.currency_manager,
+                  onTap: () =>
+                      RouteUtils.pushRoute(const CurrencyManagerPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.auto_awesome,
+                  title: t.more.ai.title,
+                  onTap: () => RouteUtils.pushRoute(const AiSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.bolt_outlined,
+                  title: t.settings.auto_import.menu_title,
+                  onTap: () =>
+                      RouteUtils.pushRoute(const AutoImportSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.palette_outlined,
+                  title: t.settings.appearance.menu_title,
+                  onTap: () =>
+                      RouteUtils.pushRoute(const AppareanceSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.swap_horiz,
+                  title: t.settings.transactions.menu_title,
+                  onTap: () =>
+                      RouteUtils.pushRoute(const TransactionsSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.lock_outline,
+                  title: t.settings.hidden_mode.title,
+                  onTap: () =>
+                      RouteUtils.pushRoute(const HiddenModeSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.fingerprint_outlined,
+                  title: t.settings.security.biometric.section_title,
+                  onTap: () =>
+                      RouteUtils.pushRoute(const AppLockSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.language,
+                  title: t.settings.general.menu_title,
+                  onTap: () =>
+                      RouteUtils.pushRoute(const GeneralSettingsPage()),
+                ),
               ]),
 
               // Datos
               _sectionHeader(t.more.sections.data),
               _settingsCard([
-                _settingsTile(icon: Icons.upload_outlined, title: t.backup.export.title, onTap: () => RouteUtils.pushRoute(const BackupSettingsPage())),
-                _settingsTile(icon: Icons.download_outlined, title: t.backup.import.title, onTap: () => RouteUtils.pushRoute(const BackupSettingsPage())),
-                _settingsTile(icon: Icons.cloud_sync_outlined, title: t.more.account.firebase_sync, onTap: () => RouteUtils.pushRoute(const BackupSettingsPage())),
+                _settingsTile(
+                  icon: Icons.upload_outlined,
+                  title: t.backup.export.title,
+                  onTap: () => RouteUtils.pushRoute(const BackupSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.download_outlined,
+                  title: t.backup.import.title,
+                  onTap: () => RouteUtils.pushRoute(const BackupSettingsPage()),
+                ),
+                _settingsTile(
+                  icon: Icons.cloud_sync_outlined,
+                  title: t.more.account.firebase_sync,
+                  onTap: () => RouteUtils.pushRoute(const BackupSettingsPage()),
+                ),
                 if (isVes)
-                  _settingsTile(icon: Icons.science_outlined, title: 'Datos de prueba Venezuela', onTap: _runPersonalVESeeder),
+                  _settingsTile(
+                    icon: Icons.science_outlined,
+                    title: 'Datos de prueba Venezuela',
+                    onTap: _runPersonalVESeeder,
+                  ),
                 _settingsTile(
                   icon: Icons.delete_forever_outlined,
                   title: t.more.data.delete_all,
@@ -400,13 +634,21 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
               // Herramientas
               _sectionHeader(t.more.sections.tools),
               _settingsCard([
-                _settingsTile(icon: Icons.calculate_outlined, title: t.calculator.title, onTap: () => RouteUtils.pushRoute(const CalculatorPage())),
+                _settingsTile(
+                  icon: Icons.calculate_outlined,
+                  title: t.calculator.title,
+                  onTap: () => RouteUtils.pushRoute(const CalculatorPage()),
+                ),
               ]),
 
               // Acerca de
               _sectionHeader(t.more.sections.about),
               _settingsCard([
-                _settingsTile(icon: Icons.info_outline, title: t.more.about_us.display, onTap: () => RouteUtils.pushRoute(const AboutPage())),
+                _settingsTile(
+                  icon: Icons.info_outline,
+                  title: t.more.about_us.display,
+                  onTap: () => RouteUtils.pushRoute(const AboutPage()),
+                ),
               ]),
 
               // Footer
@@ -416,7 +658,9 @@ class _MoreActionsPageState extends State<MoreActionsPage> {
                   child: TextButton.icon(
                     icon: const Icon(Icons.logout),
                     label: Text(t.more.account.sign_out),
-                    style: TextButton.styleFrom(foregroundColor: appColors.danger),
+                    style: TextButton.styleFrom(
+                      foregroundColor: appColors.danger,
+                    ),
                     onPressed: _handleSignOut,
                   ),
                 ),

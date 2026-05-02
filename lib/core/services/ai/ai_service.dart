@@ -16,13 +16,13 @@ import 'package:nitido/core/services/ai/providers/openai_provider.dart';
 /// over with zero behaviour change for users that stay on Nexus.
 class AiService {
   AiService._({AiCredentialsStore? credentialsStore})
-      : _credentialsStore = credentialsStore ?? AiCredentialsStore.instance;
+    : _credentialsStore = credentialsStore ?? AiCredentialsStore.instance;
 
   static final AiService instance = AiService._();
 
   /// Test-only constructor — accepts a custom credentials store.
   AiService.forTesting({required AiCredentialsStore credentialsStore})
-      : _credentialsStore = credentialsStore;
+    : _credentialsStore = credentialsStore;
 
   final AiCredentialsStore _credentialsStore;
 
@@ -88,20 +88,11 @@ class AiService {
           model: effectiveModel,
         );
       case AiProviderType.openai:
-        return OpenAiProvider(
-          apiKey: creds.apiKey,
-          model: effectiveModel,
-        );
+        return OpenAiProvider(apiKey: creds.apiKey, model: effectiveModel);
       case AiProviderType.anthropic:
-        return AnthropicProvider(
-          apiKey: creds.apiKey,
-          model: effectiveModel,
-        );
+        return AnthropicProvider(apiKey: creds.apiKey, model: effectiveModel);
       case AiProviderType.gemini:
-        return GeminiProvider(
-          apiKey: creds.apiKey,
-          model: effectiveModel,
-        );
+        return GeminiProvider(apiKey: creds.apiKey, model: effectiveModel);
     }
   }
 
@@ -114,7 +105,8 @@ class AiService {
   ///     fall back to the default when the user picked something stale.
   String resolveEffectiveModel(AiCredentials creds) {
     final stored = creds.model;
-    if (stored == null || stored.isEmpty) return creds.providerType.defaultModel;
+    if (stored == null || stored.isEmpty)
+      return creds.providerType.defaultModel;
     if (creds.providerType.allowsFreeTextModel) return stored;
     return creds.providerType.models.contains(stored)
         ? stored

@@ -293,10 +293,8 @@ class _AddMoreSlot extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: InkWell(
               customBorder: const CircleBorder(),
-              onTap: () => showQuickUseConfigSheet(
-                context,
-                descriptor: descriptor,
-              ),
+              onTap: () =>
+                  showQuickUseConfigSheet(context, descriptor: descriptor),
               child: SizedBox(
                 width: kQuickUseAvatarSize,
                 height: kQuickUseAvatarSize,

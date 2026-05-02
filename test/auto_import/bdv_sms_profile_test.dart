@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/models/auto_import/capture_channel.dart';
 import 'package:nitido/core/models/auto_import/raw_capture_event.dart';
 import 'package:nitido/core/models/transaction/transaction_type.enum.dart';
@@ -61,10 +61,7 @@ void main() {
       expect(proposal.confidence, greaterThanOrEqualTo(0.9));
       expect(proposal.channel, CaptureChannel.sms);
       expect(proposal.accountId, 'acc-bdv');
-      expect(
-        proposal.parsedBySender,
-        'bdv_sms_v1_pagomovil_recibido',
-      );
+      expect(proposal.parsedBySender, 'bdv_sms_v1_pagomovil_recibido');
     });
 
     test('Fixture 2: Bs. 210,00 con espacio tras Bs., fecha 2023', () async {
@@ -228,13 +225,17 @@ void main() {
 
   group('BdvSmsProfile — parseDate', () {
     test('29-03-26 18:01 -> DateTime(2026, 3, 29, 18, 1)', () {
-      expect(BdvSmsProfile.parseDate('29-03-26', '18:01'),
-          DateTime(2026, 3, 29, 18, 1));
+      expect(
+        BdvSmsProfile.parseDate('29-03-26', '18:01'),
+        DateTime(2026, 3, 29, 18, 1),
+      );
     });
 
     test('30-10-23 12:35 -> DateTime(2023, 10, 30, 12, 35)', () {
-      expect(BdvSmsProfile.parseDate('30-10-23', '12:35'),
-          DateTime(2023, 10, 30, 12, 35));
+      expect(
+        BdvSmsProfile.parseDate('30-10-23', '12:35'),
+        DateTime(2023, 10, 30, 12, 35),
+      );
     });
   });
 

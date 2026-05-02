@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class ChatInputBar extends StatefulWidget {
@@ -82,7 +82,8 @@ class _ChatInputBarState extends State<ChatInputBar> {
   Widget build(BuildContext context) {
     final tokens = NitidoAiTokens.of(context);
     final bottomInset = MediaQuery.of(context).viewPadding.bottom;
-    final showMic = widget.voiceAffordance &&
+    final showMic =
+        widget.voiceAffordance &&
         widget.onMicTap != null &&
         widget.controller.text.isEmpty;
 
@@ -91,9 +92,7 @@ class _ChatInputBarState extends State<ChatInputBar> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Expanded(
-            child: _buildPill(tokens),
-          ),
+          Expanded(child: _buildPill(tokens)),
           const SizedBox(width: 8),
           // Reserve stable width so mic show/hide never shifts the send button.
           SizedBox(
@@ -197,9 +196,7 @@ class _MicButton extends StatelessWidget {
         opacity: enabled ? 1 : 0.45,
         child: Material(
           color: tokens.surfaceAlt,
-          shape: CircleBorder(
-            side: BorderSide(color: tokens.border, width: 1),
-          ),
+          shape: CircleBorder(side: BorderSide(color: tokens.border, width: 1)),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: enabled ? onTap : null,
@@ -258,8 +255,7 @@ class _SendButton extends StatelessWidget {
                         height: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation(tokens.textOnUser),
+                          valueColor: AlwaysStoppedAnimation(tokens.textOnUser),
                         ),
                       )
                     : Icon(

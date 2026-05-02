@@ -12,8 +12,8 @@ String appDataInitialSeedSQL(int schemaVersion) {
 }
 
 Future<String> settingsInitialSeedSQL() async {
-  final preferredCurrency =
-      await CurrencyService.instance.getDeviceDefaultCurrencyCode();
+  final preferredCurrency = await CurrencyService.instance
+      .getDeviceDefaultCurrencyCode();
 
   return """
   INSERT INTO userSettings VALUES

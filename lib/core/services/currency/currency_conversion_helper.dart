@@ -103,14 +103,13 @@ class CurrencyConversionHelper {
             num amount = 1,
             DateTime? date,
             String? source,
-          }) =>
-              ExchangeRateService.instance.calculateExchangeRate(
-                fromCurrency: fromCurrency,
-                toCurrency: toCurrency,
-                amount: amount,
-                date: date,
-                source: source,
-              ));
+          }) => ExchangeRateService.instance.calculateExchangeRate(
+            fromCurrency: fromCurrency,
+            toCurrency: toCurrency,
+            amount: amount,
+            date: date,
+            source: source,
+          ));
 
   static final CurrencyConversionHelper instance = CurrencyConversionHelper._();
 
@@ -165,9 +164,7 @@ class CurrencyConversionHelper {
           amount: amount,
           date: date,
           source: source?.dbValue,
-        ).map(
-          (converted) => (code: code, amount: converted),
-        );
+        ).map((converted) => (code: code, amount: converted));
         perCurrencyStreams.add(converted$);
       }
 

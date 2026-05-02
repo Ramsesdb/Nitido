@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/rate_providers/rate_provider_chain.dart';
 import 'package:nitido/core/services/rate_providers/rate_source.dart';
 
@@ -12,14 +12,8 @@ import 'package:nitido/core/services/rate_providers/rate_source.dart';
 void main() {
   group('RateProviderChain.sourceForPair', () {
     test('identity returns null (no conversion needed)', () {
-      expect(
-        RateProviderChain.sourceForPair(from: 'USD', to: 'USD'),
-        isNull,
-      );
-      expect(
-        RateProviderChain.sourceForPair(from: 'BTC', to: 'BTC'),
-        isNull,
-      );
+      expect(RateProviderChain.sourceForPair(from: 'USD', to: 'USD'), isNull);
+      expect(RateProviderChain.sourceForPair(from: 'BTC', to: 'BTC'), isNull);
     });
 
     test('USD↔VES routes to BCV by default (no preference)', () {
@@ -111,33 +105,20 @@ void main() {
 
   group('RateProviderChain.isCryptoOrUnsupported', () {
     test('crypto pairs are flagged unsupported', () {
-      expect(
-        RateProviderChain.isCryptoOrUnsupported('USD', 'BTC'),
-        isTrue,
-      );
-      expect(
-        RateProviderChain.isCryptoOrUnsupported('ETH', 'EUR'),
-        isTrue,
-      );
+      expect(RateProviderChain.isCryptoOrUnsupported('USD', 'BTC'), isTrue);
+      expect(RateProviderChain.isCryptoOrUnsupported('ETH', 'EUR'), isTrue);
     });
 
-    test('VES pairs are flagged unsupported (frankfurter does not cover it)',
-        () {
-      expect(
-        RateProviderChain.isCryptoOrUnsupported('USD', 'VES'),
-        isTrue,
-      );
-    });
+    test(
+      'VES pairs are flagged unsupported (frankfurter does not cover it)',
+      () {
+        expect(RateProviderChain.isCryptoOrUnsupported('USD', 'VES'), isTrue);
+      },
+    );
 
     test('vanilla fiat pairs are supported', () {
-      expect(
-        RateProviderChain.isCryptoOrUnsupported('USD', 'EUR'),
-        isFalse,
-      );
-      expect(
-        RateProviderChain.isCryptoOrUnsupported('GBP', 'JPY'),
-        isFalse,
-      );
+      expect(RateProviderChain.isCryptoOrUnsupported('USD', 'EUR'), isFalse);
+      expect(RateProviderChain.isCryptoOrUnsupported('GBP', 'JPY'), isFalse);
     });
   });
 }

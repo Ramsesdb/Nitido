@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/settings/pages/ai/wizard/steps/s1_welcome.step.dart';
@@ -24,11 +24,11 @@ void main() {
   void stubClipboard(String? value) {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(SystemChannels.platform, (call) async {
-      if (call.method == 'Clipboard.getData') {
-        return value == null ? null : <String, dynamic>{'text': value};
-      }
-      return null;
-    });
+          if (call.method == 'Clipboard.getData') {
+            return value == null ? null : <String, dynamic>{'text': value};
+          }
+          return null;
+        });
   }
 
   tearDown(() {
@@ -38,13 +38,7 @@ void main() {
 
   group('looksLikeKeyFor', () {
     test('detects OpenAI keys (sk- prefix, length > 20)', () {
-      expect(
-        looksLikeKeyFor(
-          AiProviderType.openai,
-          'sk-${'A' * 30}',
-        ),
-        isTrue,
-      );
+      expect(looksLikeKeyFor(AiProviderType.openai, 'sk-${'A' * 30}'), isTrue);
       expect(looksLikeKeyFor(AiProviderType.openai, 'sk-tooshort'), isFalse);
       expect(
         looksLikeKeyFor(AiProviderType.openai, 'no-prefix-${'A' * 30}'),
@@ -64,18 +58,9 @@ void main() {
     });
 
     test('detects Nexus keys (sk- or tk_ prefix)', () {
-      expect(
-        looksLikeKeyFor(AiProviderType.nexus, 'sk-${'C' * 30}'),
-        isTrue,
-      );
-      expect(
-        looksLikeKeyFor(AiProviderType.nexus, 'tk_${'D' * 30}'),
-        isTrue,
-      );
-      expect(
-        looksLikeKeyFor(AiProviderType.nexus, 'AIza${'D' * 30}'),
-        isFalse,
-      );
+      expect(looksLikeKeyFor(AiProviderType.nexus, 'sk-${'C' * 30}'), isTrue);
+      expect(looksLikeKeyFor(AiProviderType.nexus, 'tk_${'D' * 30}'), isTrue);
+      expect(looksLikeKeyFor(AiProviderType.nexus, 'AIza${'D' * 30}'), isFalse);
     });
 
     test('rejects strings with whitespace', () {
@@ -138,8 +123,9 @@ void main() {
   });
 
   group('S2ChooseProviderStep', () {
-    testWidgets('disables Continuar until a provider is picked',
-        (tester) async {
+    testWidgets('disables Continuar until a provider is picked', (
+      tester,
+    ) async {
       AiProviderType? chosen;
       bool continued = false;
       await tester.pumpWidget(
@@ -179,8 +165,9 @@ void main() {
       expect(continued, isTrue);
     });
 
-    testWidgets('shows "Usar la guardada" shortcut for configured providers',
-        (tester) async {
+    testWidgets('shows "Usar la guardada" shortcut for configured providers', (
+      tester,
+    ) async {
       bool used = false;
       await tester.pumpWidget(
         MaterialApp(
@@ -249,10 +236,7 @@ void main() {
       // Allow the postFrameCallback + clipboard future to settle.
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
-      expect(
-        find.textContaining('Detectamos una key'),
-        findsOneWidget,
-      );
+      expect(find.textContaining('Detectamos una key'), findsOneWidget);
     });
 
     testWidgets('emits onSubmit with the typed key', (tester) async {

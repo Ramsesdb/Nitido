@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:nitido/core/models/currency/currency_display_policy.dart';
 import 'package:nitido/core/models/currency/currency_display_policy_resolver.dart';
@@ -29,75 +29,74 @@ void main() {
       required Stream<String?> currencyMode,
       required Stream<String?> secondaryCurrency,
     }) {
-      return Rx.combineLatest3<String?, String?, String?, CurrencyDisplayPolicy>(
-        preferredCurrency,
-        currencyMode,
-        secondaryCurrency,
-        (pref, mode, sec) =>
-            CurrencyDisplayPolicyResolver.buildPolicy(
-          preferredCurrency: pref,
-          currencyMode: mode,
-          secondaryCurrency: sec,
-        ),
-      ).distinct();
+      return Rx.combineLatest3<
+            String?,
+            String?,
+            String?,
+            CurrencyDisplayPolicy
+          >(
+            preferredCurrency,
+            currencyMode,
+            secondaryCurrency,
+            (pref, mode, sec) => CurrencyDisplayPolicyResolver.buildPolicy(
+              preferredCurrency: pref,
+              currencyMode: mode,
+              secondaryCurrency: sec,
+            ),
+          )
+          .distinct();
     }
 
-    test(
-      'emits initial policy from the first combined emission',
-      () async {
-        final pref = BehaviorSubject<String?>.seeded('USD');
-        final mode = BehaviorSubject<String?>.seeded('dual');
-        final sec = BehaviorSubject<String?>.seeded('VES');
+    test('emits initial policy from the first combined emission', () async {
+      final pref = BehaviorSubject<String?>.seeded('USD');
+      final mode = BehaviorSubject<String?>.seeded('dual');
+      final sec = BehaviorSubject<String?>.seeded('VES');
 
-        final stream$ = buildResolverStream(
-          preferredCurrency: pref.stream,
-          currencyMode: mode.stream,
-          secondaryCurrency: sec.stream,
-        );
+      final stream$ = buildResolverStream(
+        preferredCurrency: pref.stream,
+        currencyMode: mode.stream,
+        secondaryCurrency: sec.stream,
+      );
 
-        final first = await stream$.first;
-        expect(first, const DualMode(primary: 'USD', secondary: 'VES'));
+      final first = await stream$.first;
+      expect(first, const DualMode(primary: 'USD', secondary: 'VES'));
 
-        await pref.close();
-        await mode.close();
-        await sec.close();
-      },
-    );
+      await pref.close();
+      await mode.close();
+      await sec.close();
+    });
 
-    test(
-      're-emits when currencyMode changes (dual → single_usd)',
-      () async {
-        final pref = BehaviorSubject<String?>.seeded('USD');
-        final mode = BehaviorSubject<String?>.seeded('dual');
-        final sec = BehaviorSubject<String?>.seeded('VES');
+    test('re-emits when currencyMode changes (dual → single_usd)', () async {
+      final pref = BehaviorSubject<String?>.seeded('USD');
+      final mode = BehaviorSubject<String?>.seeded('dual');
+      final sec = BehaviorSubject<String?>.seeded('VES');
 
-        final stream$ = buildResolverStream(
-          preferredCurrency: pref.stream,
-          currencyMode: mode.stream,
-          secondaryCurrency: sec.stream,
-        );
+      final stream$ = buildResolverStream(
+        preferredCurrency: pref.stream,
+        currencyMode: mode.stream,
+        secondaryCurrency: sec.stream,
+      );
 
-        final emitted = <CurrencyDisplayPolicy>[];
-        final sub = stream$.listen(emitted.add);
+      final emitted = <CurrencyDisplayPolicy>[];
+      final sub = stream$.listen(emitted.add);
 
-        // Allow the initial combineLatest emission.
-        await Future<void>.delayed(Duration.zero);
+      // Allow the initial combineLatest emission.
+      await Future<void>.delayed(Duration.zero);
 
-        // Mode change: dual → single_usd.
-        mode.add('single_usd');
-        await Future<void>.delayed(Duration.zero);
+      // Mode change: dual → single_usd.
+      mode.add('single_usd');
+      await Future<void>.delayed(Duration.zero);
 
-        expect(emitted, [
-          const DualMode(primary: 'USD', secondary: 'VES'),
-          const SingleMode(code: 'USD'),
-        ]);
+      expect(emitted, [
+        const DualMode(primary: 'USD', secondary: 'VES'),
+        const SingleMode(code: 'USD'),
+      ]);
 
-        await sub.cancel();
-        await pref.close();
-        await mode.close();
-        await sec.close();
-      },
-    );
+      await sub.cancel();
+      await pref.close();
+      await mode.close();
+      await sec.close();
+    });
 
     test(
       're-emits when secondaryCurrency changes (VES → ARS) within dual',
@@ -173,69 +172,63 @@ void main() {
       },
     );
 
-    test(
-      'unknown currencyMode value falls back to dual(USD, VES) without '
-      'error (forward-compat)',
-      () async {
-        // A blob from a future client emits a mode value this binary
-        // does not know. The resolver must downgrade gracefully — no
-        // exception, just a safe `dual(USD,VES)` policy.
-        final pref = BehaviorSubject<String?>.seeded(null);
-        final mode = BehaviorSubject<String?>.seeded(
-          'something_from_a_future_client',
-        );
-        final sec = BehaviorSubject<String?>.seeded(null);
+    test('unknown currencyMode value falls back to dual(USD, VES) without '
+        'error (forward-compat)', () async {
+      // A blob from a future client emits a mode value this binary
+      // does not know. The resolver must downgrade gracefully — no
+      // exception, just a safe `dual(USD,VES)` policy.
+      final pref = BehaviorSubject<String?>.seeded(null);
+      final mode = BehaviorSubject<String?>.seeded(
+        'something_from_a_future_client',
+      );
+      final sec = BehaviorSubject<String?>.seeded(null);
 
-        final stream$ = buildResolverStream(
-          preferredCurrency: pref.stream,
-          currencyMode: mode.stream,
-          secondaryCurrency: sec.stream,
-        );
+      final stream$ = buildResolverStream(
+        preferredCurrency: pref.stream,
+        currencyMode: mode.stream,
+        secondaryCurrency: sec.stream,
+      );
 
-        final first = await stream$.first;
-        expect(first, const DualMode(primary: 'USD', secondary: 'VES'));
+      final first = await stream$.first;
+      expect(first, const DualMode(primary: 'USD', secondary: 'VES'));
 
-        await pref.close();
-        await mode.close();
-        await sec.close();
-      },
-    );
+      await pref.close();
+      await mode.close();
+      await sec.close();
+    });
 
-    test(
-      'mode toggles single_usd → single_bs → single_other emit three '
-      'distinct policies',
-      () async {
-        final pref = BehaviorSubject<String?>.seeded('EUR');
-        final mode = BehaviorSubject<String?>.seeded('single_usd');
-        final sec = BehaviorSubject<String?>.seeded(null);
+    test('mode toggles single_usd → single_bs → single_other emit three '
+        'distinct policies', () async {
+      final pref = BehaviorSubject<String?>.seeded('EUR');
+      final mode = BehaviorSubject<String?>.seeded('single_usd');
+      final sec = BehaviorSubject<String?>.seeded(null);
 
-        final stream$ = buildResolverStream(
-          preferredCurrency: pref.stream,
-          currencyMode: mode.stream,
-          secondaryCurrency: sec.stream,
-        );
+      final stream$ = buildResolverStream(
+        preferredCurrency: pref.stream,
+        currencyMode: mode.stream,
+        secondaryCurrency: sec.stream,
+      );
 
-        final emitted = <CurrencyDisplayPolicy>[];
-        final sub = stream$.listen(emitted.add);
-        await Future<void>.delayed(Duration.zero);
+      final emitted = <CurrencyDisplayPolicy>[];
+      final sub = stream$.listen(emitted.add);
+      await Future<void>.delayed(Duration.zero);
 
-        mode.add('single_bs');
-        await Future<void>.delayed(Duration.zero);
+      mode.add('single_bs');
+      await Future<void>.delayed(Duration.zero);
 
-        mode.add('single_other');
-        await Future<void>.delayed(Duration.zero);
+      mode.add('single_other');
+      await Future<void>.delayed(Duration.zero);
 
-        expect(emitted, [
-          const SingleMode(code: 'USD'),
-          const SingleMode(code: 'VES'),
-          const SingleMode(code: 'EUR'),
-        ]);
+      expect(emitted, [
+        const SingleMode(code: 'USD'),
+        const SingleMode(code: 'VES'),
+        const SingleMode(code: 'EUR'),
+      ]);
 
-        await sub.cancel();
-        await pref.close();
-        await mode.close();
-        await sec.close();
-      },
-    );
+      await sub.cancel();
+      await pref.close();
+      await mode.close();
+      await sec.close();
+    });
   });
 }

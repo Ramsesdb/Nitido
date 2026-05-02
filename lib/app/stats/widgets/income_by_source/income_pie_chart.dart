@@ -46,11 +46,15 @@ class _IncomePieChartState extends State<IncomePieChart> {
           .toList();
 
       if (tagTxs.isNotEmpty) {
-        items.add(TrDistributionChartItem<Tag>(
-          category: tag,
-          transactions: tagTxs,
-          value: tagTxs.map((e) => e.currentValueInPreferredCurrency ?? 0.0).sum,
-        ));
+        items.add(
+          TrDistributionChartItem<Tag>(
+            category: tag,
+            transactions: tagTxs,
+            value: tagTxs
+                .map((e) => e.currentValueInPreferredCurrency ?? 0.0)
+                .sum,
+          ),
+        );
       }
     }
 
@@ -78,15 +82,17 @@ class _IncomePieChartState extends State<IncomePieChart> {
         final cat = tx.category!.parentCategoryID == null
             ? Category.fromDB(tx.category!, null)
             : (await CategoryService.instance
-                  .getCategoryById(tx.category!.parentCategoryID!)
-                  .first) ??
-              Category.fromDB(tx.category!, null);
+                      .getCategoryById(tx.category!.parentCategoryID!)
+                      .first) ??
+                  Category.fromDB(tx.category!, null);
 
-        items.add(TrDistributionChartItem<Category>(
-          category: cat,
-          transactions: [tx],
-          value: trValue,
-        ));
+        items.add(
+          TrDistributionChartItem<Category>(
+            category: cat,
+            transactions: [tx],
+            value: trValue,
+          ),
+        );
       }
     }
 
@@ -223,10 +229,7 @@ class _IncomePieChartState extends State<IncomePieChart> {
                 borderData: FlBorderData(show: false),
                 sectionsSpace: 0,
                 centerSpaceRadius: _centerRadius,
-                sections: _buildSections(
-                  data: data,
-                  colorGetter: colorGetter,
-                ),
+                sections: _buildSections(data: data, colorGetter: colorGetter),
               ),
             ),
           ),
@@ -238,8 +241,9 @@ class _IncomePieChartState extends State<IncomePieChart> {
                 height: _centerRadius * 2.25,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color:
-                      Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surface.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -262,7 +266,9 @@ class _IncomePieChartState extends State<IncomePieChart> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<List<MoneyTransaction>>(
-      stream: TransactionService.instance.getTransactions(filters: widget.filters),
+      stream: TransactionService.instance.getTransactions(
+        filters: widget.filters,
+      ),
       builder: (context, trSnapshot) {
         if (!trSnapshot.hasData) {
           return const LinearProgressIndicator();

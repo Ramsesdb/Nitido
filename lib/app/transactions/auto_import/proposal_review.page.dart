@@ -54,12 +54,14 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
     _type = pi.type == 'T'
         ? TransactionType.transfer
         : pi.type == 'I'
-            ? TransactionType.income
-            : TransactionType.expense;
-    _amountController =
-        TextEditingController(text: pi.amount.toStringAsFixed(2));
-    _counterpartyController =
-        TextEditingController(text: pi.counterpartyName ?? '');
+        ? TransactionType.income
+        : TransactionType.expense;
+    _amountController = TextEditingController(
+      text: pi.amount.toStringAsFixed(2),
+    );
+    _counterpartyController = TextEditingController(
+      text: pi.counterpartyName ?? '',
+    );
     _currencyId = pi.currencyId;
     _date = pi.date;
 
@@ -119,7 +121,8 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
       });
 
       final sender = (widget.pendingImport.sender ?? '').toLowerCase();
-      final isBdv = sender.contains('bdv') || sender == '2661' || sender == '2662';
+      final isBdv =
+          sender.contains('bdv') || sender == '2661' || sender == '2662';
       final selectedCurrency = match.first.currency.code.toUpperCase();
       if (isBdv && selectedCurrency != _currencyId.toUpperCase()) {
         await _resolveOrCreateSuggestedAccount();
@@ -138,7 +141,8 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
   Future<void> _resolveOrCreateSuggestedAccount() async {
     final pi = widget.pendingImport;
     final sender = (pi.sender ?? '').toLowerCase();
-    final isBdv = sender.contains('bdv') || sender == '2661' || sender == '2662';
+    final isBdv =
+        sender.contains('bdv') || sender == '2661' || sender == '2662';
     if (!isBdv) return;
 
     final currency = _currencyId.toUpperCase();
@@ -155,7 +159,10 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
     if (match == null) {
       final nextOrder = accounts.isEmpty
           ? 1
-          : (accounts.map((a) => a.displayOrder).reduce((a, b) => a > b ? a : b) + 1);
+          : (accounts
+                    .map((a) => a.displayOrder)
+                    .reduce((a, b) => a > b ? a : b) +
+                1);
 
       final accountName = currency == 'VES'
           ? 'Banco de Venezuela'
@@ -203,15 +210,19 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
     final raw = pi.rawText.toLowerCase();
     final sender = (pi.sender ?? '').toLowerCase();
     final counterparty = (pi.counterpartyName ?? '').toLowerCase();
-    final isBdv = sender.contains('bdv') || sender == '2661' || sender == '2662';
+    final isBdv =
+        sender.contains('bdv') || sender == '2661' || sender == '2662';
     final looksLikeBinanceTransfer =
-        raw.contains('binance') || sender.contains('binance') || counterparty.contains('binance');
-    final looksLikeBdvUsdSavingMove = isBdv &&
-      _currencyId.toUpperCase() == 'USD' &&
-      _type == TransactionType.expense;
+        raw.contains('binance') ||
+        sender.contains('binance') ||
+        counterparty.contains('binance');
+    final looksLikeBdvUsdSavingMove =
+        isBdv &&
+        _currencyId.toUpperCase() == 'USD' &&
+        _type == TransactionType.expense;
 
     if (_type != TransactionType.expense ||
-      (!looksLikeBinanceTransfer && !looksLikeBdvUsdSavingMove)) {
+        (!looksLikeBinanceTransfer && !looksLikeBdvUsdSavingMove)) {
       return;
     }
 
@@ -239,13 +250,12 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
     final pi = widget.pendingImport;
     final status = TransactionProposalStatus.fromDbValue(pi.status);
     final isDuplicate = status == TransactionProposalStatus.duplicate;
-    final isReviewable = status == TransactionProposalStatus.pending ||
+    final isReviewable =
+        status == TransactionProposalStatus.pending ||
         status == TransactionProposalStatus.duplicate;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Revisar propuesta'),
-      ),
+      appBar: AppBar(title: const Text('Revisar propuesta')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -259,8 +269,10 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
                   padding: const EdgeInsets.all(12),
                   child: Row(
                     children: [
-                      Icon(Icons.warning_amber_rounded,
-                          color: Colors.amber.shade800),
+                      Icon(
+                        Icons.warning_amber_rounded,
+                        color: Colors.amber.shade800,
+                      ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Text(
@@ -283,10 +295,7 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
               spacing: 8,
               runSpacing: 8,
               children: [
-                ProposalOriginChip(
-                  channel: pi.channel,
-                  sender: pi.sender,
-                ),
+                ProposalOriginChip(channel: pi.channel, sender: pi.sender),
                 ProposalStatusChip(status: status),
               ],
             ),
@@ -304,20 +313,22 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
               child: InputDecorator(
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  contentPadding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                  suffixIcon:
-                      isReviewable ? const Icon(Icons.arrow_drop_down) : null,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 14,
+                  ),
+                  suffixIcon: isReviewable
+                      ? const Icon(Icons.arrow_drop_down)
+                      : null,
                 ),
                 child: Text(
                   _selectedAccount?.name ?? 'Seleccionar cuenta',
                   style: TextStyle(
                     color: _selectedAccount != null
                         ? null
-                        : Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.5),
+                        : Theme.of(
+                            context,
+                          ).colorScheme.onSurface.withValues(alpha: 0.5),
                   ),
                 ),
               ),
@@ -381,8 +392,9 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
                   child: TextFormField(
                     controller: _amountController,
                     readOnly: !isReviewable,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     decoration: const InputDecoration(
                       labelText: 'Monto',
                       border: OutlineInputBorder(),
@@ -419,8 +431,10 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
                     decoration: const InputDecoration(
                       labelText: 'Moneda',
                       border: OutlineInputBorder(),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 8, vertical: 14),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 14,
+                      ),
                     ),
                   ),
                 ),
@@ -429,10 +443,7 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
             const SizedBox(height: 16),
 
             // Date + time picker
-            Text(
-              'Fecha y hora',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            Text('Fecha y hora', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 8),
             InkWell(
               onTap: isReviewable ? _selectDateTime : null,
@@ -442,9 +453,7 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
                   border: OutlineInputBorder(),
                   suffixIcon: Icon(Icons.calendar_today),
                 ),
-                child: Text(
-                  DateFormat('dd/MM/yyyy HH:mm').format(_date),
-                ),
+                child: Text(DateFormat('dd/MM/yyyy HH:mm').format(_date)),
               ),
             ),
             const SizedBox(height: 16),
@@ -462,20 +471,23 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
                 child: InputDecorator(
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                    suffixIcon:
-                        isReviewable ? const Icon(Icons.arrow_drop_down) : null,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 14,
+                    ),
+                    suffixIcon: isReviewable
+                        ? const Icon(Icons.arrow_drop_down)
+                        : null,
                   ),
                   child: Text(
-                    _selectedTransferAccount?.name ?? 'Seleccionar cuenta destino',
+                    _selectedTransferAccount?.name ??
+                        'Seleccionar cuenta destino',
                     style: TextStyle(
                       color: _selectedTransferAccount != null
                           ? null
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.5),
+                          : Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ),
@@ -486,11 +498,13 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
               TextFormField(
                 controller: _valueInDestinyController,
                 readOnly: !isReviewable,
-                keyboardType:
-                    const TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
                 decoration: const InputDecoration(
                   labelText: 'Monto recibido (neto)',
-                  helperText: 'Monto que llega a la cuenta destino (sin comision)',
+                  helperText:
+                      'Monto que llega a la cuenta destino (sin comision)',
                   border: OutlineInputBorder(),
                 ),
                 validator: (value) {
@@ -529,20 +543,22 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
                 child: InputDecorator(
                   decoration: InputDecoration(
                     border: const OutlineInputBorder(),
-                    contentPadding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                    suffixIcon:
-                        isReviewable ? const Icon(Icons.arrow_drop_down) : null,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 14,
+                    ),
+                    suffixIcon: isReviewable
+                        ? const Icon(Icons.arrow_drop_down)
+                        : null,
                   ),
                   child: Text(
                     _selectedCategory?.name ?? 'Sin categoria',
                     style: TextStyle(
                       color: _selectedCategory != null
                           ? null
-                          : Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.5),
+                          : Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withValues(alpha: 0.5),
                     ),
                   ),
                 ),
@@ -606,9 +622,9 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: SelectableText(
@@ -732,27 +748,29 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
   Future<void> _confirmAndSave() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedAccount == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Selecciona una cuenta')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Selecciona una cuenta')));
       return;
     }
 
     // Binance double-count check (applies to all types)
     final sender = (widget.pendingImport.sender ?? '').toLowerCase();
     if (sender.startsWith('binance:') && _selectedAccount != null) {
-      final countRow = await AppDB.instance.customSelect(
-        '''
+      final countRow = await AppDB.instance
+          .customSelect(
+            '''
         SELECT COUNT(1) AS txCount
         FROM transactions
         WHERE accountID = ? OR receivingAccountID = ?
         ''',
-        variables: [
-          Variable.withString(_selectedAccount!.id),
-          Variable.withString(_selectedAccount!.id),
-        ],
-        readsFrom: {AppDB.instance.transactions},
-      ).getSingle();
+            variables: [
+              Variable.withString(_selectedAccount!.id),
+              Variable.withString(_selectedAccount!.id),
+            ],
+            readsFrom: {AppDB.instance.transactions},
+          )
+          .getSingle();
 
       final txCount = (countRow.data['txCount'] as int?) ?? 0;
       final isBinanceBalanceMode =
@@ -852,7 +870,9 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
           if (mounted) {
             setState(() => _isSaving = false);
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Selecciona una categoria para guardar')),
+              const SnackBar(
+                content: Text('Selecciona una categoria para guardar'),
+              ),
             );
           }
           return;
@@ -916,7 +936,9 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
     }
   }
 
-  Future<Category?> _resolveFallbackCategoryForType(TransactionType type) async {
+  Future<Category?> _resolveFallbackCategoryForType(
+    TransactionType type,
+  ) async {
     final categories = await CategoryService.instance.getCategories().first;
 
     final normalized = categories.where((category) {
@@ -925,8 +947,7 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
             category.type == CategoryType.B;
       }
 
-      return category.type == CategoryType.E ||
-          category.type == CategoryType.B;
+      return category.type == CategoryType.E || category.type == CategoryType.B;
     }).toList();
 
     if (normalized.isEmpty) return null;
@@ -946,16 +967,20 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
 
     for (final category in categories) {
       final name = category.name.toLowerCase();
-      final isExpenseLike = category.type == CategoryType.E ||
-          category.type == CategoryType.B;
-      if (isExpenseLike && (name.contains('ahorro') || name.contains('ahorros'))) {
+      final isExpenseLike =
+          category.type == CategoryType.E || category.type == CategoryType.B;
+      if (isExpenseLike &&
+          (name.contains('ahorro') || name.contains('ahorros'))) {
         return category;
       }
     }
 
     final maxOrder = categories.isEmpty
         ? 1
-        : (categories.map((e) => e.displayOrder).reduce((a, b) => a > b ? a : b) + 1);
+        : (categories
+                  .map((e) => e.displayOrder)
+                  .reduce((a, b) => a > b ? a : b) +
+              1);
 
     final toInsert = CategoryInDB(
       id: generateUUID(),
@@ -1002,9 +1027,9 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
     );
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Propuesta rechazada')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Propuesta rechazada')));
       Navigator.pop(context, true);
     }
   }

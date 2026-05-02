@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/widget_descriptor.dart';
 import 'package:nitido/app/home/dashboard_widgets/services/dashboard_layout_service.dart';
 import 'package:nitido/app/home/dashboard_widgets/widgets/quick_use/quick_action_dispatcher.dart';
@@ -77,13 +77,10 @@ class _QuickUseConfigSheetState extends State<QuickUseConfigSheet>
       (w) => w.instanceId == widget.descriptor.instanceId,
       orElse: () => widget.descriptor,
     );
-    service.updateConfig(
-      widget.descriptor.instanceId,
-      <String, dynamic>{
-        ...live.config,
-        'chips': _chips.map((id) => id.name).toList(growable: false),
-      },
-    );
+    service.updateConfig(widget.descriptor.instanceId, <String, dynamic>{
+      ...live.config,
+      'chips': _chips.map((id) => id.name).toList(growable: false),
+    });
   }
 
   void _addChip(QuickActionId id) {
@@ -156,10 +153,7 @@ class _QuickUseConfigSheetState extends State<QuickUseConfigSheet>
             height: MediaQuery.of(context).size.height * 0.5,
             child: TabBarView(
               controller: _tabController,
-              children: [
-                _buildShownTab(context),
-                _buildHiddenTab(context),
-              ],
+              children: [_buildShownTab(context), _buildHiddenTab(context)],
             ),
           ),
         ],
@@ -283,10 +277,7 @@ class _QuickUseConfigSheetState extends State<QuickUseConfigSheet>
               for (final id in ids)
                 SizedBox(
                   width: kQuickUseSlotWidth,
-                  child: _HiddenAvatar(
-                    id: id,
-                    onAdd: () => _addChip(id),
-                  ),
+                  child: _HiddenAvatar(id: id, onAdd: () => _addChip(id)),
                 ),
             ],
           ),
@@ -328,9 +319,7 @@ class _ShownRow extends StatelessWidget {
         child: Row(
           children: <Widget>[
             // Avatar circular grande — misma escala que la vista Rial.
-            _AvatarCircle(
-              icon: action?.icon ?? Icons.bolt_rounded,
-            ),
+            _AvatarCircle(icon: action?.icon ?? Icons.bolt_rounded),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
@@ -387,10 +376,7 @@ class _HiddenAvatar extends StatelessWidget {
             clipBehavior: Clip.none,
             children: <Widget>[
               Positioned.fill(
-                child: _AvatarCircle(
-                  icon: action.icon,
-                  onTap: onAdd,
-                ),
+                child: _AvatarCircle(icon: action.icon, onTap: onAdd),
               ),
               // Badge `+` flotante (top-right). El stack se permite con
               // `Clip.none` para no recortarlo al borde del avatar.

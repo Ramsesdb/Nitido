@@ -115,7 +115,8 @@ class WizardScaffold extends StatelessWidget {
                                     right: V3Tokens.spaceMd,
                                   ),
                                   child: _BackPill(
-                                    onTap: onBack ??
+                                    onTap:
+                                        onBack ??
                                         () => Navigator.of(context).maybePop(),
                                   ),
                                 )
@@ -166,7 +167,8 @@ class WizardScaffold extends StatelessWidget {
                                 child: V3SecondaryButton(
                                   label: secondaryLabel!,
                                   onPressed: onSecondary,
-                                  leadingIcon: secondaryLeadingIcon ??
+                                  leadingIcon:
+                                      secondaryLeadingIcon ??
                                       Icons.arrow_forward,
                                 ),
                               ),
@@ -224,11 +226,7 @@ class _BackPill extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Center(
-            child: Icon(
-              Icons.arrow_back_ios_new,
-              size: 14,
-              color: fg,
-            ),
+            child: Icon(Icons.arrow_back_ios_new, size: 14, color: fg),
           ),
         ),
       ),

@@ -32,7 +32,8 @@ enum TransactionProposalStatus {
         return TransactionProposalStatus.duplicate;
       default:
         throw ArgumentError(
-            'Unknown TransactionProposalStatus dbValue: $value');
+          'Unknown TransactionProposalStatus dbValue: $value',
+        );
     }
   }
 }

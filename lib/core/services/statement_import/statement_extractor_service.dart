@@ -6,13 +6,14 @@ import 'package:nitido/core/services/ai/nexus_ai_service.dart';
 import 'package:nitido/core/services/statement_import/models/extracted_row.dart';
 import 'package:nitido/core/utils/uuid.dart';
 
-typedef StatementMultimodalCompleteFn = Future<String?> Function({
-  required String systemPrompt,
-  required String userPrompt,
-  required String imageBase64,
-  double temperature,
-  int maxTokens,
-});
+typedef StatementMultimodalCompleteFn =
+    Future<String?> Function({
+      required String systemPrompt,
+      required String userPrompt,
+      required String imageBase64,
+      double temperature,
+      int maxTokens,
+    });
 
 const String _systemPrompt =
     'Eres un extractor de movimientos bancarios venezolanos (BDV principalmente).\n'
@@ -51,8 +52,8 @@ class StatementExtractorException implements Exception {
 
 class StatementExtractorService {
   StatementExtractorService({StatementMultimodalCompleteFn? multimodalComplete})
-      : _multimodalComplete =
-            multimodalComplete ?? NexusAiService.instance.completeMultimodal;
+    : _multimodalComplete =
+          multimodalComplete ?? NexusAiService.instance.completeMultimodal;
 
   final StatementMultimodalCompleteFn _multimodalComplete;
 
@@ -118,7 +119,8 @@ class StatementExtractorService {
       final amount = amountNum.abs();
 
       final rawKind = map['kind']?.toString().toLowerCase();
-      final kind = (rawKind == 'income' || rawKind == 'expense' || rawKind == 'fee')
+      final kind =
+          (rawKind == 'income' || rawKind == 'expense' || rawKind == 'fee')
           ? rawKind!
           : 'expense';
 
@@ -133,19 +135,25 @@ class StatementExtractorService {
           ? confidenceRaw.toDouble().clamp(0.0, 1.0).toDouble()
           : null;
 
-      result.add(ExtractedRow(
-        id: generateUUID(),
-        amount: amount,
-        kind: kind,
-        date: date,
-        description: description,
-        confidence: confidence,
-      ));
+      result.add(
+        ExtractedRow(
+          id: generateUUID(),
+          amount: amount,
+          kind: kind,
+          date: date,
+          description: description,
+          confidence: confidence,
+        ),
+      );
     }
     return result;
   }
 
-  DateTime _resolveDate(String? dateHint, String? timeHint, DateTime pivotDate) {
+  DateTime _resolveDate(
+    String? dateHint,
+    String? timeHint,
+    DateTime pivotDate,
+  ) {
     final pivotDay = DateTime(pivotDate.year, pivotDate.month, pivotDate.day);
     DateTime baseDate;
     if (dateHint == null || dateHint.isEmpty) {
@@ -179,13 +187,7 @@ class StatementExtractorService {
     if (suffix == 'AM' && hour == 12) hour = 0;
     if (hour < 0 || hour > 23 || minute < 0 || minute > 59) return baseDate;
 
-    return DateTime(
-      baseDate.year,
-      baseDate.month,
-      baseDate.day,
-      hour,
-      minute,
-    );
+    return DateTime(baseDate.year, baseDate.month, baseDate.day, hour, minute);
   }
 }
 

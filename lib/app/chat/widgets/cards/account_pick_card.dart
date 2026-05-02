@@ -1,14 +1,10 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/models/chat_card_payload.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 import 'package:nitido/app/chat/widgets/hex_tile.dart';
 
 class AccountPickCard extends StatelessWidget {
-  const AccountPickCard(
-    this.payload, {
-    super.key,
-    required this.onTap,
-  });
+  const AccountPickCard(this.payload, {super.key, required this.onTap});
 
   final AccountPickPayload payload;
   final void Function(String accountId) onTap;

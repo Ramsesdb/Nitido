@@ -14,8 +14,9 @@ typedef LoadSecret = Future<String?> Function();
 /// user has not configured Nexus credentials.
 @Deprecated('Use AiService.instance instead')
 Future<String?> _defaultNexusApiKeyLoader() async {
-  final creds = await AiCredentialsStore.instance
-      .loadCredentials(AiProviderType.nexus);
+  final creds = await AiCredentialsStore.instance.loadCredentials(
+    AiProviderType.nexus,
+  );
   return creds?.apiKey;
 }
 
@@ -25,8 +26,9 @@ Future<String?> _defaultNexusApiKeyLoader() async {
 /// codepaths that still live on this service.
 @Deprecated('Use AiService.instance instead')
 Future<String?> _defaultNexusModelLoader() async {
-  final creds = await AiCredentialsStore.instance
-      .loadCredentials(AiProviderType.nexus);
+  final creds = await AiCredentialsStore.instance.loadCredentials(
+    AiProviderType.nexus,
+  );
   final model = creds?.model;
   if (model == null || model.trim().isEmpty) {
     return 'openai/gpt-4.1-mini';
@@ -42,10 +44,10 @@ class NexusAiService {
     LoadSecret? loadApiKey,
     LoadSecret? loadModel,
     Duration requestTimeout = const Duration(seconds: 15),
-  })  : _client = client ?? http.Client(),
-        _loadApiKey = loadApiKey ?? _defaultNexusApiKeyLoader,
-        _loadModel = loadModel ?? _defaultNexusModelLoader,
-        _requestTimeout = requestTimeout;
+  }) : _client = client ?? http.Client(),
+       _loadApiKey = loadApiKey ?? _defaultNexusApiKeyLoader,
+       _loadModel = loadModel ?? _defaultNexusModelLoader,
+       _requestTimeout = requestTimeout;
 
   factory NexusAiService.forTesting({
     required http.Client client,
@@ -101,7 +103,9 @@ class NexusAiService {
           .timeout(_requestTimeout);
 
       final latencyMs = DateTime.now().difference(startedAt).inMilliseconds;
-      debugPrint('NexusAiService.complete status=${response.statusCode} latencyMs=$latencyMs');
+      debugPrint(
+        'NexusAiService.complete status=${response.statusCode} latencyMs=$latencyMs',
+      );
 
       if (response.statusCode < 200 || response.statusCode >= 300) {
         return null;
@@ -139,7 +143,9 @@ class NexusAiService {
   }) async {
     final apiKey = await _loadApiKey();
     if (apiKey == null || apiKey.isEmpty) {
-      debugPrint('NexusAiService.completeMultimodal ABORT: no API key configured');
+      debugPrint(
+        'NexusAiService.completeMultimodal ABORT: no API key configured',
+      );
       return null;
     }
 
@@ -162,17 +168,11 @@ class NexusAiService {
               'temperature': temperature,
               'max_tokens': maxTokens,
               'messages': [
-                {
-                  'role': 'system',
-                  'content': systemPrompt,
-                },
+                {'role': 'system', 'content': systemPrompt},
                 {
                   'role': 'user',
                   'content': [
-                    {
-                      'type': 'text',
-                      'text': userPrompt,
-                    },
+                    {'type': 'text', 'text': userPrompt},
                     {
                       'type': 'image_url',
                       'image_url': {
@@ -292,8 +292,8 @@ class NexusAiService {
     final resolvedModel = (model?.trim().isNotEmpty ?? false)
         ? model!.trim()
         : ((await _loadModel())?.trim().isNotEmpty ?? false
-            ? (await _loadModel())!.trim()
-            : _defaultMultimodalModel);
+              ? (await _loadModel())!.trim()
+              : _defaultMultimodalModel);
 
     final startedAt = DateTime.now();
 
@@ -344,9 +344,7 @@ class NexusAiService {
         final preview = response.body.length > 200
             ? '${response.body.substring(0, 200)}…'
             : response.body;
-        debugPrint(
-          'NexusAiService.completeWithTools non-2xx body=$preview',
-        );
+        debugPrint('NexusAiService.completeWithTools non-2xx body=$preview');
         // Tag gateway-level transient failures distinctly so the UI can show
         // a "servicio no disponible" message instead of confusing the user
         // with a generic "couldn't understand you" error.
@@ -439,11 +437,9 @@ class NexusAiService {
           } else {
             argumentsJson = '{}';
           }
-          toolCalls.add(AiToolCall(
-            id: id,
-            name: fnName,
-            argumentsJson: argumentsJson,
-          ));
+          toolCalls.add(
+            AiToolCall(id: id, name: fnName, argumentsJson: argumentsJson),
+          );
         }
       }
 
@@ -512,9 +508,7 @@ class NexusAiService {
   }) async {
     final apiKey = await _loadApiKey();
     if (apiKey == null || apiKey.isEmpty) {
-      debugPrint(
-        'NexusAiService.streamWithTools ABORT: no API key configured',
-      );
+      debugPrint('NexusAiService.streamWithTools ABORT: no API key configured');
       return const AiCompletionResult(
         finishReason: AiCompletionFinishReason.unavailable,
         error: 'missing_api_key',
@@ -524,8 +518,8 @@ class NexusAiService {
     final resolvedModel = (model?.trim().isNotEmpty ?? false)
         ? model!.trim()
         : ((await _loadModel())?.trim().isNotEmpty ?? false
-            ? (await _loadModel())!.trim()
-            : _defaultMultimodalModel);
+              ? (await _loadModel())!.trim()
+              : _defaultMultimodalModel);
 
     final startedAt = DateTime.now();
 
@@ -562,9 +556,7 @@ class NexusAiService {
           final raw = utf8.decode(bytes, allowMalformed: true);
           preview = raw.length > 200 ? '${raw.substring(0, 200)}…' : raw;
         } catch (_) {}
-        debugPrint(
-          'NexusAiService.streamWithTools non-2xx body=$preview',
-        );
+        debugPrint('NexusAiService.streamWithTools non-2xx body=$preview');
         final code = response.statusCode;
         final errorTag = _isRetryableGatewayError(code)
             ? 'gateway_unavailable'
@@ -624,10 +616,7 @@ class NexusAiService {
             if (entry is! Map) continue;
             final idx = entry['index'];
             if (idx is! int) continue;
-            final acc = toolAcc.putIfAbsent(
-              idx,
-              () => _ToolCallAccumulator(),
-            );
+            final acc = toolAcc.putIfAbsent(idx, () => _ToolCallAccumulator());
 
             final id = entry['id'];
             if (id is String && id.isNotEmpty) acc.id = id;
@@ -675,19 +664,22 @@ class NexusAiService {
             'invalid_arguments_json bufferLen=${argsJson.length}',
           );
         }
-        toolCalls.add(AiToolCall(
-          id: id,
-          name: name,
-          argumentsJson: argsJson.isEmpty ? '{}' : argsJson,
-          hasInvalidArguments: !isValid,
-        ));
+        toolCalls.add(
+          AiToolCall(
+            id: id,
+            name: name,
+            argumentsJson: argsJson.isEmpty ? '{}' : argsJson,
+            hasInvalidArguments: !isValid,
+          ),
+        );
       }
 
       // Decide finish reason.
       // Some providers omit finish_reason but emit tool_calls — detect by
       // presence of accumulated calls. Likewise, treat absent finish_reason
       // with content as a normal stop.
-      final isToolCalls = (finishReason == 'tool_calls') ||
+      final isToolCalls =
+          (finishReason == 'tool_calls') ||
           (finishReason == null && toolCalls.isNotEmpty);
 
       if (isToolCalls) {

@@ -55,11 +55,10 @@ class WizardProviderCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final Color borderColor = selected
         ? V3Tokens.accent.withValues(alpha: 0.4)
-        : (isDark
-            ? const Color(0x0FFFFFFF)
-            : const Color(0x0F000000));
-    final Color bg =
-        selected ? scheme.surfaceContainerHighest : Colors.transparent;
+        : (isDark ? const Color(0x0FFFFFFF) : const Color(0x0F000000));
+    final Color bg = selected
+        ? scheme.surfaceContainerHighest
+        : Colors.transparent;
     final Color fg = scheme.onSurface;
 
     return InkWell(
@@ -223,11 +222,7 @@ class _Radio extends StatelessWidget {
       ),
       alignment: Alignment.center,
       child: selected
-          ? const Icon(
-              Icons.check_rounded,
-              size: 14,
-              color: Color(0xFF0A0A0A),
-            )
+          ? const Icon(Icons.check_rounded, size: 14, color: Color(0xFF0A0A0A))
           : null,
     );
   }

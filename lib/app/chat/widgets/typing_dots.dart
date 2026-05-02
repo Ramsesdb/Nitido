@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class TypingDots extends StatefulWidget {
@@ -97,7 +97,8 @@ class _TypingDotsState extends State<TypingDots>
   }
 
   double _phasedProgress(double value, int index) {
-    final staggerRatio = NitidoAiTokens.typingStagger.inMilliseconds /
+    final staggerRatio =
+        NitidoAiTokens.typingStagger.inMilliseconds /
         NitidoAiTokens.typingBounceDuration.inMilliseconds;
     final shifted = (value - index * staggerRatio) % 1.0;
     return shifted < 0 ? shifted + 1.0 : shifted;

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:nitido/app/currencies/widgets/manual_override_dialog.dart';
 import 'package:nitido/app/currencies/widgets/rate_source_badge.dart';
@@ -26,7 +26,8 @@ import 'package:nitido/i18n/generated/translations.g.dart';
 ///
 /// Misma indirección que [quickUseConfigEditorBuilder] — ver ADR-5 en
 /// `openspec/changes/exchange-rate-widget-config/design.md`.
-Widget Function(BuildContext, WidgetDescriptor)? exchangeRateConfigEditorBuilder;
+Widget Function(BuildContext, WidgetDescriptor)?
+exchangeRateConfigEditorBuilder;
 
 /// Phase 6.4 of `currency-modes-rework`: per-pair "Tasas de cambio" card.
 ///
@@ -140,17 +141,13 @@ class ExchangeRateCardWidget extends StatelessWidget {
   }
 
   Future<void> _refreshNow(BuildContext context) async {
-    NitidoSnackbar.success(
-      SnackbarParams('Actualizando tasas...'),
-    );
+    NitidoSnackbar.success(SnackbarParams('Actualizando tasas...'));
     try {
       final result = await RateRefreshService.instance.refreshNow();
       if (!context.mounted) return;
       if (result.totalFailure == 0 && result.totalSuccess > 0) {
         NitidoSnackbar.success(
-          SnackbarParams(
-            'Tasas actualizadas (${result.totalSuccess})',
-          ),
+          SnackbarParams('Tasas actualizadas (${result.totalSuccess})'),
         );
       } else if (result.totalSuccess == 0) {
         NitidoSnackbar.error(SnackbarParams('No se pudieron actualizar tasas'));
@@ -278,12 +275,10 @@ class _RatesList extends StatelessWidget {
         //     abajo).
         final pref = (appStateSettings[SettingKey.preferredCurrency] ?? 'USD')
             .toUpperCase();
-        final relevantRows = snapshot.data!
-            .where((r) {
-              final code = r.currencyCode.toUpperCase();
-              return wanted.contains(code) || code == pivotCode;
-            })
-            .toList();
+        final relevantRows = snapshot.data!.where((r) {
+          final code = r.currencyCode.toUpperCase();
+          return wanted.contains(code) || code == pivotCode;
+        }).toList();
         if (relevantRows.isEmpty || wanted.isEmpty) {
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
@@ -326,7 +321,9 @@ class _RatesList extends StatelessWidget {
 
         final anyHasBoth = orderedCodes.any((code) {
           final group = grouped[code] ?? [];
-          final sources = group.map((r) => r.source?.toLowerCase() ?? '').toSet();
+          final sources = group
+              .map((r) => r.source?.toLowerCase() ?? '')
+              .toSet();
           return sources.contains('bcv') && sources.contains('paralelo');
         });
 
@@ -506,8 +503,7 @@ class _RatesTable extends StatelessWidget {
       children: List<Widget>.generate(headerCells.length, (i) {
         // Header de la columna 0 está vacío pero conserva alineación
         // izquierda para coherencia con el label que va abajo.
-        final align =
-            i == 0 ? Alignment.centerLeft : Alignment.centerRight;
+        final align = i == 0 ? Alignment.centerLeft : Alignment.centerRight;
         return Padding(
           padding: const EdgeInsets.only(bottom: 6),
           child: Align(alignment: align, child: headerCells[i]),
@@ -591,8 +587,7 @@ class _RatesTable extends StatelessWidget {
           children: List<Widget>.generate(cells.length, (i) {
             // Columna 0 (label de divisa) alineada a la izquierda; las
             // columnas numéricas siguen pegadas a la derecha.
-            final align =
-                i == 0 ? Alignment.centerLeft : Alignment.centerRight;
+            final align = i == 0 ? Alignment.centerLeft : Alignment.centerRight;
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 5),
               child: Align(alignment: align, child: cells[i]),
@@ -630,10 +625,7 @@ void registerExchangeRateCardWidget() {
       ).home.dashboard_widgets.exchange_rate_card.description,
       icon: Icons.currency_exchange,
       defaultSize: WidgetSize.medium,
-      allowedSizes: const <WidgetSize>{
-        WidgetSize.medium,
-        WidgetSize.fullWidth,
-      },
+      allowedSizes: const <WidgetSize>{WidgetSize.medium, WidgetSize.fullWidth},
       defaultConfig: const <String, dynamic>{
         'pair': 'USD_VES',
         'source': null,

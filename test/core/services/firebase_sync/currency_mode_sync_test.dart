@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
 import 'package:nitido/core/models/currency/currency_mode.dart';
 import 'package:nitido/core/models/currency/currency_display_policy.dart';
@@ -84,199 +84,161 @@ void main() {
     return out;
   }
 
-  group(
-    'Firebase sync inclusion/exclusion — `currencyMode` / '
-    '`secondaryCurrency` (Task 10.9)',
-    () {
-      test(
-        '`currencyMode` is NOT in the sync exclusion set',
-        () {
-          expect(
-            userSettingsSyncExclusions.contains(SettingKey.currencyMode),
-            isFalse,
-            reason:
-                'currencyMode MUST sync across devices — see Phase 8 Run 6.',
-          );
-        },
+  group('Firebase sync inclusion/exclusion — `currencyMode` / '
+      '`secondaryCurrency` (Task 10.9)', () {
+    test('`currencyMode` is NOT in the sync exclusion set', () {
+      expect(
+        userSettingsSyncExclusions.contains(SettingKey.currencyMode),
+        isFalse,
+        reason: 'currencyMode MUST sync across devices — see Phase 8 Run 6.',
       );
+    });
 
-      test(
-        '`secondaryCurrency` is NOT in the sync exclusion set',
-        () {
-          expect(
-            userSettingsSyncExclusions
-                .contains(SettingKey.secondaryCurrency),
-            isFalse,
-          );
-        },
+    test('`secondaryCurrency` is NOT in the sync exclusion set', () {
+      expect(
+        userSettingsSyncExclusions.contains(SettingKey.secondaryCurrency),
+        isFalse,
       );
+    });
 
-      test(
-        'neither key matches the sensitive-substring filter',
-        () {
-          // The filter rejects substrings `apikey|secret|token|password`.
-          // Neither `currencyMode` nor `secondaryCurrency` matches.
-          expect(isSensitiveSettingKey('currencyMode'), isFalse);
-          expect(isSensitiveSettingKey('secondaryCurrency'), isFalse);
-        },
+    test('neither key matches the sensitive-substring filter', () {
+      // The filter rejects substrings `apikey|secret|token|password`.
+      // Neither `currencyMode` nor `secondaryCurrency` matches.
+      expect(isSensitiveSettingKey('currencyMode'), isFalse);
+      expect(isSensitiveSettingKey('secondaryCurrency'), isFalse);
+    });
+
+    test('simulated push includes both new keys', () {
+      final pushedBlob = simulatePush({
+        SettingKey.preferredCurrency: 'USD',
+        SettingKey.currencyMode: 'dual',
+        SettingKey.secondaryCurrency: 'VES',
+        SettingKey.firebaseSyncEnabled: '1', // excluded
+      });
+
+      expect(
+        pushedBlob.keys,
+        containsAll(['currencyMode', 'secondaryCurrency']),
       );
-
-      test(
-        'simulated push includes both new keys',
-        () {
-          final pushedBlob = simulatePush({
-            SettingKey.preferredCurrency: 'USD',
-            SettingKey.currencyMode: 'dual',
-            SettingKey.secondaryCurrency: 'VES',
-            SettingKey.firebaseSyncEnabled: '1', // excluded
-          });
-
-          expect(pushedBlob.keys, containsAll(['currencyMode', 'secondaryCurrency']));
-          expect(pushedBlob['currencyMode'], 'dual');
-          expect(pushedBlob['secondaryCurrency'], 'VES');
-          expect(
-            pushedBlob.keys.contains('firebaseSyncEnabled'),
-            isFalse,
-            reason: 'firebaseSyncEnabled is the only excluded key.',
-          );
-        },
+      expect(pushedBlob['currencyMode'], 'dual');
+      expect(pushedBlob['secondaryCurrency'], 'VES');
+      expect(
+        pushedBlob.keys.contains('firebaseSyncEnabled'),
+        isFalse,
+        reason: 'firebaseSyncEnabled is the only excluded key.',
       );
-    },
-  );
-
-  group('Firebase sync round-trip (Task 10.9 spec scenario)', () {
-    test(
-      'Round-trip preserves `currencyMode=single_bs` from device A to '
-      'device B',
-      () {
-        // Device A pushes single_bs.
-        final pushedBlob = simulatePush({
-          SettingKey.preferredCurrency: 'VES',
-          SettingKey.currencyMode: 'single_bs',
-        });
-
-        // Firestore stores the blob verbatim (no transformation).
-        // Device B pulls.
-        final pulledWrites = simulatePull(pushedBlob);
-
-        expect(pulledWrites[SettingKey.currencyMode], 'single_bs');
-
-        // Sanity check: the resolver on device B emits `SingleMode(VES)`.
-        final policy = CurrencyDisplayPolicyResolver.buildPolicy(
-          preferredCurrency: pulledWrites[SettingKey.preferredCurrency],
-          currencyMode: pulledWrites[SettingKey.currencyMode],
-          secondaryCurrency: pulledWrites[SettingKey.secondaryCurrency],
-        );
-        expect(policy, const SingleMode(code: 'VES'));
-      },
-    );
-
-    test(
-      'Round-trip preserves `dual(EUR, ARS)` shape',
-      () {
-        final pushedBlob = simulatePush({
-          SettingKey.preferredCurrency: 'EUR',
-          SettingKey.currencyMode: 'dual',
-          SettingKey.secondaryCurrency: 'ARS',
-        });
-        final pulledWrites = simulatePull(pushedBlob);
-
-        expect(pulledWrites[SettingKey.currencyMode], 'dual');
-        expect(pulledWrites[SettingKey.secondaryCurrency], 'ARS');
-
-        final policy = CurrencyDisplayPolicyResolver.buildPolicy(
-          preferredCurrency: pulledWrites[SettingKey.preferredCurrency],
-          currencyMode: pulledWrites[SettingKey.currencyMode],
-          secondaryCurrency: pulledWrites[SettingKey.secondaryCurrency],
-        );
-        expect(policy, const DualMode(primary: 'EUR', secondary: 'ARS'));
-      },
-    );
+    });
   });
 
-  group(
-    'Mixed-version rollout tolerance — Task 10.9 spec scenario "Cliente '
-    'antiguo sin las claves"',
-    () {
-      test(
-        'Old client blob lacking `currencyMode` does NOT erase the local '
-        'value (field-by-field merge)',
-        () {
-          // The new client previously wrote `currencyMode='single_bs'`
-          // locally. An old client (without the new keys) pushes a blob
-          // that omits `currencyMode`.
-          final oldClientBlob = <String, String?>{
-            'preferredCurrency': 'USD',
-            'themeMode': 'dark',
-          };
+  group('Firebase sync round-trip (Task 10.9 spec scenario)', () {
+    test('Round-trip preserves `currencyMode=single_bs` from device A to '
+        'device B', () {
+      // Device A pushes single_bs.
+      final pushedBlob = simulatePush({
+        SettingKey.preferredCurrency: 'VES',
+        SettingKey.currencyMode: 'single_bs',
+      });
 
-          final pulledWrites = simulatePull(oldClientBlob);
+      // Firestore stores the blob verbatim (no transformation).
+      // Device B pulls.
+      final pulledWrites = simulatePull(pushedBlob);
 
-          expect(
-            pulledWrites.containsKey(SettingKey.currencyMode),
-            isFalse,
-            reason:
-                'Pull MUST NOT touch keys absent from the remote blob — '
-                'the field-by-field merge preserves the local value.',
-          );
-          expect(
-            pulledWrites.containsKey(SettingKey.secondaryCurrency),
-            isFalse,
-          );
-          // The keys that DID arrive are written.
-          expect(pulledWrites[SettingKey.preferredCurrency], 'USD');
-        },
+      expect(pulledWrites[SettingKey.currencyMode], 'single_bs');
+
+      // Sanity check: the resolver on device B emits `SingleMode(VES)`.
+      final policy = CurrencyDisplayPolicyResolver.buildPolicy(
+        preferredCurrency: pulledWrites[SettingKey.preferredCurrency],
+        currencyMode: pulledWrites[SettingKey.currencyMode],
+        secondaryCurrency: pulledWrites[SettingKey.secondaryCurrency],
       );
+      expect(policy, const SingleMode(code: 'VES'));
+    });
 
-      test(
-        'Old client receives a blob with future-mode → unknown key '
-        'silently skipped (no crash)',
-        () {
-          // A FUTURE client emits `currencyMode='something_new'`. An old
-          // client pulls — `firstOrNull` returns null for the unknown
-          // value space and simulatePull skips it.
-          //
-          // This test pins the contract: future-proofing relies on
-          // `CurrencyMode.fromDb` downgrading gracefully on the read
-          // side after the value is written locally.
-          final futureBlob = <String, String?>{
-            'currencyMode': 'something_new',
-          };
-          final pulledWrites = simulatePull(futureBlob);
+    test('Round-trip preserves `dual(EUR, ARS)` shape', () {
+      final pushedBlob = simulatePush({
+        SettingKey.preferredCurrency: 'EUR',
+        SettingKey.currencyMode: 'dual',
+        SettingKey.secondaryCurrency: 'ARS',
+      });
+      final pulledWrites = simulatePull(pushedBlob);
 
-          // The simulation writes the unknown VALUE to a known KEY (the
-          // sync layer stores raw strings; mode parsing happens on read).
-          // The Phase 1 tolerant parser MUST downgrade the unknown value
-          // to `dual`.
-          expect(
-            pulledWrites[SettingKey.currencyMode],
-            'something_new',
-            reason:
-                'Sync layer stores raw strings — parsing happens on read.',
-          );
-          // On read, `CurrencyMode.fromDb('something_new')` MUST resolve
-          // to `dual` (forward-compat default).
-          expect(
-            CurrencyMode.fromDb(pulledWrites[SettingKey.currencyMode]),
-            CurrencyMode.dual,
-          );
-        },
+      expect(pulledWrites[SettingKey.currencyMode], 'dual');
+      expect(pulledWrites[SettingKey.secondaryCurrency], 'ARS');
+
+      final policy = CurrencyDisplayPolicyResolver.buildPolicy(
+        preferredCurrency: pulledWrites[SettingKey.preferredCurrency],
+        currencyMode: pulledWrites[SettingKey.currencyMode],
+        secondaryCurrency: pulledWrites[SettingKey.secondaryCurrency],
       );
+      expect(policy, const DualMode(primary: 'EUR', secondary: 'ARS'));
+    });
+  });
 
-      test(
-        'New client with no remote blob falls back to dual(USD, VES) via '
-        'the resolver',
-        () {
-          // Fresh device, no Firestore doc, no local row. The sync layer
-          // is a no-op; the resolver's null fallback kicks in.
-          final policy = CurrencyDisplayPolicyResolver.buildPolicy(
-            preferredCurrency: null,
-            currencyMode: null,
-            secondaryCurrency: null,
-          );
-          expect(policy, const DualMode(primary: 'USD', secondary: 'VES'));
-        },
+  group('Mixed-version rollout tolerance — Task 10.9 spec scenario "Cliente '
+      'antiguo sin las claves"', () {
+    test('Old client blob lacking `currencyMode` does NOT erase the local '
+        'value (field-by-field merge)', () {
+      // The new client previously wrote `currencyMode='single_bs'`
+      // locally. An old client (without the new keys) pushes a blob
+      // that omits `currencyMode`.
+      final oldClientBlob = <String, String?>{
+        'preferredCurrency': 'USD',
+        'themeMode': 'dark',
+      };
+
+      final pulledWrites = simulatePull(oldClientBlob);
+
+      expect(
+        pulledWrites.containsKey(SettingKey.currencyMode),
+        isFalse,
+        reason:
+            'Pull MUST NOT touch keys absent from the remote blob — '
+            'the field-by-field merge preserves the local value.',
       );
-    },
-  );
+      expect(pulledWrites.containsKey(SettingKey.secondaryCurrency), isFalse);
+      // The keys that DID arrive are written.
+      expect(pulledWrites[SettingKey.preferredCurrency], 'USD');
+    });
+
+    test('Old client receives a blob with future-mode → unknown key '
+        'silently skipped (no crash)', () {
+      // A FUTURE client emits `currencyMode='something_new'`. An old
+      // client pulls — `firstOrNull` returns null for the unknown
+      // value space and simulatePull skips it.
+      //
+      // This test pins the contract: future-proofing relies on
+      // `CurrencyMode.fromDb` downgrading gracefully on the read
+      // side after the value is written locally.
+      final futureBlob = <String, String?>{'currencyMode': 'something_new'};
+      final pulledWrites = simulatePull(futureBlob);
+
+      // The simulation writes the unknown VALUE to a known KEY (the
+      // sync layer stores raw strings; mode parsing happens on read).
+      // The Phase 1 tolerant parser MUST downgrade the unknown value
+      // to `dual`.
+      expect(
+        pulledWrites[SettingKey.currencyMode],
+        'something_new',
+        reason: 'Sync layer stores raw strings — parsing happens on read.',
+      );
+      // On read, `CurrencyMode.fromDb('something_new')` MUST resolve
+      // to `dual` (forward-compat default).
+      expect(
+        CurrencyMode.fromDb(pulledWrites[SettingKey.currencyMode]),
+        CurrencyMode.dual,
+      );
+    });
+
+    test('New client with no remote blob falls back to dual(USD, VES) via '
+        'the resolver', () {
+      // Fresh device, no Firestore doc, no local row. The sync layer
+      // is a no-op; the resolver's null fallback kicks in.
+      final policy = CurrencyDisplayPolicyResolver.buildPolicy(
+        preferredCurrency: null,
+        currencyMode: null,
+        secondaryCurrency: null,
+      );
+      expect(policy, const DualMode(primary: 'USD', secondary: 'VES'));
+    });
+  });
 }

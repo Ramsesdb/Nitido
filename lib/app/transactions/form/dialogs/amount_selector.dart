@@ -346,8 +346,8 @@ class _AmountSelectorState extends State<AmountSelector> {
                                     fontWeight: FontWeight.w300,
                                     fontSize: 22,
                                     color: AppColors.of(context).textBody
-                                        .withValues(alpha: 
-                                          amountString.contains('.')
+                                        .withValues(
+                                          alpha: amountString.contains('.')
                                               ? 1.0
                                               : 0.3,
                                         ),

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/settings/pages/ai/wizard/widgets/wizard_scaffold.dart';
 import 'package:nitido/core/services/ai/ai_credentials.dart';
@@ -113,10 +113,7 @@ class S6DoneStep extends StatelessWidget {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({
-    required this.providerName,
-    required this.model,
-  });
+  const _SummaryCard({required this.providerName, required this.model});
 
   final String providerName;
   final String model;

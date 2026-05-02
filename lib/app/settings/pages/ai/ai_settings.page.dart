@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/settings/pages/ai/wizard/ai_wizard.page.dart';
@@ -78,8 +78,8 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
     _receiptAiEnabled = appStateSettings[SettingKey.receiptAiEnabled] != '0';
     _voiceEnabled = appStateSettings[SettingKey.aiVoiceEnabled] != '0';
 
-    _activeProvider = AiCredentialsStore.instance.activeProvider() ??
-        AiProviderType.nexus;
+    _activeProvider =
+        AiCredentialsStore.instance.activeProvider() ?? AiProviderType.nexus;
     _editingProvider = _activeProvider;
 
     _storedCreds.clear();
@@ -113,10 +113,12 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
         _categorizationEnabled =
             appStateSettings[SettingKey.aiCategorizationEnabled] == '1';
         _chatEnabled = appStateSettings[SettingKey.aiChatEnabled] == '1';
-        _insightsEnabled = appStateSettings[SettingKey.aiInsightsEnabled] == '1';
+        _insightsEnabled =
+            appStateSettings[SettingKey.aiInsightsEnabled] == '1';
         _budgetPredictionEnabled =
             appStateSettings[SettingKey.aiBudgetPredictionEnabled] == '1';
-        _receiptAiEnabled = appStateSettings[SettingKey.receiptAiEnabled] != '0';
+        _receiptAiEnabled =
+            appStateSettings[SettingKey.receiptAiEnabled] != '0';
         _voiceEnabled = appStateSettings[SettingKey.aiVoiceEnabled] != '0';
       });
     }
@@ -190,7 +192,9 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Credenciales guardadas de forma segura.')),
+          const SnackBar(
+            content: Text('Credenciales guardadas de forma segura.'),
+          ),
         );
       }
     } finally {
@@ -207,7 +211,9 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
     // provider (or fall back to Nexus) so the dispatcher does not blow up.
     if (_activeProvider == type) {
       final remaining = _storedCreds.keys.toList();
-      final next = remaining.isNotEmpty ? remaining.first : AiProviderType.nexus;
+      final next = remaining.isNotEmpty
+          ? remaining.first
+          : AiProviderType.nexus;
       await AiCredentialsStore.instance.setActiveProvider(next);
       _activeProvider = next;
     }
@@ -217,9 +223,9 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
       _hydrateEditorFromStored();
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('API key eliminada.')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('API key eliminada.')));
   }
 
   Future<void> _testConnection() async {
@@ -293,10 +299,12 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                       labelText: 'Proveedor',
                     ),
                     items: AiProviderType.values
-                        .map((t) => DropdownMenuItem<AiProviderType>(
-                              value: t,
-                              child: Text(t.displayName),
-                            ))
+                        .map(
+                          (t) => DropdownMenuItem<AiProviderType>(
+                            value: t,
+                            child: Text(t.displayName),
+                          ),
+                        )
                         .toList(),
                     onChanged: (v) {
                       if (v != null) _onActiveProviderChanged(v);
@@ -355,10 +363,12 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                       DropdownButton<AiProviderType>(
                         value: _editingProvider,
                         items: AiProviderType.values
-                            .map((t) => DropdownMenuItem<AiProviderType>(
-                                  value: t,
-                                  child: Text(t.displayName),
-                                ))
+                            .map(
+                              (t) => DropdownMenuItem<AiProviderType>(
+                                value: t,
+                                child: Text(t.displayName),
+                              ),
+                            )
                             .toList(),
                         onChanged: (v) {
                           if (v != null) _onEditingProviderChanged(v);
@@ -380,9 +390,9 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                           ? null
                           : 'Actual: ${_maskKey(editingCreds.apiKey)}',
                       suffixIcon: IconButton(
-                        icon: Icon(_showApiKey
-                            ? Icons.visibility_off
-                            : Icons.visibility),
+                        icon: Icon(
+                          _showApiKey ? Icons.visibility_off : Icons.visibility,
+                        ),
                         onPressed: () {
                           setState(() => _showApiKey = !_showApiKey);
                         },
@@ -434,17 +444,19 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                       key: ValueKey('model_dropdown_${_editingProvider.name}'),
                       initialValue:
                           _editingProvider.models.contains(_selectedModel)
-                              ? _selectedModel
-                              : _editingProvider.defaultModel,
+                          ? _selectedModel
+                          : _editingProvider.defaultModel,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Modelo',
                       ),
                       items: _editingProvider.models
-                          .map((m) => DropdownMenuItem<String>(
-                                value: m,
-                                child: Text(m),
-                              ))
+                          .map(
+                            (m) => DropdownMenuItem<String>(
+                              value: m,
+                              child: Text(m),
+                            ),
+                          )
                           .toList(),
                       onChanged: (v) {
                         setState(() => _selectedModel = v);
@@ -474,8 +486,9 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                               ? const SizedBox(
                                   width: 16,
                                   height: 16,
-                                  child:
-                                      CircularProgressIndicator(strokeWidth: 2),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 )
                               : const Icon(Icons.save),
                           label: const Text('Guardar'),
@@ -483,8 +496,9 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                       ),
                       const SizedBox(width: 12),
                       OutlinedButton.icon(
-                        onPressed:
-                            editingCreds == null ? null : _deleteCredentials,
+                        onPressed: editingCreds == null
+                            ? null
+                            : _deleteCredentials,
                         icon: const Icon(Icons.delete_outline),
                         label: const Text('Eliminar'),
                       ),
@@ -527,14 +541,16 @@ class _AiSettingsPageState extends State<AiSettingsPage> {
                   Row(
                     children: [
                       FilledButton.icon(
-                        onPressed:
-                            _isTestingConnection ? null : _testConnection,
+                        onPressed: _isTestingConnection
+                            ? null
+                            : _testConnection,
                         icon: _isTestingConnection
                             ? const SizedBox(
                                 width: 16,
                                 height: 16,
-                                child:
-                                    CircularProgressIndicator(strokeWidth: 2),
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
                               )
                             : const Icon(Icons.bolt),
                         label: const Text('Probar'),

@@ -99,8 +99,9 @@ class CurrencyAmountPane extends StatelessWidget {
     final Widget display = canFlip
         ? AnimatedFlipCounter(
             value: n,
-            duration:
-                isActive ? Duration.zero : const Duration(milliseconds: 300),
+            duration: isActive
+                ? Duration.zero
+                : const Duration(milliseconds: 300),
             curve: Curves.easeOut,
             fractionDigits: currency.decimalPlaces,
             thousandSeparator: _localeThousandSep(),
@@ -141,11 +142,10 @@ class CurrencyAmountPane extends StatelessWidget {
                 onChanged: onCurrencyChanged,
               ),
               const SizedBox(width: 12),
-              Expanded(child: Align(alignment: Alignment.centerRight, child: display)),
-              if (trailing != null) ...[
-                const SizedBox(width: 4),
-                trailing!,
-              ],
+              Expanded(
+                child: Align(alignment: Alignment.centerRight, child: display),
+              ),
+              if (trailing != null) ...[const SizedBox(width: 4), trailing!],
             ],
           ),
         ),

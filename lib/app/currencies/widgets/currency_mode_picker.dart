@@ -55,14 +55,15 @@ class CurrencyModeWrites {
 
   @override
   int get hashCode => Object.hash(
-        currencyMode,
-        preferredCurrency,
-        secondaryCurrency,
-        preferredRateSource,
-      );
+    currencyMode,
+    preferredCurrency,
+    secondaryCurrency,
+    preferredRateSource,
+  );
 
   @override
-  String toString() => 'CurrencyModeWrites('
+  String toString() =>
+      'CurrencyModeWrites('
       'mode=$currencyMode, '
       'primary=$preferredCurrency, '
       'secondary=$secondaryCurrency, '
@@ -122,8 +123,8 @@ CurrencyModeWrites computeModeWrites({
       // pair is unordered USD+VES. For any other dual pair the chip is
       // hidden and the value is irrelevant.
       final pair = <String>{upperPrimary, effectiveSecondary};
-      final isUsdVes = pair.length == 2 &&
-          pair.containsAll(<String>{'USD', 'VES'});
+      final isUsdVes =
+          pair.length == 2 && pair.containsAll(<String>{'USD', 'VES'});
       return CurrencyModeWrites(
         currencyMode: newMode.dbValue,
         preferredCurrency: upperPrimary,
@@ -328,10 +329,9 @@ class _CurrencyModePickerSheetState extends State<_CurrencyModePickerSheet> {
                     Expanded(
                       child: Text(
                         'Modo de moneda',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge
-                            ?.copyWith(fontWeight: FontWeight.w700),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ],
@@ -343,8 +343,8 @@ class _CurrencyModePickerSheetState extends State<_CurrencyModePickerSheet> {
                   'Cambia cómo se muestran los totales en el dashboard. '
                   'Tus cuentas y transacciones no se modifican.',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: colors.onSurfaceVariant,
-                      ),
+                    color: colors.onSurfaceVariant,
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
@@ -379,8 +379,7 @@ class _CurrencyModePickerSheetState extends State<_CurrencyModePickerSheet> {
                       _ModeOptionTile(
                         leadingCode: '↕',
                         title: 'Dual',
-                        subtitle:
-                            'Dos monedas a la vez. Por defecto USD/Bs.',
+                        subtitle: 'Dos monedas a la vez. Por defecto USD/Bs.',
                         selected: _mode == CurrencyMode.dual,
                         onTap: _selectDual,
                       ),
@@ -397,8 +396,7 @@ class _CurrencyModePickerSheetState extends State<_CurrencyModePickerSheet> {
                                   4,
                                 ),
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.only(
@@ -439,8 +437,7 @@ class _CurrencyModePickerSheetState extends State<_CurrencyModePickerSheet> {
               SafeArea(
                 top: false,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.fromLTRB(20, 4, 20, 16),
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 16),
                   child: Row(
                     children: [
                       Expanded(
@@ -536,25 +533,22 @@ class _ModeOptionTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: colors.onSurfaceVariant,
-                        ),
+                      color: colors.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ),
             ),
             Icon(
-              selected
-                  ? Icons.radio_button_checked
-                  : Icons.radio_button_off,
+              selected ? Icons.radio_button_checked : Icons.radio_button_off,
               color: selected ? colors.primary : colors.outline,
             ),
           ],
@@ -589,15 +583,12 @@ class _DualRow extends StatelessWidget {
               child: Text(
                 label,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: colors.onSurfaceVariant,
-                    ),
+                  color: colors.onSurfaceVariant,
+                ),
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: colors.primary.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(999),

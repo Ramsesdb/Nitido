@@ -1,4 +1,4 @@
-﻿import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/auto_import/binance/binance_credentials_store.dart';
 
@@ -30,15 +30,17 @@ void main() {
       expect(creds, isNull);
     });
 
-    test('hasCredentials returns true when both key and secret are present',
-        () async {
-      await store.save(
-        apiKey: 'fake_api_key_for_tests',
-        apiSecret: 'fake_secret_for_tests',
-      );
+    test(
+      'hasCredentials returns true when both key and secret are present',
+      () async {
+        await store.save(
+          apiKey: 'fake_api_key_for_tests',
+          apiSecret: 'fake_secret_for_tests',
+        );
 
-      expect(await store.hasCredentials(), isTrue);
-    });
+        expect(await store.hasCredentials(), isTrue);
+      },
+    );
 
     test('hasCredentials returns false when storage is empty', () async {
       expect(await store.hasCredentials(), isFalse);
@@ -58,15 +60,9 @@ void main() {
     });
 
     test('save overwrites previous credentials', () async {
-      await store.save(
-        apiKey: 'fake_old_key',
-        apiSecret: 'fake_old_secret',
-      );
+      await store.save(apiKey: 'fake_old_key', apiSecret: 'fake_old_secret');
 
-      await store.save(
-        apiKey: 'fake_new_key',
-        apiSecret: 'fake_new_secret',
-      );
+      await store.save(apiKey: 'fake_new_key', apiSecret: 'fake_new_secret');
 
       final creds = await store.load();
       expect(creds, isNotNull);

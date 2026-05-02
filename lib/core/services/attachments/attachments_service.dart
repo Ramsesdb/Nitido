@@ -13,7 +13,9 @@ class AttachmentsService {
 
   final AppDB db;
 
-  static final AttachmentsService instance = AttachmentsService._(AppDB.instance);
+  static final AttachmentsService instance = AttachmentsService._(
+    AppDB.instance,
+  );
 
   AttachmentsService.forTesting(this.db);
 
@@ -31,7 +33,10 @@ class AttachmentsService {
 
     final attachmentId = generateUUID();
     final extension = await _targetExtensionFor(sourceFile);
-    final targetAbsolutePath = p.join(ownerFolder.path, '$attachmentId$extension');
+    final targetAbsolutePath = p.join(
+      ownerFolder.path,
+      '$attachmentId$extension',
+    );
 
     final persistedFile = await _persistWithCompression(
       sourceFile,
@@ -43,7 +48,9 @@ class AttachmentsService {
     final sizeBytes = await persistedFile.length();
     final now = DateTime.now();
 
-    await db.into(db.attachments).insert(
+    await db
+        .into(db.attachments)
+        .insert(
           AttachmentsCompanion.insert(
             id: attachmentId,
             ownerType: ownerType.dbValue,
@@ -75,11 +82,10 @@ class AttachmentsService {
     final query = db.select(db.attachments)
       ..where(
         (tbl) =>
-            tbl.ownerType.equals(ownerType.dbValue) & tbl.ownerId.equals(ownerId),
+            tbl.ownerType.equals(ownerType.dbValue) &
+            tbl.ownerId.equals(ownerId),
       )
-      ..orderBy([
-        (tbl) => OrderingTerm.desc(tbl.createdAt),
-      ]);
+      ..orderBy([(tbl) => OrderingTerm.desc(tbl.createdAt)]);
 
     final rows = await query.get();
     return rows.map(_toModel).toList(growable: false);
@@ -93,11 +99,10 @@ class AttachmentsService {
     final query = db.select(db.attachments)
       ..where(
         (tbl) =>
-            tbl.ownerType.equals(ownerType.dbValue) & tbl.ownerId.equals(ownerId),
+            tbl.ownerType.equals(ownerType.dbValue) &
+            tbl.ownerId.equals(ownerId),
       )
-      ..orderBy([
-        (tbl) => OrderingTerm.desc(tbl.createdAt),
-      ])
+      ..orderBy([(tbl) => OrderingTerm.desc(tbl.createdAt)])
       ..limit(1);
 
     if (role != null) {
@@ -136,12 +141,11 @@ class AttachmentsService {
       }
     }
 
-    await (db.delete(db.attachments)
-          ..where(
-            (tbl) =>
-                tbl.ownerType.equals(ownerType.dbValue) &
-                tbl.ownerId.equals(ownerId),
-          ))
+    await (db.delete(db.attachments)..where(
+          (tbl) =>
+              tbl.ownerType.equals(ownerType.dbValue) &
+              tbl.ownerId.equals(ownerId),
+        ))
         .go();
   }
 
@@ -160,13 +164,18 @@ class AttachmentsService {
 
       final file = File(absolutePath);
       if (!await file.exists()) {
-        await (db.delete(db.attachments)..where((tbl) => tbl.id.equals(row.id))).go();
+        await (db.delete(
+          db.attachments,
+        )..where((tbl) => tbl.id.equals(row.id))).go();
         removedItems++;
       }
     }
 
     if (await rootDir.exists()) {
-      await for (final entity in rootDir.list(recursive: true, followLinks: false)) {
+      await for (final entity in rootDir.list(
+        recursive: true,
+        followLinks: false,
+      )) {
         if (entity is! File) continue;
 
         final candidate = p.normalize(entity.path);
@@ -198,7 +207,10 @@ class AttachmentsService {
     );
   }
 
-  Future<File> _persistWithCompression(File sourceFile, String targetPath) async {
+  Future<File> _persistWithCompression(
+    File sourceFile,
+    String targetPath,
+  ) async {
     final sourceBytes = await sourceFile.readAsBytes();
     final decoded = img.decodeImage(sourceBytes);
 

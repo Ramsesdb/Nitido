@@ -50,9 +50,9 @@ class RateProviderChain {
     FrankfurterRateProvider? frankfurter,
     ManualOverrideProvider? manual,
     SharedPreferencesAsync? prefs,
-  })  : _frankfurter = frankfurter ?? FrankfurterRateProvider(),
-        _manual = manual ?? ManualOverrideProvider.instance,
-        _prefs = prefs ?? SharedPreferencesAsync();
+  }) : _frankfurter = frankfurter ?? FrankfurterRateProvider(),
+       _manual = manual ?? ManualOverrideProvider.instance,
+       _prefs = prefs ?? SharedPreferencesAsync();
 
   static final RateProviderChain instance = RateProviderChain._();
 
@@ -159,11 +159,7 @@ class RateProviderChain {
 
     // Identity short-circuit.
     if (upperFrom == upperTo) {
-      return ChainResult(
-        rate: 1.0,
-        source: RateSource.manual,
-        fetchedAt: when,
-      );
+      return ChainResult(rate: 1.0, source: RateSource.manual, fetchedAt: when);
     }
 
     final picked = sourceForPair(
@@ -307,8 +303,7 @@ class RateProviderChain {
     final live = await _frankfurter.fetchPair(from: from, to: to);
     if (live != null) {
       if (persistAuto) {
-        await ExchangeRateService.instance
-            .insertOrUpdateExchangeRateWithSource(
+        await ExchangeRateService.instance.insertOrUpdateExchangeRateWithSource(
           currencyCode: from,
           date: date,
           rate: live.rate,

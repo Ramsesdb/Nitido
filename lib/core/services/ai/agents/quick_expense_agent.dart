@@ -1,4 +1,4 @@
-﻿import 'package:nitido/core/services/ai/agents/agent_profile.dart';
+import 'package:nitido/core/services/ai/agents/agent_profile.dart';
 import 'package:nitido/core/services/ai/agents/agent_run_result.dart';
 import 'package:nitido/core/services/ai/agents/agent_runner.dart';
 import 'package:nitido/core/services/ai/financial_context_builder.dart';
@@ -23,14 +23,15 @@ class QuickExpenseAgent {
   final AgentRunner _runner;
 
   QuickExpenseAgent._({required this.profile, required AgentRunner runner})
-      : _runner = runner;
+    : _runner = runner;
 
   factory QuickExpenseAgent({
     CreateTransactionTool? createTransactionTool,
     AgentRunner? runner,
     String? modelOverride,
   }) {
-    final tool = createTransactionTool ??
+    final tool =
+        createTransactionTool ??
         CreateTransactionTool(execMode: AiToolExecMode.propose);
     final registry = AiToolRegistry([tool]);
     final profile = AgentProfile(
@@ -66,19 +67,10 @@ class QuickExpenseAgent {
     final systemContent =
         '${profile.systemPrompt}\n\nFecha de hoy: $currentDate.\n\n$ctx';
     final messages = <Map<String, dynamic>>[
-      {
-        'role': 'system',
-        'content': systemContent,
-      },
-      {
-        'role': 'user',
-        'content': transcript,
-      },
+      {'role': 'system', 'content': systemContent},
+      {'role': 'user', 'content': transcript},
     ];
-    return _runner.run(
-      profile: profile,
-      initialMessages: messages,
-    );
+    return _runner.run(profile: profile, initialMessages: messages);
   }
 
   static const String _systemPrompt =

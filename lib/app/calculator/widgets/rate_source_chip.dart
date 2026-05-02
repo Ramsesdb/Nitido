@@ -77,11 +77,7 @@ class RateSourceChip extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                Container(
-                  width: 1,
-                  height: 14,
-                  color: colors.outlineVariant,
-                ),
+                Container(width: 1, height: 14, color: colors.outlineVariant),
                 const SizedBox(width: 8),
                 Text(
                   ageText,

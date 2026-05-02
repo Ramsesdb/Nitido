@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/budgets/budgets_page.dart';
 import 'package:nitido/app/calculator/calculator.page.dart';
@@ -58,8 +58,7 @@ void main() {
           home: Builder(
             builder: (context) {
               return ElevatedButton(
-                onPressed: () =>
-                    QuickActionDispatcher.run(id.name, context),
+                onPressed: () => QuickActionDispatcher.run(id.name, context),
                 child: const Text('tap'),
               );
             },
@@ -72,33 +71,27 @@ void main() {
   }
 
   group('quick action dispatcher — switch tab on mobile', () {
-    testWidgets(
-      'openTransactions cambia el tab a transactions sin push',
-      (tester) async {
-        await tapAction(tester, QuickActionId.openTransactions);
+    testWidgets('openTransactions cambia el tab a transactions sin push', (
+      tester,
+    ) async {
+      await tapAction(tester, QuickActionId.openTransactions);
 
-        expect(
-          tabSwitches,
-          equals(<AppMenuDestinationsID>[
-            AppMenuDestinationsID.transactions,
-          ]),
-        );
-        expect(pushedPages, isEmpty);
-      },
-    );
+      expect(
+        tabSwitches,
+        equals(<AppMenuDestinationsID>[AppMenuDestinationsID.transactions]),
+      );
+      expect(pushedPages, isEmpty);
+    });
 
-    testWidgets(
-      'goToReports cambia el tab a stats sin push',
-      (tester) async {
-        await tapAction(tester, QuickActionId.goToReports);
+    testWidgets('goToReports cambia el tab a stats sin push', (tester) async {
+      await tapAction(tester, QuickActionId.goToReports);
 
-        expect(
-          tabSwitches,
-          equals(<AppMenuDestinationsID>[AppMenuDestinationsID.stats]),
-        );
-        expect(pushedPages, isEmpty);
-      },
-    );
+      expect(
+        tabSwitches,
+        equals(<AppMenuDestinationsID>[AppMenuDestinationsID.stats]),
+      );
+      expect(pushedPages, isEmpty);
+    });
   });
 
   group('quick action dispatcher — push para destinos sin tab', () {
@@ -118,16 +111,15 @@ void main() {
       expect(pushedPages.single, isA<SettingsPage>());
     });
 
-    testWidgets(
-      'openExchangeRates hace push de CurrencyManagerPage',
-      (tester) async {
-        await tapAction(tester, QuickActionId.openExchangeRates);
+    testWidgets('openExchangeRates hace push de CurrencyManagerPage', (
+      tester,
+    ) async {
+      await tapAction(tester, QuickActionId.openExchangeRates);
 
-        expect(tabSwitches, isEmpty);
-        expect(pushedPages, hasLength(1));
-        expect(pushedPages.single, isA<CurrencyManagerPage>());
-      },
-    );
+      expect(tabSwitches, isEmpty);
+      expect(pushedPages, hasLength(1));
+      expect(pushedPages.single, isA<CurrencyManagerPage>());
+    });
 
     testWidgets('goToCalculator hace push de CalculatorPage', (tester) async {
       await tapAction(tester, QuickActionId.goToCalculator);

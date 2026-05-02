@@ -22,9 +22,7 @@ class StatementImportCounter extends StatelessWidget {
       decoration: BoxDecoration(
         color: cs.primary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: cs.primary.withValues(alpha: 0.25),
-        ),
+        border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
@@ -57,9 +55,7 @@ class StatementImportCounter extends StatelessWidget {
                   modeLabel == null
                       ? 'filas se importarán'
                       : 'filas se importarán · $modeLabel',
-                  style: tt.bodySmall?.copyWith(
-                    color: cs.onSurfaceVariant,
-                  ),
+                  style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
               ],
             ),
@@ -72,11 +68,7 @@ class StatementImportCounter extends StatelessWidget {
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
-            child: Icon(
-              Icons.south_rounded,
-              color: cs.onPrimary,
-              size: 22,
-            ),
+            child: Icon(Icons.south_rounded, color: cs.onPrimary, size: 22),
           ),
         ],
       ),

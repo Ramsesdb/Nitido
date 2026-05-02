@@ -13,11 +13,7 @@ final RegExp _kPlayStoreUrl = RegExp(
 );
 
 class Slide09AppsIncluded extends StatefulWidget {
-  const Slide09AppsIncluded({
-    super.key,
-    required this.onNext,
-    this.onSkip,
-  });
+  const Slide09AppsIncluded({super.key, required this.onNext, this.onSkip});
 
   final VoidCallback onNext;
   final VoidCallback? onSkip;
@@ -64,9 +60,7 @@ class _Slide09AppsIncludedState extends State<Slide09AppsIncluded> {
         // Fallback: show all banks that have a profileId so the user can
         // still configure auto-import even when detection returns nothing.
         // All apps are now supported (dedicated parser or AI fallback).
-        tiles.addAll(
-          kBanks.where((b) => b.profileId != null),
-        );
+        tiles.addAll(kBanks.where((b) => b.profileId != null));
       } else {
         // Dedupe profileIds (BDV/Zinli have legacy package aliases).
         final seen = <String>{};
@@ -160,9 +154,7 @@ class _Slide09AppsIncludedState extends State<Slide09AppsIncluded> {
     final pkg = match.group(1);
     final messenger = ScaffoldMessenger.of(context);
     if (pkg == null) {
-      messenger.showSnackBar(
-        const SnackBar(content: Text('URL no válida')),
-      );
+      messenger.showSnackBar(const SnackBar(content: Text('URL no válida')));
       return;
     }
     final profileId = kAnyPackageToProfileId[pkg];
@@ -187,13 +179,10 @@ class _Slide09AppsIncludedState extends State<Slide09AppsIncluded> {
     await _onToggle(profileId, true);
     _urlController.clear();
     if (!mounted) return;
-    messenger.showSnackBar(
-      SnackBar(content: Text('${option.name} añadida')),
-    );
+    messenger.showSnackBar(SnackBar(content: Text('${option.name} añadida')));
   }
 
-  bool get _hasGPay =>
-      _tiles.any((t) => t.profileId == 'gpay_notif');
+  bool get _hasGPay => _tiles.any((t) => t.profileId == 'gpay_notif');
 
   Future<void> _onAddGPay() async {
     if (_hasGPay) return;
@@ -206,9 +195,7 @@ class _Slide09AppsIncludedState extends State<Slide09AppsIncluded> {
     // with the rest of the list.
     await _onToggle('gpay_notif', true);
     if (!mounted) return;
-    messenger.showSnackBar(
-      const SnackBar(content: Text('Google Pay añadido')),
-    );
+    messenger.showSnackBar(const SnackBar(content: Text('Google Pay añadido')));
   }
 
   @override
@@ -227,16 +214,16 @@ class _Slide09AppsIncludedState extends State<Slide09AppsIncluded> {
         children: [
           Text(
             'Aplicaciones incluidas',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Elige de qué apps queremos leer notificaciones. Puedes cambiarlo luego en Ajustes.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
           if (_loading)
@@ -279,18 +266,16 @@ class _Slide09AppsIncludedState extends State<Slide09AppsIncluded> {
                           ? (v) => _onToggle(tile.profileId!, v)
                           : null,
                       onRemove: () => _onRemove(tile.profileId!),
-                      badgeLabel:
-                          tile.autoImportSupported ? null : 'Próximamente',
+                      badgeLabel: tile.autoImportSupported
+                          ? null
+                          : 'Próximamente',
                     ),
                     const SizedBox(height: V3Tokens.spaceSm),
                   ],
                 ],
               ),
             const SizedBox(height: V3Tokens.space24),
-            _SectionLabel(
-              text: 'AGREGAR MANUALMENTE',
-              color: mutedLabel,
-            ),
+            _SectionLabel(text: 'AGREGAR MANUALMENTE', color: mutedLabel),
             const SizedBox(height: V3Tokens.spaceMd),
             _ManualInstructions(color: mutedLabel),
             const SizedBox(height: V3Tokens.spaceMd),
@@ -485,8 +470,7 @@ class _AddGPayChip extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(V3Tokens.radiusPill),
           child: Container(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(V3Tokens.radiusPill),
               border: Border.all(color: borderColor, width: 1),

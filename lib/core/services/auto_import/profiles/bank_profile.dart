@@ -28,12 +28,11 @@ class ParseResult {
   factory ParseResult.parsed(
     TransactionProposal proposal, {
     String? resolvedBankName,
-  }) =>
-      ParseResult._(
-        success: true,
-        transaction: proposal,
-        resolvedBankName: resolvedBankName,
-      );
+  }) => ParseResult._(
+    success: true,
+    transaction: proposal,
+    resolvedBankName: resolvedBankName,
+  );
 
   factory ParseResult.failed(String reason) =>
       ParseResult._(success: false, failureReason: reason);

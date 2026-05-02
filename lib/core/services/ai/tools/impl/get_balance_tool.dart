@@ -6,7 +6,7 @@ class GetBalanceTool implements AiTool {
   final AccountService _accountService;
 
   GetBalanceTool({AccountService? accountService})
-      : _accountService = accountService ?? AccountService.instance;
+    : _accountService = accountService ?? AccountService.instance;
 
   @override
   String get name => 'get_balance';
@@ -21,22 +21,22 @@ class GetBalanceTool implements AiTool {
 
   @override
   Map<String, dynamic> get parametersSchema => {
-        'type': 'object',
-        'properties': {
-          'accountId': {
-            'type': 'string',
-            'description':
-                'ID de la cuenta a consultar. Omite el campo para sumar todas las cuentas.',
-          },
-          'convertToPreferredCurrency': {
-            'type': 'boolean',
-            'description':
-                'Si true, convierte el saldo a la moneda preferida del usuario.',
-            'default': true,
-          },
-        },
-        'additionalProperties': false,
-      };
+    'type': 'object',
+    'properties': {
+      'accountId': {
+        'type': 'string',
+        'description':
+            'ID de la cuenta a consultar. Omite el campo para sumar todas las cuentas.',
+      },
+      'convertToPreferredCurrency': {
+        'type': 'boolean',
+        'description':
+            'Si true, convierte el saldo a la moneda preferida del usuario.',
+        'default': true,
+      },
+    },
+    'additionalProperties': false,
+  };
 
   @override
   Future<AiToolResult> execute(Map<String, dynamic> args) async {

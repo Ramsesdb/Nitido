@@ -48,9 +48,9 @@ class CaptureOrchestrator {
     required AppDB db,
     required PendingImportService pendingImportService,
     required DedupeChecker dedupeChecker,
-  })  : _db = db,
-        _pendingImportService = pendingImportService,
-        _dedupeChecker = dedupeChecker;
+  }) : _db = db,
+       _pendingImportService = pendingImportService,
+       _dedupeChecker = dedupeChecker;
 
   final List<CaptureSource> _sources = [];
   StreamSubscription<RawCaptureEvent>? _subscription;
@@ -86,8 +86,7 @@ class CaptureOrchestrator {
   AppDB get db => _db ?? AppDB.instance;
   PendingImportService get pendingImportService =>
       _pendingImportService ?? PendingImportService.instance;
-  DedupeChecker get dedupeChecker =>
-      _dedupeChecker ?? DedupeChecker.instance;
+  DedupeChecker get dedupeChecker => _dedupeChecker ?? DedupeChecker.instance;
 
   /// Register a capture source to be managed by this orchestrator.
   Future<void> registerSource(CaptureSource source) async {
@@ -207,6 +206,7 @@ class CaptureOrchestrator {
   /// and real sources are instantiated.
   Future<void> applySettings({
     Future<CaptureSource> Function(CaptureChannel)? sourceFactory,
+
     /// If non-null, only configure sources for the specified channels.
     /// Pass `{CaptureChannel.notification}` in the main isolate and
     /// `{CaptureChannel.sms, CaptureChannel.api}` in the background isolate
@@ -214,8 +214,7 @@ class CaptureOrchestrator {
     /// FlutterEngine) is never subscribed from the background service.
     Set<CaptureChannel>? channels,
   }) async {
-    final autoEnabled =
-        appStateSettings[SettingKey.autoImportEnabled] == '1';
+    final autoEnabled = appStateSettings[SettingKey.autoImportEnabled] == '1';
 
     if (!autoEnabled) {
       await clearSources();
@@ -229,10 +228,12 @@ class CaptureOrchestrator {
     await clearSources();
 
     // SMS source (Android only, or any platform when using sourceFactory for tests)
-    final smsEnabled =
-        appStateSettings[SettingKey.smsImportEnabled] == '1';
-    final includeSms = channels == null || channels.contains(CaptureChannel.sms);
-    if (includeSms && smsEnabled && (sourceFactory != null || Platform.isAndroid)) {
+    final smsEnabled = appStateSettings[SettingKey.smsImportEnabled] == '1';
+    final includeSms =
+        channels == null || channels.contains(CaptureChannel.sms);
+    if (includeSms &&
+        smsEnabled &&
+        (sourceFactory != null || Platform.isAndroid)) {
       try {
         final CaptureSource smsSource;
         if (sourceFactory != null) {
@@ -253,17 +254,18 @@ class CaptureOrchestrator {
           );
         }
       } catch (e) {
-        debugPrint(
-          'CaptureOrchestrator: Error creating SMS source: $e',
-        );
+        debugPrint('CaptureOrchestrator: Error creating SMS source: $e');
       }
     }
 
     // Notification source (Android only, or any platform when using sourceFactory for tests)
     final notifEnabled =
         appStateSettings[SettingKey.notifListenerEnabled] == '1';
-    final includeNotif = channels == null || channels.contains(CaptureChannel.notification);
-    if (includeNotif && notifEnabled && (sourceFactory != null || Platform.isAndroid)) {
+    final includeNotif =
+        channels == null || channels.contains(CaptureChannel.notification);
+    if (includeNotif &&
+        notifEnabled &&
+        (sourceFactory != null || Platform.isAndroid)) {
       try {
         final CaptureSource notifSource;
         if (sourceFactory != null) {
@@ -274,14 +276,14 @@ class CaptureOrchestrator {
               .expand((p) => p.knownSenders)
               .toSet()
               .toList();
-          notifSource =
-              NotificationCaptureSource(allowlistPackages: notifPackages);
+          notifSource = NotificationCaptureSource(
+            allowlistPackages: notifPackages,
+          );
         }
         if (await notifSource.hasPermission()) {
           await registerSource(notifSource);
           if (notifSource is NotificationCaptureSource) {
-            CaptureHealthMonitor.instance
-                .bindNotificationSource(notifSource);
+            CaptureHealthMonitor.instance.bindNotificationSource(notifSource);
             // Idempotent — if already running this is a no-op.
             await CaptureHealthMonitor.instance.start();
           }
@@ -300,7 +302,8 @@ class CaptureOrchestrator {
     // Binance API source (all platforms)
     final binanceEnabled =
         appStateSettings[SettingKey.binanceApiEnabled] == '1';
-    final includeBinance = channels == null || channels.contains(CaptureChannel.api);
+    final includeBinance =
+        channels == null || channels.contains(CaptureChannel.api);
     if (includeBinance && binanceEnabled) {
       try {
         if (sourceFactory != null) {
@@ -310,8 +313,8 @@ class CaptureOrchestrator {
             await registerSource(binanceSource);
           }
         } else {
-          final hasCreds =
-              await BinanceCredentialsStore.instance.hasCredentials();
+          final hasCreds = await BinanceCredentialsStore.instance
+              .hasCredentials();
           if (hasCreds) {
             final binanceSource = BinanceApiCaptureSource();
             await registerSource(binanceSource);
@@ -389,16 +392,16 @@ class CaptureOrchestrator {
         try {
           await FingerprintRegistry.instance.markRemoved(fingerprint);
         } catch (e) {
-          debugPrint(
-            'CaptureOrchestrator: markRemoved error: $e',
-          );
+          debugPrint('CaptureOrchestrator: markRemoved error: $e');
         }
-        _logDiagnostic(diagnosticBase.copyWith(
-          id: generateUUID(),
-          status: CaptureEventStatus.systemEvent,
-          reason:
-              'Usuario borró notif id=${event.nativeNotifId ?? '?'} (hasRemoved)',
-        ));
+        _logDiagnostic(
+          diagnosticBase.copyWith(
+            id: generateUUID(),
+            status: CaptureEventStatus.systemEvent,
+            reason:
+                'Usuario borró notif id=${event.nativeNotifId ?? '?'} (hasRemoved)',
+          ),
+        );
         return;
       }
 
@@ -408,8 +411,7 @@ class CaptureOrchestrator {
         if (seen != null) {
           final isStableMatch = seen.stable == fingerprint.stable;
           final linked = seen.linkedTransactionId ?? '-';
-          final hoursSince =
-              DateTime.now().difference(seen.lastSeen).inHours;
+          final hoursSince = DateTime.now().difference(seen.lastSeen).inHours;
           final fpShort = fingerprint.contentHash;
           final firstSeenRel = _relativeAgo(seen.firstSeen);
           final headline = isStableMatch
@@ -417,11 +419,13 @@ class CaptureOrchestrator {
               : 'Contenido idéntico visto hace ${hoursSince}h, tx=$linked';
           final reason =
               '$headline · Fingerprint: $fpShort · Primera vez: $firstSeenRel';
-          _logDiagnostic(diagnosticBase.copyWith(
-            id: generateUUID(),
-            status: CaptureEventStatus.duplicate,
-            reason: reason,
-          ));
+          _logDiagnostic(
+            diagnosticBase.copyWith(
+              id: generateUUID(),
+              status: CaptureEventStatus.duplicate,
+              reason: reason,
+            ),
+          );
           // Still bump the `lastSeen` / occurrences counter so the diagnostic
           // tile reflects the real event rate.
           try {
@@ -437,20 +441,24 @@ class CaptureOrchestrator {
 
     // Find matching profiles by channel + sender
     final candidateProfiles = bankProfilesRegistry
-        .where((profile) =>
-            profile.channel == event.channel &&
-            profile.knownSenders.contains(event.sender))
+        .where(
+          (profile) =>
+              profile.channel == event.channel &&
+              profile.knownSenders.contains(event.sender),
+        )
         .toList();
 
     if (candidateProfiles.isEmpty) {
       final reason = event.channel == CaptureChannel.notification
           ? 'Package "${event.sender}" no tiene perfil en el registro'
           : 'Remitente "${event.sender}" no tiene perfil en el registro';
-      _logDiagnostic(diagnosticBase.copyWith(
-        id: generateUUID(),
-        status: CaptureEventStatus.filteredOut,
-        reason: reason,
-      ));
+      _logDiagnostic(
+        diagnosticBase.copyWith(
+          id: generateUUID(),
+          status: CaptureEventStatus.filteredOut,
+          reason: reason,
+        ),
+      );
       return;
     }
 
@@ -462,13 +470,14 @@ class CaptureOrchestrator {
       if (UserSettingService.instance.isProfileEnabled(profile.profileId)) {
         matchingProfiles.add(profile);
       } else {
-        _logDiagnostic(diagnosticBase.copyWith(
-          id: generateUUID(),
-          status: CaptureEventStatus.filteredOut,
-          reason:
-              'Perfil "${profile.bankName}" está desactivado en ajustes',
-          matchedProfile: profile.bankName,
-        ));
+        _logDiagnostic(
+          diagnosticBase.copyWith(
+            id: generateUUID(),
+            status: CaptureEventStatus.filteredOut,
+            reason: 'Perfil "${profile.bankName}" está desactivado en ajustes',
+            matchedProfile: profile.bankName,
+          ),
+        );
       }
     }
 
@@ -493,8 +502,10 @@ class CaptureOrchestrator {
     for (final profile in matchingProfiles) {
       try {
         // Parse first so we can resolve account by bank name + proposal currency.
-        final parseResult =
-            await profile.tryParseWithDetails(event, accountId: null);
+        final parseResult = await profile.tryParseWithDetails(
+          event,
+          accountId: null,
+        );
 
         if (!parseResult.success || parseResult.transaction == null) {
           debugPrint(
@@ -503,13 +514,16 @@ class CaptureOrchestrator {
             '"${event.rawText.length > 60 ? '${event.rawText.substring(0, 60)}...' : event.rawText}" '
             '— reason: ${parseResult.failureReason ?? 'unspecified'}',
           );
-          _logDiagnostic(diagnosticBase.copyWith(
-            id: generateUUID(),
-            status: CaptureEventStatus.parsedFailed,
-            reason: parseResult.failureReason ??
-                'El perfil no pudo extraer una transacción',
-            matchedProfile: profile.bankName,
-          ));
+          _logDiagnostic(
+            diagnosticBase.copyWith(
+              id: generateUUID(),
+              status: CaptureEventStatus.parsedFailed,
+              reason:
+                  parseResult.failureReason ??
+                  'El perfil no pudo extraer una transacción',
+              matchedProfile: profile.bankName,
+            ),
+          );
           continue;
         }
 
@@ -546,16 +560,18 @@ class CaptureOrchestrator {
             'CaptureOrchestrator: Skipping duplicate proposal: '
             '${proposal.bankRef ?? 'no-ref'} (${proposal.amount} ${proposal.currencyId})',
           );
-          _logDiagnostic(diagnosticBase.copyWith(
-            id: generateUUID(),
-            status: CaptureEventStatus.duplicate,
-            reason: proposal.bankRef != null && proposal.bankRef!.isNotEmpty
-                ? 'Duplicado por bankRef=${proposal.bankRef}'
-                : 'Duplicado (coincidencia con transacción existente)',
-            matchedProfile: profile.bankName,
-            parsedAmount: proposal.amount,
-            parsedCurrency: proposal.currencyId,
-          ));
+          _logDiagnostic(
+            diagnosticBase.copyWith(
+              id: generateUUID(),
+              status: CaptureEventStatus.duplicate,
+              reason: proposal.bankRef != null && proposal.bankRef!.isNotEmpty
+                  ? 'Duplicado por bankRef=${proposal.bankRef}'
+                  : 'Duplicado (coincidencia con transacción existente)',
+              matchedProfile: profile.bankName,
+              parsedAmount: proposal.amount,
+              parsedCurrency: proposal.currencyId,
+            ),
+          );
           continue;
         }
 
@@ -605,15 +621,17 @@ class CaptureOrchestrator {
             'CaptureOrchestrator: Skipping Binance proposal to avoid double count: '
             '${enhancedProposal.bankRef ?? 'no-ref'} (${enhancedProposal.amount} ${enhancedProposal.currencyId})',
           );
-          _logDiagnostic(diagnosticBase.copyWith(
-            id: generateUUID(),
-            status: CaptureEventStatus.duplicate,
-            reason:
-                'Saltado para evitar doble conteo con transferencia Binance reciente',
-            matchedProfile: profile.bankName,
-            parsedAmount: enhancedProposal.amount,
-            parsedCurrency: enhancedProposal.currencyId,
-          ));
+          _logDiagnostic(
+            diagnosticBase.copyWith(
+              id: generateUUID(),
+              status: CaptureEventStatus.duplicate,
+              reason:
+                  'Saltado para evitar doble conteo con transferencia Binance reciente',
+              matchedProfile: profile.bankName,
+              parsedAmount: enhancedProposal.amount,
+              parsedCurrency: enhancedProposal.currencyId,
+            ),
+          );
         }
 
         debugPrint(
@@ -624,8 +642,9 @@ class CaptureOrchestrator {
         );
 
         try {
-          final insertedRowId = await pendingImportService
-              .insertPendingImport(enhancedProposal.toCompanion(status: status));
+          final insertedRowId = await pendingImportService.insertPendingImport(
+            enhancedProposal.toCompanion(status: status),
+          );
           debugPrint(
             '[DEDUPE-DBG] orchestrator: insertPendingImport SUCCESS '
             'rowId=$insertedRowId id=${enhancedProposal.id} bankRef=${enhancedProposal.bankRef}',
@@ -661,16 +680,18 @@ class CaptureOrchestrator {
           'as $status (${enhancedProposal.amount} ${enhancedProposal.currencyId})',
         );
 
-        _logDiagnostic(diagnosticBase.copyWith(
-          id: generateUUID(),
-          status: CaptureEventStatus.parsedSuccess,
-          reason: resolvedAccountId == null
-              ? 'Parseada OK — sin cuenta asociada'
-              : 'Parseada OK — propuesta creada',
-          matchedProfile: profile.bankName,
-          parsedAmount: enhancedProposal.amount,
-          parsedCurrency: enhancedProposal.currencyId,
-        ));
+        _logDiagnostic(
+          diagnosticBase.copyWith(
+            id: generateUUID(),
+            status: CaptureEventStatus.parsedSuccess,
+            reason: resolvedAccountId == null
+                ? 'Parseada OK — sin cuenta asociada'
+                : 'Parseada OK — propuesta creada',
+            matchedProfile: profile.bankName,
+            parsedAmount: enhancedProposal.amount,
+            parsedCurrency: enhancedProposal.currencyId,
+          ),
+        );
 
         // Health signal: the pipeline produced a parseable proposal — this is
         // the strongest "things are working end-to-end" indicator we have.
@@ -684,8 +705,9 @@ class CaptureOrchestrator {
           try {
             // Get the current count of pending imports for the notification
             final countStream = pendingImportService.watchPendingCount();
-            final currentCount =
-                await countStream.first.timeout(const Duration(seconds: 2));
+            final currentCount = await countStream.first.timeout(
+              const Duration(seconds: 2),
+            );
             await onNewPendingImport!(currentCount);
           } catch (e) {
             debugPrint(
@@ -698,12 +720,14 @@ class CaptureOrchestrator {
         debugPrint(
           'CaptureOrchestrator: Error processing event with profile ${profile.bankName}: $e\n$stackTrace',
         );
-        _logDiagnostic(diagnosticBase.copyWith(
-          id: generateUUID(),
-          status: CaptureEventStatus.parsedFailed,
-          reason: 'Excepción al procesar: $e',
-          matchedProfile: profile.bankName,
-        ));
+        _logDiagnostic(
+          diagnosticBase.copyWith(
+            id: generateUUID(),
+            status: CaptureEventStatus.parsedFailed,
+            reason: 'Excepción al procesar: $e',
+            matchedProfile: profile.bankName,
+          ),
+        );
       }
     }
 
@@ -732,7 +756,9 @@ class CaptureOrchestrator {
             currencyCode: parsedProposal.currencyId,
           );
 
-          final proposal = parsedProposal.copyWith(accountId: resolvedAccountId);
+          final proposal = parsedProposal.copyWith(
+            accountId: resolvedAccountId,
+          );
 
           debugPrint(
             '[LLM-FALLBACK] orchestrator: proposal from LLM '
@@ -742,19 +768,19 @@ class CaptureOrchestrator {
 
           final isDuplicate = await dedupeChecker.check(proposal);
           if (isDuplicate) {
-            debugPrint(
-              '[LLM-FALLBACK] orchestrator: duplicate — skipping',
+            debugPrint('[LLM-FALLBACK] orchestrator: duplicate — skipping');
+            _logDiagnostic(
+              diagnosticBase.copyWith(
+                id: generateUUID(),
+                status: CaptureEventStatus.duplicate,
+                reason: proposal.bankRef != null && proposal.bankRef!.isNotEmpty
+                    ? 'Duplicado por bankRef=${proposal.bankRef} (LLM fallback)'
+                    : 'Duplicado (LLM fallback)',
+                matchedProfile: _genericLlmFallback.bankName,
+                parsedAmount: proposal.amount,
+                parsedCurrency: proposal.currencyId,
+              ),
             );
-            _logDiagnostic(diagnosticBase.copyWith(
-              id: generateUUID(),
-              status: CaptureEventStatus.duplicate,
-              reason: proposal.bankRef != null && proposal.bankRef!.isNotEmpty
-                  ? 'Duplicado por bankRef=${proposal.bankRef} (LLM fallback)'
-                  : 'Duplicado (LLM fallback)',
-              matchedProfile: _genericLlmFallback.bankName,
-              parsedAmount: proposal.amount,
-              parsedCurrency: proposal.currencyId,
-            ));
           } else {
             // AI auto-categorization for LLM-parsed proposals
             var enhancedProposal = proposal;
@@ -778,18 +804,20 @@ class CaptureOrchestrator {
 
             createdTransactionId = enhancedProposal.id;
 
-            _logDiagnostic(diagnosticBase.copyWith(
-              id: generateUUID(),
-              status: CaptureEventStatus.parsedSuccess,
-              reason: resolvedAccountId == null
-                  ? 'Parseada por IA — sin cuenta asociada'
-                  : 'Parseada por IA — propuesta creada',
-              matchedProfile: bankNameHint.isNotEmpty
-                  ? bankNameHint
-                  : _genericLlmFallback.bankName,
-              parsedAmount: enhancedProposal.amount,
-              parsedCurrency: enhancedProposal.currencyId,
-            ));
+            _logDiagnostic(
+              diagnosticBase.copyWith(
+                id: generateUUID(),
+                status: CaptureEventStatus.parsedSuccess,
+                reason: resolvedAccountId == null
+                    ? 'Parseada por IA — sin cuenta asociada'
+                    : 'Parseada por IA — propuesta creada',
+                matchedProfile: bankNameHint.isNotEmpty
+                    ? bankNameHint
+                    : _genericLlmFallback.bankName,
+                parsedAmount: enhancedProposal.amount,
+                parsedCurrency: enhancedProposal.currencyId,
+              ),
+            );
 
             try {
               CaptureHealthMonitor.instance.markSuccess();
@@ -797,10 +825,10 @@ class CaptureOrchestrator {
 
             if (onNewPendingImport != null) {
               try {
-                final countStream =
-                    pendingImportService.watchPendingCount();
-                final currentCount = await countStream.first
-                    .timeout(const Duration(seconds: 2));
+                final countStream = pendingImportService.watchPendingCount();
+                final currentCount = await countStream.first.timeout(
+                  const Duration(seconds: 2),
+                );
                 await onNewPendingImport!(currentCount);
               } catch (e) {
                 debugPrint(
@@ -810,24 +838,26 @@ class CaptureOrchestrator {
             }
           }
         } else {
-          _logDiagnostic(diagnosticBase.copyWith(
-            id: generateUUID(),
-            status: CaptureEventStatus.parsedFailed,
-            reason:
-                'LLM fallback: ${llmResult.failureReason ?? 'no se pudo extraer transacción'}',
-            matchedProfile: _genericLlmFallback.bankName,
-          ));
+          _logDiagnostic(
+            diagnosticBase.copyWith(
+              id: generateUUID(),
+              status: CaptureEventStatus.parsedFailed,
+              reason:
+                  'LLM fallback: ${llmResult.failureReason ?? 'no se pudo extraer transacción'}',
+              matchedProfile: _genericLlmFallback.bankName,
+            ),
+          );
         }
       } catch (e, stackTrace) {
-        debugPrint(
-          'CaptureOrchestrator: LLM fallback error: $e\n$stackTrace',
+        debugPrint('CaptureOrchestrator: LLM fallback error: $e\n$stackTrace');
+        _logDiagnostic(
+          diagnosticBase.copyWith(
+            id: generateUUID(),
+            status: CaptureEventStatus.parsedFailed,
+            reason: 'Excepción en LLM fallback: $e',
+            matchedProfile: _genericLlmFallback.bankName,
+          ),
         );
-        _logDiagnostic(diagnosticBase.copyWith(
-          id: generateUUID(),
-          status: CaptureEventStatus.parsedFailed,
-          reason: 'Excepción en LLM fallback: $e',
-          matchedProfile: _genericLlmFallback.bankName,
-        ));
       }
     }
 
@@ -925,14 +955,15 @@ class CaptureOrchestrator {
     final normalizedCurrency = currencyCode?.toUpperCase();
 
     if (normalizedCurrency != null && normalizedCurrency.isNotEmpty) {
-      final byCurrency = await (db.select(db.accounts)
-            ..where(
-              (a) =>
-                  a.name.equals(accountMatchName) &
-                  a.currencyId.equals(normalizedCurrency),
-            )
-            ..limit(1))
-          .getSingleOrNull();
+      final byCurrency =
+          await (db.select(db.accounts)
+                ..where(
+                  (a) =>
+                      a.name.equals(accountMatchName) &
+                      a.currencyId.equals(normalizedCurrency),
+                )
+                ..limit(1))
+              .getSingleOrNull();
 
       if (byCurrency != null) return byCurrency.id;
     }
@@ -943,8 +974,9 @@ class CaptureOrchestrator {
         return _createBdvAccountIfMissing(normalizedCurrency);
       }
 
-      final similarByCurrency = await db.customSelect(
-        '''
+      final similarByCurrency = await db
+          .customSelect(
+            '''
         SELECT id
         FROM accounts
         WHERE LOWER(name) LIKE LOWER(?)
@@ -952,12 +984,13 @@ class CaptureOrchestrator {
         ORDER BY displayOrder ASC
         LIMIT 1
         ''',
-        variables: [
-          Variable.withString('$accountMatchName%'),
-          Variable.withString(normalizedCurrency),
-        ],
-        readsFrom: {db.accounts},
-      ).getSingleOrNull();
+            variables: [
+              Variable.withString('$accountMatchName%'),
+              Variable.withString(normalizedCurrency),
+            ],
+            readsFrom: {db.accounts},
+          )
+          .getSingleOrNull();
 
       if (similarByCurrency != null) {
         return similarByCurrency.data['id'] as String?;
@@ -967,10 +1000,11 @@ class CaptureOrchestrator {
       return null;
     }
 
-    final fallback = await (db.select(db.accounts)
-          ..where((a) => a.name.equals(accountMatchName))
-          ..limit(1))
-        .getSingleOrNull();
+    final fallback =
+        await (db.select(db.accounts)
+              ..where((a) => a.name.equals(accountMatchName))
+              ..limit(1))
+            .getSingleOrNull();
 
     if (fallback != null) return fallback.id;
 
@@ -992,21 +1026,24 @@ class CaptureOrchestrator {
     final accountId = proposal.accountId as String?;
     if (accountId == null) return false;
 
-    final accountRow = await db.customSelect(
-      '''
+    final accountRow = await db
+        .customSelect(
+          '''
       SELECT name, currencyId
       FROM accounts
       WHERE id = ?
       LIMIT 1
       ''',
-      variables: [Variable.withString(accountId)],
-      readsFrom: {db.accounts},
-    ).getSingleOrNull();
+          variables: [Variable.withString(accountId)],
+          readsFrom: {db.accounts},
+        )
+        .getSingleOrNull();
 
     if (accountRow == null) return false;
 
     final name = (accountRow.data['name'] as String? ?? '').toLowerCase();
-    final currency = (accountRow.data['currencyId'] as String? ?? '').toUpperCase();
+    final currency = (accountRow.data['currencyId'] as String? ?? '')
+        .toUpperCase();
 
     // Check if a recent transfer already credited this account.
     // When a BDV→Binance transfer is saved as type 'T', the Binance side
@@ -1016,8 +1053,9 @@ class CaptureOrchestrator {
     final proposalDate = proposal.date as DateTime?;
 
     if (proposalAmount > 0 && proposalDate != null) {
-      final recentTransferRow = await db.customSelect(
-        '''
+      final recentTransferRow = await db
+          .customSelect(
+            '''
         SELECT id FROM transactions
         WHERE type = 'T'
           AND receivingAccountID = ?
@@ -1027,18 +1065,19 @@ class CaptureOrchestrator {
           )
         LIMIT 1
         ''',
-        variables: [
-          Variable.withString(accountId),
-          Variable.withDateTime(
-            proposalDate.subtract(const Duration(hours: 24)),
-          ),
-          Variable.withDateTime(
-            proposalDate.add(const Duration(hours: 24)),
-          ),
-          Variable.withReal(proposalAmount),
-        ],
-        readsFrom: {db.transactions},
-      ).getSingleOrNull();
+            variables: [
+              Variable.withString(accountId),
+              Variable.withDateTime(
+                proposalDate.subtract(const Duration(hours: 24)),
+              ),
+              Variable.withDateTime(
+                proposalDate.add(const Duration(hours: 24)),
+              ),
+              Variable.withReal(proposalAmount),
+            ],
+            readsFrom: {db.transactions},
+          )
+          .getSingleOrNull();
 
       if (recentTransferRow != null) {
         debugPrint(
@@ -1052,18 +1091,20 @@ class CaptureOrchestrator {
     // Balance-sync mode: Binance USD account with no local tx history.
     if (!name.contains('binance') || currency != 'USD') return false;
 
-    final txCountRow = await db.customSelect(
-      '''
+    final txCountRow = await db
+        .customSelect(
+          '''
       SELECT COUNT(1) AS txCount
       FROM transactions
       WHERE accountID = ? OR receivingAccountID = ?
       ''',
-      variables: [
-        Variable.withString(accountId),
-        Variable.withString(accountId),
-      ],
-      readsFrom: {db.transactions},
-    ).getSingle();
+          variables: [
+            Variable.withString(accountId),
+            Variable.withString(accountId),
+          ],
+          readsFrom: {db.transactions},
+        )
+        .getSingle();
 
     final txCount = (txCountRow.data['txCount'] as int?) ?? 0;
     return txCount == 0;
@@ -1074,19 +1115,22 @@ class CaptureOrchestrator {
         ? 'Banco de Venezuela'
         : 'Banco de Venezuela $currencyCode';
 
-    final existing = await (db.select(db.accounts)
-          ..where(
-            (a) => a.name.equals(name) & a.currencyId.equals(currencyCode),
-          )
-          ..limit(1))
-        .getSingleOrNull();
+    final existing =
+        await (db.select(db.accounts)
+              ..where(
+                (a) => a.name.equals(name) & a.currencyId.equals(currencyCode),
+              )
+              ..limit(1))
+            .getSingleOrNull();
 
     if (existing != null) return existing.id;
 
-    final maxOrderRow = await db.customSelect(
-      'SELECT COALESCE(MAX(displayOrder), 0) AS maxOrder FROM accounts',
-      readsFrom: {db.accounts},
-    ).getSingle();
+    final maxOrderRow = await db
+        .customSelect(
+          'SELECT COALESCE(MAX(displayOrder), 0) AS maxOrder FROM accounts',
+          readsFrom: {db.accounts},
+        )
+        .getSingle();
     final maxOrder = (maxOrderRow.data['maxOrder'] as int?) ?? 0;
 
     final newAccount = AccountInDB(
@@ -1132,8 +1176,7 @@ class CaptureOrchestrator {
   bool _wasRecentlyProcessed(String key) {
     final now = DateTime.now();
     final cutoff = now.subtract(_processedEventTtl);
-    _recentlyProcessedKeys
-        .removeWhere((_, ts) => ts.isBefore(cutoff));
+    _recentlyProcessedKeys.removeWhere((_, ts) => ts.isBefore(cutoff));
     final seenAt = _recentlyProcessedKeys[key];
     return seenAt != null && seenAt.isAfter(cutoff);
   }
@@ -1149,10 +1192,9 @@ class CaptureOrchestrator {
     final subscriptions = <StreamSubscription<T>>[];
 
     for (final stream in streams) {
-      subscriptions.add(stream.listen(
-        controller.add,
-        onError: controller.addError,
-      ));
+      subscriptions.add(
+        stream.listen(controller.add, onError: controller.addError),
+      );
     }
 
     controller.onCancel = () async {

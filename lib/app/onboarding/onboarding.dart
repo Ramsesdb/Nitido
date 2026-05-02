@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 
@@ -112,8 +112,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
   /// continues uninterrupted per the spec's "Resolución tardía" scenario.
   Future<void> _resolveRestrictedSettings() async {
     if (!_isAndroid) return;
-    final allowed =
-        await DeviceQuirksService.instance.isRestrictedSettingsAllowed();
+    final allowed = await DeviceQuirksService.instance
+        .isRestrictedSettingsAllowed();
     if (!mounted) return;
     if (allowed) {
       debugPrint(
@@ -169,10 +169,12 @@ class _OnboardingPageState extends State<OnboardingPage> {
       updateGlobalState: true,
     );
     if (!mounted) return;
-    unawaited(Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => const WelcomeScreen()),
-      (route) => false,
-    ));
+    unawaited(
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+        (route) => false,
+      ),
+    );
   }
 
   /// Skip the current slide without committing any selection. Used by the
@@ -491,10 +493,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         currencyMode: _legacyCurrencyMode,
         onDone: _next,
       ),
-      Slide11Ready(
-        onFinish: _completeOnboarding,
-        isFinishing: _isFinishing,
-      ),
+      Slide11Ready(onFinish: _completeOnboarding, isFinishing: _isFinishing),
     ]);
 
     return slides;
@@ -531,7 +530,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
     // - Hidden while the seeding overlay is mounted (the user must not
     //   interrupt seeding).
     // - Shown for every other slide.
-    final bool isSeedingSlide = _currentIndex >= 0 &&
+    final bool isSeedingSlide =
+        _currentIndex >= 0 &&
         _currentIndex < slides.length &&
         slides[_currentIndex] is Slide10SeedingOverlay;
     final bool showBack = _currentIndex > 0 && !isSeedingSlide;
@@ -587,19 +587,17 @@ class _OnboardingPageState extends State<OnboardingPage> {
                                   child: _BackPill(onTap: _previous),
                                 )
                               : _currentIndex == 0
-                                  ? Padding(
-                                      key: const ValueKey('close-pill'),
-                                      padding: const EdgeInsets.only(
-                                        right: V3Tokens.spaceMd,
-                                      ),
-                                      child: _BackPill(
-                                        onTap: _exitOnboarding,
-                                        icon: Icons.close,
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(
-                                      key: ValueKey('no-back'),
-                                    ),
+                              ? Padding(
+                                  key: const ValueKey('close-pill'),
+                                  padding: const EdgeInsets.only(
+                                    right: V3Tokens.spaceMd,
+                                  ),
+                                  child: _BackPill(
+                                    onTap: _exitOnboarding,
+                                    icon: Icons.close,
+                                  ),
+                                )
+                              : const SizedBox.shrink(key: ValueKey('no-back')),
                         ),
                         Expanded(
                           // The header Row owns the horizontal padding, so
@@ -657,10 +655,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 /// - radius 999 (full pill)
 /// - icon `arrow_back_ios_new` size 14, `mutedDark`/`mutedLight` color
 class _BackPill extends StatelessWidget {
-  const _BackPill({
-    required this.onTap,
-    this.icon = Icons.arrow_back_ios_new,
-  });
+  const _BackPill({required this.onTap, this.icon = Icons.arrow_back_ios_new});
 
   final VoidCallback? onTap;
   final IconData icon;
@@ -680,13 +675,7 @@ class _BackPill extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: onTap,
-          child: Center(
-            child: Icon(
-              icon,
-              size: 14,
-              color: fg,
-            ),
-          ),
+          child: Center(child: Icon(icon, size: 14, color: fg)),
         ),
       ),
     );

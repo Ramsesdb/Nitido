@@ -169,9 +169,7 @@ class AccountService {
 
     // Build the latest-rates CTE once; its `?` placeholders bind in textual
     // order so they MUST come first in the `variables:` list below.
-    final cte = convertToPreferredCurrency
-        ? _latestRatesCte(date: date)
-        : null;
+    final cte = convertToPreferredCurrency ? _latestRatesCte(date: date) : null;
 
     // Get the accounts initial balance (converted to the preferred currency if necessary)
     final initialBalanceQuery = db
@@ -200,8 +198,7 @@ class AccountService {
             // CTE parameters MUST come first (textual order of `?` in SQL):
             //   1. rateSource            → `CASE WHEN er.source = ?`
             //   2. useDate (only when date != null) → `unixepoch(er.date) <= unixepoch(?)`
-            if (convertToPreferredCurrency)
-              Variable.withString(rateSource),
+            if (convertToPreferredCurrency) Variable.withString(rateSource),
             if (convertToPreferredCurrency && date != null)
               Variable.withDateTime(useDate),
             // Main query parameters:
@@ -326,9 +323,7 @@ class AccountService {
         appStateSettings[SettingKey.preferredRateSource] ?? 'bcv';
 
     // No date cutoff for the preview, so the CTE only binds `rateSource`.
-    final cte = convertToPreferredCurrency
-        ? _latestRatesCte(date: null)
-        : null;
+    final cte = convertToPreferredCurrency ? _latestRatesCte(date: null) : null;
 
     // Mirror of [getAccountsMoney]'s initial-balance query, restricted to
     // the single account being previewed.
@@ -358,8 +353,7 @@ class AccountService {
             // CTE parameters MUST come first (textual order of `?` in SQL):
             //   1. rateSource → `CASE WHEN er.source = ?`
             //   (no date cutoff in preview, so no second CTE binding)
-            if (convertToPreferredCurrency)
-              Variable.withString(rateSource),
+            if (convertToPreferredCurrency) Variable.withString(rateSource),
             // Main query parameters:
             Variable.withDateTime(useDate),
             if (convertToPreferredCurrency)

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:nitido/app/chat/nitido_chat.page.dart';
 import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
@@ -50,7 +50,11 @@ class _AiHubPageState extends State<AiHubPage> {
                 color: cs.primaryContainer,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Icon(Icons.auto_awesome_rounded, size: 20, color: cs.primary),
+              child: Icon(
+                Icons.auto_awesome_rounded,
+                size: 20,
+                color: cs.primary,
+              ),
             ),
             const Text('Niti'),
           ],
@@ -71,7 +75,11 @@ class _AiHubPageState extends State<AiHubPage> {
                   mainAxisSize: MainAxisSize.min,
                   spacing: 16,
                   children: [
-                    Icon(Icons.auto_awesome_outlined, size: 64, color: cs.outlineVariant),
+                    Icon(
+                      Icons.auto_awesome_outlined,
+                      size: 64,
+                      color: cs.outlineVariant,
+                    ),
                     Text(
                       'IA deshabilitada',
                       style: Theme.of(context).textTheme.titleLarge,
@@ -142,7 +150,11 @@ class _AiHubPageState extends State<AiHubPage> {
                   ],
                 ),
               ),
-              Icon(Icons.arrow_forward_ios_rounded, size: 16, color: cs.onPrimaryContainer),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 16,
+                color: cs.onPrimaryContainer,
+              ),
             ],
           ),
         ),
@@ -210,7 +222,10 @@ class _AiHubPageState extends State<AiHubPage> {
                   child: Row(
                     spacing: 12,
                     children: [
-                      Icon(Icons.info_outline_rounded, color: cs.onSurfaceVariant),
+                      Icon(
+                        Icons.info_outline_rounded,
+                        color: cs.onSurfaceVariant,
+                      ),
                       Expanded(
                         child: Text(
                           'No hay suficientes datos para generar insights este mes.',
@@ -248,9 +263,18 @@ class _AiHubPageState extends State<AiHubPage> {
                       fontWeight: FontWeight.w600,
                       fontSize: 13,
                     ),
-                    tableBody: TextStyle(color: cs.onSurfaceVariant, fontSize: 13),
-                    tableBorder: TableBorder.all(color: cs.outlineVariant, width: 0.5),
-                    tableCellsPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    tableBody: TextStyle(
+                      color: cs.onSurfaceVariant,
+                      fontSize: 13,
+                    ),
+                    tableBorder: TableBorder.all(
+                      color: cs.outlineVariant,
+                      width: 0.5,
+                    ),
+                    tableCellsPadding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
                     listBullet: TextStyle(color: cs.primary, fontSize: 15),
                     blockSpacing: 8,
                   ),

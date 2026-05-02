@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class SuggestChips extends StatelessWidget {
@@ -30,9 +30,7 @@ class SuggestChips extends StatelessWidget {
             .map(
               (label) => Material(
                 color: bg,
-                shape: StadiumBorder(
-                  side: BorderSide(color: border, width: 1),
-                ),
+                shape: StadiumBorder(side: BorderSide(color: border, width: 1)),
                 clipBehavior: Clip.antiAlias,
                 child: InkWell(
                   onTap: () => onTap(label),

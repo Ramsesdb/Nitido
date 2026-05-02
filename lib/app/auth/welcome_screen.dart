@@ -1,4 +1,4 @@
-﻿import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:nitido/app/auth/returning_user_flow.dart';
@@ -63,9 +63,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         // Navigate to the 10-slide onboarding (NOT PageSwitcher) so users
         // still see the intro on first launch.
         await Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (_) => const OnboardingPage(),
-          ),
+          MaterialPageRoute(builder: (_) => const OnboardingPage()),
           (route) => false,
         );
       }
@@ -123,12 +121,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       // OnboardingPage so users still see the 10-slide intro on fresh install).
       await FirebaseSyncService.instance.setSyncEnabled(true);
       await AppDataService.instance.setItem(
-        AppDataKey.onboarded, '1', updateGlobalState: true,
+        AppDataKey.onboarded,
+        '1',
+        updateGlobalState: true,
       );
 
       if (user?.displayName != null) {
         await UserSettingService.instance.setItem(
-          SettingKey.userName, user!.displayName, updateGlobalState: true,
+          SettingKey.userName,
+          user!.displayName,
+          updateGlobalState: true,
         );
       }
 
@@ -185,9 +187,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           // Mini-flow: welcome back + activate listener (compact).
           await Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
-              builder: (_) => ReturningUserFlow(
-                displayName: user?.displayName,
-              ),
+              builder: (_) => ReturningUserFlow(displayName: user?.displayName),
             ),
             (route) => false,
           );
@@ -195,9 +195,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           // Navigate to the 10-slide onboarding (NOT PageSwitcher) so new
           // users still see the intro on first launch.
           await Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (_) => const OnboardingPage(),
-            ),
+            MaterialPageRoute(builder: (_) => const OnboardingPage()),
             (route) => false,
           );
         }
@@ -268,16 +266,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         Container(
                           padding: const EdgeInsets.all(V3Tokens.spaceMd),
                           decoration: BoxDecoration(
-                            color: colorScheme.errorContainer.withValues(alpha: 0.8),
-                            borderRadius: BorderRadius.circular(V3Tokens.radiusMd),
+                            color: colorScheme.errorContainer.withValues(
+                              alpha: 0.8,
+                            ),
+                            borderRadius: BorderRadius.circular(
+                              V3Tokens.radiusMd,
+                            ),
                             border: Border.all(
                               color: colorScheme.error.withValues(alpha: 0.5),
                             ),
                           ),
                           child: Row(
                             children: [
-                              Icon(Icons.error,
-                                  color: colorScheme.onErrorContainer, size: 20),
+                              Icon(
+                                Icons.error,
+                                color: colorScheme.onErrorContainer,
+                                size: 20,
+                              ),
                               const SizedBox(width: V3Tokens.spaceXs),
                               Expanded(
                                 child: Text(

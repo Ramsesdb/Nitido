@@ -93,13 +93,17 @@ class RateRefreshService {
     bool forceUpdate = false;
     if (preferredCurrency != 'VES') {
       final db = AppDB.instance;
-      final vesRates = await db.customSelect(
-        "SELECT COUNT(*) AS cnt FROM exchangeRates WHERE currencyCode = 'VES'",
-      ).getSingle();
+      final vesRates = await db
+          .customSelect(
+            "SELECT COUNT(*) AS cnt FROM exchangeRates WHERE currencyCode = 'VES'",
+          )
+          .getSingle();
       final vesCount = vesRates.read<int>('cnt');
       if (vesCount == 0) {
         forceUpdate = true;
-        debugPrint('[RateRefresh] No VES exchange rates found — forcing update');
+        debugPrint(
+          '[RateRefresh] No VES exchange rates found — forcing update',
+        );
       }
     }
 
@@ -219,7 +223,8 @@ class RateRefreshService {
     // via [RateProviderChain].
     final involvesVes =
         preferredCurrency == 'VES' || pairs.any((p) => p.from == 'VES');
-    final hasUsdVesPair = preferredCurrency == 'VES' ||
+    final hasUsdVesPair =
+        preferredCurrency == 'VES' ||
         pairs.any((p) => p.from == 'USD' || p.from == 'VES');
     final hasEurVesPair = pairs.any((p) => p.from == 'EUR');
 

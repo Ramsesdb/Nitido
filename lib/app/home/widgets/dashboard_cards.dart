@@ -55,117 +55,118 @@ class _DashboardCardsState extends State<DashboardCards> {
         // SizedBox.shrink() según el conteo en streaming.
         const PendingImportsAlertWidget(),
 
-
         ResponsiveRowColumn.withSymetricSpacing(
-      direction: BreakPoint.of(context).isLargerThan(BreakpointID.md)
-          ? Axis.horizontal
-          : Axis.vertical,
-      rowCrossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 16,
-      children: [
-        ResponsiveRowColumnItem(
-          rowFit: FlexFit.tight,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Respect Hidden Mode: while locked, `visibleIds` excludes
-              // savings account ids, so the health score is computed
-              // **without** those accounts' transactions — matching the
-              // stats-page semantics (see [FinanceHealthDetails] call site
-              // in stats_page.dart). When Hidden Mode is disabled the list
-              // contains every id and the filter is a no-op. `visibleIds`
-              // is passed down from the dashboard's single upstream
-              // subscription to avoid re-running the combineLatest pipeline.
-              StreamBuilder(
-                stream: _healthService.getHealthyValue(
-                  filters: TransactionFilterSet(
-                    minDate: dateRangeService.startDate,
-                    maxDate: dateRangeService.endDate,
-                    accountsIDs: visibleIds,
-                  ),
-                ),
-                builder: (context, snapshot) {
-                  final score = snapshot.hasData
-                      ? (snapshot.data!.healthyScore ?? 0)
-                      : 0.0;
-                  return _HealthRingCard(
-                    score: score,
-                    onTap: () => RouteUtils.pushRoute(
-                      StatsPage(
-                        dateRangeService: dateRangeService,
-                        initialIndex: 0,
+          direction: BreakPoint.of(context).isLargerThan(BreakpointID.md)
+              ? Axis.horizontal
+              : Axis.vertical,
+          rowCrossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            ResponsiveRowColumnItem(
+              rowFit: FlexFit.tight,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Respect Hidden Mode: while locked, `visibleIds` excludes
+                  // savings account ids, so the health score is computed
+                  // **without** those accounts' transactions — matching the
+                  // stats-page semantics (see [FinanceHealthDetails] call site
+                  // in stats_page.dart). When Hidden Mode is disabled the list
+                  // contains every id and the filter is a no-op. `visibleIds`
+                  // is passed down from the dashboard's single upstream
+                  // subscription to avoid re-running the combineLatest pipeline.
+                  StreamBuilder(
+                    stream: _healthService.getHealthyValue(
+                      filters: TransactionFilterSet(
+                        minDate: dateRangeService.startDate,
+                        maxDate: dateRangeService.endDate,
+                        accountsIDs: visibleIds,
                       ),
                     ),
-                  );
-                },
-              ),
-              const SizedBox(height: 16),
-              CardWithHeader(
-                title: t.stats.by_categories,
-                body: PieChartByCategories(datePeriodState: dateRangeService),
-                footer: CardFooterWithSingleButton(
-                  onButtonClick: () => RouteUtils.pushRoute(
-                    StatsPage(
-                      dateRangeService: dateRangeService,
-                      initialIndex: 1,
+                    builder: (context, snapshot) {
+                      final score = snapshot.hasData
+                          ? (snapshot.data!.healthyScore ?? 0)
+                          : 0.0;
+                      return _HealthRingCard(
+                        score: score,
+                        onTap: () => RouteUtils.pushRoute(
+                          StatsPage(
+                            dateRangeService: dateRangeService,
+                            initialIndex: 0,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  CardWithHeader(
+                    title: t.stats.by_categories,
+                    body: PieChartByCategories(
+                      datePeriodState: dateRangeService,
+                    ),
+                    footer: CardFooterWithSingleButton(
+                      onButtonClick: () => RouteUtils.pushRoute(
+                        StatsPage(
+                          dateRangeService: dateRangeService,
+                          initialIndex: 1,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        ),
-        ResponsiveRowColumnItem(
-          rowFit: FlexFit.tight,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CardWithHeader(
-                title: t.stats.balance_evolution,
-                bodyPadding: const EdgeInsets.all(16),
-                body: FundEvolutionInfo(dateRange: dateRangeService),
-                footer: CardFooterWithSingleButton(
-                  onButtonClick: () {
-                    RouteUtils.pushRoute(
-                      StatsPage(
-                        dateRangeService: dateRangeService,
-                        initialIndex: 2,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-              CardWithHeader(
-                title: t.stats.by_periods,
-                bodyPadding: const EdgeInsets.only(
-                  bottom: 12,
-                  top: 24,
-                  right: 16,
-                ),
-                body: BalanceBarChart(
-                  dateRange: dateRangeService,
-                  filters: TransactionFilterSet(
-                    minDate: dateRangeService.startDate,
-                    maxDate: dateRangeService.endDate,
+            ),
+            ResponsiveRowColumnItem(
+              rowFit: FlexFit.tight,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CardWithHeader(
+                    title: t.stats.balance_evolution,
+                    bodyPadding: const EdgeInsets.all(16),
+                    body: FundEvolutionInfo(dateRange: dateRangeService),
+                    footer: CardFooterWithSingleButton(
+                      onButtonClick: () {
+                        RouteUtils.pushRoute(
+                          StatsPage(
+                            dateRangeService: dateRangeService,
+                            initialIndex: 2,
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
-                footer: CardFooterWithSingleButton(
-                  onButtonClick: () {
-                    RouteUtils.pushRoute(
-                      StatsPage(
-                        dateRangeService: dateRangeService,
-                        initialIndex: 3,
+                  const SizedBox(height: 16),
+                  CardWithHeader(
+                    title: t.stats.by_periods,
+                    bodyPadding: const EdgeInsets.only(
+                      bottom: 12,
+                      top: 24,
+                      right: 16,
+                    ),
+                    body: BalanceBarChart(
+                      dateRange: dateRangeService,
+                      filters: TransactionFilterSet(
+                        minDate: dateRangeService.startDate,
+                        maxDate: dateRangeService.endDate,
                       ),
-                    );
-                  },
-                ),
+                    ),
+                    footer: CardFooterWithSingleButton(
+                      onButtonClick: () {
+                        RouteUtils.pushRoute(
+                          StatsPage(
+                            dateRangeService: dateRangeService,
+                            initialIndex: 3,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      ],
-    ),
       ],
     );
   }
@@ -224,9 +225,7 @@ class _HealthRingCard extends StatelessWidget {
             ? primary.withValues(alpha: 0.08)
             : Theme.of(context).cardColor,
         border: Border.all(
-          color: isDark
-              ? primary.withValues(alpha: 0.1)
-              : Colors.transparent,
+          color: isDark ? primary.withValues(alpha: 0.1) : Colors.transparent,
           width: isDark ? 0.5 : 0,
         ),
         borderRadius: BorderRadius.circular(14),

@@ -1,12 +1,8 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
 class UserBubble extends StatelessWidget {
-  const UserBubble({
-    super.key,
-    required this.text,
-    this.maxWidthFactor = 0.78,
-  });
+  const UserBubble({super.key, required this.text, this.maxWidthFactor = 0.78});
 
   final String text;
   final double maxWidthFactor;

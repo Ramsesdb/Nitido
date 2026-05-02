@@ -39,7 +39,9 @@ class TransactionStatusSelector extends StatelessWidget {
         keyToWatch: selectedStatus.icon.toString(),
         child: Icon(
           selectedStatus.icon,
-          color: selectedStatus.color.withValues(alpha: isSelectorDisabled ? 0.3 : 1),
+          color: selectedStatus.color.withValues(
+            alpha: isSelectorDisabled ? 0.3 : 1,
+          ),
         ),
       ),
       minTileHeight: 64,

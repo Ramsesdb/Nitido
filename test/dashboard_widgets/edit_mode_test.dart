@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/home/dashboard_widgets/edit/editable_widget_frame.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/widget_descriptor.dart';
@@ -93,9 +93,7 @@ void main() {
             width: 400,
             child: EditableWidgetFrame(
               descriptor: descriptor,
-              spec: _stubSpec(
-                configEditor: (_, _) => const SizedBox.shrink(),
-              ),
+              spec: _stubSpec(configEditor: (_, _) => const SizedBox.shrink()),
               onDelete: () {},
               onConfigure: () => configureCalled = true,
               child: const SizedBox(height: 50),
@@ -127,9 +125,7 @@ void main() {
             width: 400,
             child: EditableWidgetFrame(
               descriptor: descriptor,
-              spec: _stubSpec(
-                configEditor: (_, _) => const SizedBox.shrink(),
-              ),
+              spec: _stubSpec(configEditor: (_, _) => const SizedBox.shrink()),
               onDelete: () {},
               child: const SizedBox(height: 50),
             ),
@@ -141,8 +137,9 @@ void main() {
     expect(find.byIcon(Icons.tune_rounded), findsNothing);
   });
 
-  testWidgets("absorbs the wrapped child's pointer events via IgnorePointer",
-      (tester) async {
+  testWidgets("absorbs the wrapped child's pointer events via IgnorePointer", (
+    tester,
+  ) async {
     var childTapCount = 0;
     final descriptor = WidgetDescriptor(
       instanceId: 'abc',
@@ -162,10 +159,7 @@ void main() {
                 key: const Key('inner-tappable'),
                 behavior: HitTestBehavior.opaque,
                 onTap: () => childTapCount++,
-                child: Container(
-                  height: 60,
-                  color: const Color(0xFFFAFAFA),
-                ),
+                child: Container(height: 60, color: const Color(0xFFFAFAFA)),
               ),
             ),
           ),
@@ -235,10 +229,7 @@ void main() {
               ),
               onDelete: () {},
               showEmptyPlaceholder: true,
-              child: const SizedBox(
-                key: Key('real-body'),
-                height: 200,
-              ),
+              child: const SizedBox(key: Key('real-body'), height: 200),
             ),
           ),
         ),

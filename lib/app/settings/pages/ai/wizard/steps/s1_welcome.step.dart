@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/settings/pages/ai/wizard/widgets/wizard_scaffold.dart';
 
@@ -83,8 +83,7 @@ class S1WelcomeStep extends StatelessWidget {
           const _Feature(
             icon: Icons.notifications_active_outlined,
             title: 'Parser de notificaciones',
-            body:
-                'Lee notificaciones de bancos y crea transacciones por vos.',
+            body: 'Lee notificaciones de bancos y crea transacciones por vos.',
           ),
           const SizedBox(height: V3Tokens.space16),
           const _Feature(
@@ -107,11 +106,7 @@ class S1WelcomeStep extends StatelessWidget {
 }
 
 class _Feature extends StatelessWidget {
-  const _Feature({
-    required this.icon,
-    required this.title,
-    required this.body,
-  });
+  const _Feature({required this.icon, required this.title, required this.body});
 
   final IconData icon;
   final String title;
@@ -140,16 +135,16 @@ class _Feature extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 2),
               Text(
                 body,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: scheme.onSurfaceVariant,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
               ),
             ],
           ),

@@ -161,8 +161,7 @@ class _ThemeChip extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight:
-                    selected ? FontWeight.w600 : FontWeight.normal,
+                fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
                 color: selected ? cs.primary : cs.onSurface,
               ),
             ),

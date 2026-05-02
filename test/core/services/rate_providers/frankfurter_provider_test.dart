@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -46,21 +46,23 @@ void main() {
       expect(result.providerName, 'Frankfurter');
     });
 
-    test('returns 1.0 sentinel for identity pair without network call',
-        () async {
-      bool called = false;
-      final mockClient = http_testing.MockClient((request) async {
-        called = true;
-        return http.Response('', 500);
-      });
+    test(
+      'returns 1.0 sentinel for identity pair without network call',
+      () async {
+        bool called = false;
+        final mockClient = http_testing.MockClient((request) async {
+          called = true;
+          return http.Response('', 500);
+        });
 
-      final provider = FrankfurterRateProvider(httpClient: mockClient);
-      final result = await provider.fetchPair(from: 'USD', to: 'USD');
+        final provider = FrankfurterRateProvider(httpClient: mockClient);
+        final result = await provider.fetchPair(from: 'USD', to: 'USD');
 
-      expect(called, isFalse, reason: 'identity must skip the network');
-      expect(result, isNotNull);
-      expect(result!.rate, 1.0);
-    });
+        expect(called, isFalse, reason: 'identity must skip the network');
+        expect(result, isNotNull);
+        expect(result!.rate, 1.0);
+      },
+    );
 
     test('returns null on HTTP 404 (unsupported currency)', () async {
       final mockClient = http_testing.MockClient((request) async {
@@ -172,8 +174,7 @@ void main() {
       expect(result, isNull);
     });
 
-    test('returns null for non-today dates (no historical support)',
-        () async {
+    test('returns null for non-today dates (no historical support)', () async {
       final mockClient = http_testing.MockClient((request) async {
         fail('must not hit the network for past dates');
       });

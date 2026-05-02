@@ -19,7 +19,7 @@ class AiCredentialsStore {
   /// Test-only constructor that lets callers swap the secure storage backend.
   @visibleForTesting
   AiCredentialsStore.forTesting(FlutterSecureStorage storage)
-      : _storage = storage;
+    : _storage = storage;
 
   FlutterSecureStorage _storage = const FlutterSecureStorage(
     aOptions: AndroidOptions(encryptedSharedPreferences: true),
@@ -81,8 +81,10 @@ class AiCredentialsStore {
   /// Persists [type] as the active provider. The change is immediately
   /// reflected in [appStateSettings] so subsequent dispatches pick it up.
   Future<void> setActiveProvider(AiProviderType type) async {
-    await UserSettingService.instance
-        .setItem(SettingKey.activeAiProvider, type.storageId);
+    await UserSettingService.instance.setItem(
+      SettingKey.activeAiProvider,
+      type.storageId,
+    );
   }
 
   /// Returns the providers that currently have an entry in storage.
@@ -125,22 +127,26 @@ class AiCredentialsStore {
       final legacyModelRaw = await _storage.read(key: _kLegacyModel);
       final legacyModel =
           (legacyModelRaw != null && legacyModelRaw.trim().isNotEmpty)
-              ? legacyModelRaw.trim()
-              : null;
+          ? legacyModelRaw.trim()
+          : null;
 
-      await saveCredentials(AiCredentials(
-        providerType: AiProviderType.nexus,
-        apiKey: legacyKey,
-        model: legacyModel,
-      ));
+      await saveCredentials(
+        AiCredentials(
+          providerType: AiProviderType.nexus,
+          apiKey: legacyKey,
+          model: legacyModel,
+        ),
+      );
       // The active-provider write goes through UserSettingService → Drift,
       // which can be unavailable in unit tests. Best-effort: swallow the
       // error so the storage migration still completes.
       try {
         await setActiveProvider(AiProviderType.nexus);
       } catch (e) {
-        debugPrint('AiCredentialsStore: setActiveProvider failed during '
-            'migration (likely DB unavailable in tests): $e');
+        debugPrint(
+          'AiCredentialsStore: setActiveProvider failed during '
+          'migration (likely DB unavailable in tests): $e',
+        );
       }
 
       await _storage.delete(key: _kLegacyApiKey);

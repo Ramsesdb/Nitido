@@ -223,10 +223,10 @@ class PersonalVESeeder {
       //  1. DUAL mode and user explicitly toggled "also USD", OR
       //  2. USD mode and the bank supports both currencies (VE banks
       //     require the VES account to hold a USD sub-account).
-      final wantsAlsoUsd = bank.supportsBoth &&
+      final wantsAlsoUsd =
+          bank.supportsBoth &&
           bank.defaultCurrency == 'VES' &&
-          ((alsoUsdForBank[bank.id] ?? false) ||
-              currencyMode == 'USD');
+          ((alsoUsdForBank[bank.id] ?? false) || currencyMode == 'USD');
 
       final legacySpecs = _legacyAccountSpecs[bank.id];
       if (legacySpecs != null) {
@@ -691,9 +691,7 @@ class PersonalVESeeder {
       }
     }
 
-    Logger.printDebug(
-      '[PersonalVESeeder] Inserted $insertedCount categories.',
-    );
+    Logger.printDebug('[PersonalVESeeder] Inserted $insertedCount categories.');
   }
 
   /// Inserts a single category via raw SQL (same pattern as

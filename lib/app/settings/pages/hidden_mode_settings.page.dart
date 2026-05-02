@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/layout/page_framework.dart';
 import 'package:nitido/app/settings/widgets/pin_modal.dart';
 import 'package:nitido/app/settings/widgets/settings_list_utils.dart';
@@ -67,7 +67,9 @@ class _HiddenModeSettingsPageState extends State<HiddenModeSettingsPage> {
     if (!mounted) return;
     if (changed) {
       final t = Translations.of(context);
-      NitidoSnackbar.info(SnackbarParams(t.settings.hidden_mode.pin.pin_changed));
+      NitidoSnackbar.info(
+        SnackbarParams(t.settings.hidden_mode.pin.pin_changed),
+      );
     }
   }
 
@@ -91,8 +93,8 @@ class _HiddenModeSettingsPageState extends State<HiddenModeSettingsPage> {
                 child: Text(
                   t.settings.hidden_mode.description,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ),
               if (_enabled == null)

@@ -87,9 +87,8 @@ class RecentTransactionsWidget extends StatelessWidget {
             return const SizedBox.shrink();
           }
           return CardFooterWithSingleButton(
-            onButtonClick: () => RouteUtils.pushRoute(
-              TransactionsPage(filters: filters),
-            ),
+            onButtonClick: () =>
+                RouteUtils.pushRoute(TransactionsPage(filters: filters)),
           );
         },
       ),
@@ -103,10 +102,7 @@ class RecentTransactionsWidget extends StatelessWidget {
         ),
         onEmptyList: Padding(
           padding: const EdgeInsets.all(24),
-          child: Text(
-            t.transaction.list.empty,
-            textAlign: TextAlign.center,
-          ),
+          child: Text(t.transaction.list.empty, textAlign: TextAlign.center),
         ),
       ),
     );
@@ -146,7 +142,9 @@ void registerRecentTransactionsWidget() {
         final rawLimit = descriptor.config['limit'];
         final limit = rawLimit is int
             ? rawLimit
-            : (rawLimit is num ? rawLimit.toInt() : RecentTransactionsWidget.defaultLimit);
+            : (rawLimit is num
+                  ? rawLimit.toInt()
+                  : RecentTransactionsWidget.defaultLimit);
         final rawAccounts = descriptor.config['accountIds'];
         final cfgAccounts = rawAccounts is List
             ? rawAccounts.whereType<String>().toList(growable: false)

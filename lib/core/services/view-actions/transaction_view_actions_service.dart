@@ -1,4 +1,4 @@
-﻿import 'package:drift/drift.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:nitido/app/transactions/form/transaction_form.page.dart';
 import 'package:nitido/core/database/app_db.dart';
@@ -133,9 +133,7 @@ class TransactionViewActionService {
       try {
         await _duplicateTransaction(transaction, newTrId);
 
-        NitidoSnackbar.success(
-          SnackbarParams(t.transaction.duplicate_success),
-        );
+        NitidoSnackbar.success(SnackbarParams(t.transaction.duplicate_success));
       } catch (error) {
         NitidoSnackbar.error(SnackbarParams.fromError(error));
       }

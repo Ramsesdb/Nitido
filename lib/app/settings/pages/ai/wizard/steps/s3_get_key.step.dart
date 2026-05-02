@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_primary_button.dart';
@@ -100,18 +100,18 @@ class S3GetKeyStep extends StatelessWidget {
         children: [
           Text(
             'Conseguí tu API key de ${provider.displayName}',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             provider == AiProviderType.nexus
                 ? 'Tu admin tiene que generar el token desde el panel de Nexus.'
                 : 'Seguí estos pasos en el sitio del proveedor:',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
           for (int i = 0; i < steps.length; i++) ...[

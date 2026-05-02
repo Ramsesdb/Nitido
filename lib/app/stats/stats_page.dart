@@ -152,7 +152,10 @@ class _StatsPageState extends State<StatsPage>
         controller: _tabController,
         tabs: [
           Tab(text: t.financial_health.display),
-          const Tab(text: 'Ingresos', icon: Icon(Icons.trending_up, size: 18)), // TODO: i18n
+          const Tab(
+            text: 'Ingresos',
+            icon: Icon(Icons.trending_up, size: 18),
+          ), // TODO: i18n
           Tab(text: t.stats.distribution),
           Tab(text: t.stats.balance),
           Tab(text: t.stats.cash_flow),

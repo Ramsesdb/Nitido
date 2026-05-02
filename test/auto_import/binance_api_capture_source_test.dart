@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,8 +15,9 @@ void main() {
 
   setUp(() {
     FlutterSecureStorage.setMockInitialValues({});
-    credentialsStore =
-        BinanceCredentialsStore.forTesting(const FlutterSecureStorage());
+    credentialsStore = BinanceCredentialsStore.forTesting(
+      const FlutterSecureStorage(),
+    );
   });
 
   group('BinanceApiCaptureSource', () {
@@ -53,28 +54,30 @@ void main() {
       expect(await source.hasPermission(), isTrue);
     });
 
-    test('start without credentials does not poll (no events emitted)',
-        () async {
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
+    test(
+      'start without credentials does not poll (no events emitted)',
+      () async {
+        SharedPreferences.setMockInitialValues({});
+        final prefs = await SharedPreferences.getInstance();
 
-      final source = BinanceApiCaptureSource(
-        credentialsStore: credentialsStore,
-        prefsOverride: prefs,
-      );
+        final source = BinanceApiCaptureSource(
+          credentialsStore: credentialsStore,
+          prefsOverride: prefs,
+        );
 
-      final events = <dynamic>[];
-      source.events.listen(events.add);
+        final events = <dynamic>[];
+        source.events.listen(events.add);
 
-      await source.start();
+        await source.start();
 
-      // Give any async operations time to complete
-      await Future.delayed(const Duration(milliseconds: 100));
+        // Give any async operations time to complete
+        await Future.delayed(const Duration(milliseconds: 100));
 
-      expect(events, isEmpty);
+        expect(events, isEmpty);
 
-      await source.stop();
-    });
+        await source.stop();
+      },
+    );
 
     test('poll with credentials and mock data emits events', () async {
       await credentialsStore.save(
@@ -91,9 +94,7 @@ void main() {
 
         if (path == '/api/v3/time') {
           return http.Response(
-            jsonEncode({
-              'serverTime': DateTime.now().millisecondsSinceEpoch,
-            }),
+            jsonEncode({'serverTime': DateTime.now().millisecondsSinceEpoch}),
             200,
           );
         }
@@ -184,9 +185,7 @@ void main() {
 
         if (path == '/api/v3/time') {
           return http.Response(
-            jsonEncode({
-              'serverTime': DateTime.now().millisecondsSinceEpoch,
-            }),
+            jsonEncode({'serverTime': DateTime.now().millisecondsSinceEpoch}),
             200,
           );
         }

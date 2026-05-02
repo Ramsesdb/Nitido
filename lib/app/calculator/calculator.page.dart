@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show Clipboard, ClipboardData;
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
@@ -133,8 +133,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
         // (ej. user reabrió la calculadora con manual rate previo).
         if (_manualRateFocusNode.hasFocus) {
           final t = _manualRateController.text;
-          _manualRateController.selection =
-              TextSelection.collapsed(offset: t.length);
+          _manualRateController.selection = TextSelection.collapsed(
+            offset: t.length,
+          );
         }
         setState(() {});
       });
@@ -608,7 +609,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
     _activeExpression = '$expr$sep';
   }
 
-  bool _isOperatorChar(String c) => c == '+' || c == '-' || c == '×' || c == '÷';
+  bool _isOperatorChar(String c) =>
+      c == '+' || c == '-' || c == '×' || c == '÷';
 
   /// Representación canónica (sin trailing zeros innecesarios) que
   /// `evaluateExpression` puede re-parsear. Usa punto como decimal porque
@@ -725,10 +727,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
     await showExchangeRateFormDialog(
       context,
-      ExchangeRateFormDialog(
-        currency: prefillCurrency,
-        initialRate: rate,
-      ),
+      ExchangeRateFormDialog(currency: prefillCurrency, initialRate: rate),
     );
   }
 
@@ -878,8 +877,11 @@ class _CalculatorPageState extends State<CalculatorPage> {
     final toCurrency = _topIsActive ? bottom : top;
 
     final fromAmount = _activeAmount();
-    final convertedAmount =
-        _convertAmount(amount: fromAmount, from: fromCurrency, to: toCurrency);
+    final convertedAmount = _convertAmount(
+      amount: fromAmount,
+      from: fromCurrency,
+      to: toCurrency,
+    );
 
     final fromText = _formatAmount(fromAmount, currency: fromCurrency);
     final toText = convertedAmount == null
@@ -1096,9 +1098,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                   hintText: t.calculator.manual.field_hint(
                                     currency:
                                         (_topCurrency?.code != 'VES'
-                                                ? _topCurrency?.code
-                                                : _bottomCurrency?.code) ??
-                                            'USD',
+                                            ? _topCurrency?.code
+                                            : _bottomCurrency?.code) ??
+                                        'USD',
                                   ),
                                   invalidText:
                                       t.calculator.manual.field_invalid,
@@ -1113,9 +1115,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
                                     ),
                                     label: Text(t.calculator.manual.save_link),
                                     onPressed:
-                                        (_manualRate != null && _manualRate! > 0)
-                                            ? _onSaveManualRate
-                                            : null,
+                                        (_manualRate != null &&
+                                            _manualRate! > 0)
+                                        ? _onSaveManualRate
+                                        : null,
                                   ),
                                 ),
                               ],
@@ -1151,10 +1154,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       key: _shareCardKey,
                       child: Builder(
                         builder: (ctx) {
-                          final fromCurrency =
-                              _topIsActive ? topCurrency : bottomCurrency;
-                          final toCurrency =
-                              _topIsActive ? bottomCurrency : topCurrency;
+                          final fromCurrency = _topIsActive
+                              ? topCurrency
+                              : bottomCurrency;
+                          final toCurrency = _topIsActive
+                              ? bottomCurrency
+                              : topCurrency;
                           final fromAmount = _activeAmount();
                           final converted = _convertAmount(
                             amount: fromAmount,
@@ -1311,7 +1316,8 @@ class _RateExplicitBlock extends StatelessWidget {
   final RateSource source;
   final double? effectiveRate;
   final DateTime? lastFetched;
-  final String Function(double value, {required Currency currency}) formatAmount;
+  final String Function(double value, {required Currency currency})
+  formatAmount;
 
   @override
   Widget build(BuildContext context) {
@@ -1327,8 +1333,7 @@ class _RateExplicitBlock extends StatelessWidget {
     if (topCurrency.code == 'VES' && bottomCurrency.code != 'VES') {
       from = bottomCurrency;
       to = topCurrency;
-    } else if (bottomCurrency.code == 'VES' &&
-        topCurrency.code != 'VES') {
+    } else if (bottomCurrency.code == 'VES' && topCurrency.code != 'VES') {
       from = topCurrency;
       to = bottomCurrency;
     } else {
@@ -1342,7 +1347,9 @@ class _RateExplicitBlock extends StatelessWidget {
     String sym(Currency c) => c.symbol.isNotEmpty ? c.symbol : c.code;
 
     final String line1Text;
-    if (effectiveRate == null || !effectiveRate!.isFinite || from.code == to.code) {
+    if (effectiveRate == null ||
+        !effectiveRate!.isFinite ||
+        from.code == to.code) {
       // Sin tasa o panes con misma currency: línea 1 cae al placeholder
       // estándar.
       line1Text = '${sym(from)} 1 = ${sym(to)} —';
@@ -1363,8 +1370,7 @@ class _RateExplicitBlock extends StatelessWidget {
     } else if (lastFetched == null) {
       line2Text = t.calculator.rate_explicit.timestamp_unknown;
     } else {
-      final formatter =
-          DateFormat.yMMMd(Intl.defaultLocale).add_jm();
+      final formatter = DateFormat.yMMMd(Intl.defaultLocale).add_jm();
       line2Text = t.calculator.rate_explicit.timestamp_long(
         date: formatter.format(lastFetched!),
       );

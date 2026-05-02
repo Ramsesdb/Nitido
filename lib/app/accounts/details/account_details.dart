@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
@@ -59,9 +59,7 @@ class _AccountDetailsPageState extends State<AccountDetailsPage> {
                 );
               })
               .catchError((_) {
-                NitidoSnackbar.error(
-                  SnackbarParams(t.general.clipboard.error),
-                );
+                NitidoSnackbar.error(SnackbarParams(t.general.clipboard.error));
               });
         },
         icon: const Icon(Icons.copy_rounded),

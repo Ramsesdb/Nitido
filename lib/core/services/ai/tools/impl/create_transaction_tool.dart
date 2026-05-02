@@ -35,9 +35,8 @@ class CreateTransactionTool implements AiTool {
     this.captureChannel = CaptureChannel.voice,
     AccountService? accountService,
     TransactionService? transactionService,
-  })  : _accountService = accountService ?? AccountService.instance,
-        _transactionService =
-            transactionService ?? TransactionService.instance;
+  }) : _accountService = accountService ?? AccountService.instance,
+       _transactionService = transactionService ?? TransactionService.instance;
 
   @override
   String get name => 'create_transaction';
@@ -52,52 +51,49 @@ class CreateTransactionTool implements AiTool {
 
   @override
   Map<String, dynamic> get parametersSchema => {
-        'type': 'object',
-        'properties': {
-          'amount': {
-            'type': 'number',
-            'description':
-                'Monto absoluto positivo. Para gastos el signo se aplica automaticamente.',
-          },
-          'type': {
-            'type': 'string',
-            'enum': ['income', 'expense'],
-            'description': 'Tipo de transaccion.',
-          },
-          'accountId': {
-            'type': 'string',
-            'description':
-                'ID de la cuenta. Si se omite, se usa la primera cuenta abierta.',
-          },
-          'categoryId': {
-            'type': 'string',
-            'description':
-                'ID de la categoria. Recomendado para gastos; opcional para ingresos.',
-          },
-          'title': {
-            'type': 'string',
-            'description': 'Titulo corto de la transaccion.',
-          },
-          'notes': {
-            'type': 'string',
-            'description': 'Notas extendidas.',
-          },
-          'date': {
-            'type': 'string',
-            'description': 'Fecha ISO 8601; por defecto ahora.',
-          },
-          'currency': {
-            'type': 'string',
-            'description':
-                'Codigo ISO 4217 en mayusculas (USD, VES, EUR, COP). '
-                'Completalo SOLO si el usuario menciona la divisa explicitamente '
-                '(dolares, bolivares, euros...). Si se omite, se asume la divisa '
-                'de la cuenta.',
-          },
-        },
-        'required': ['amount', 'type'],
-        'additionalProperties': false,
-      };
+    'type': 'object',
+    'properties': {
+      'amount': {
+        'type': 'number',
+        'description':
+            'Monto absoluto positivo. Para gastos el signo se aplica automaticamente.',
+      },
+      'type': {
+        'type': 'string',
+        'enum': ['income', 'expense'],
+        'description': 'Tipo de transaccion.',
+      },
+      'accountId': {
+        'type': 'string',
+        'description':
+            'ID de la cuenta. Si se omite, se usa la primera cuenta abierta.',
+      },
+      'categoryId': {
+        'type': 'string',
+        'description':
+            'ID de la categoria. Recomendado para gastos; opcional para ingresos.',
+      },
+      'title': {
+        'type': 'string',
+        'description': 'Titulo corto de la transaccion.',
+      },
+      'notes': {'type': 'string', 'description': 'Notas extendidas.'},
+      'date': {
+        'type': 'string',
+        'description': 'Fecha ISO 8601; por defecto ahora.',
+      },
+      'currency': {
+        'type': 'string',
+        'description':
+            'Codigo ISO 4217 en mayusculas (USD, VES, EUR, COP). '
+            'Completalo SOLO si el usuario menciona la divisa explicitamente '
+            '(dolares, bolivares, euros...). Si se omite, se asume la divisa '
+            'de la cuenta.',
+      },
+    },
+    'required': ['amount', 'type'],
+    'additionalProperties': false,
+  };
 
   @override
   Future<AiToolResult> execute(Map<String, dynamic> args) async {
@@ -127,8 +123,7 @@ class CreateTransactionTool implements AiTool {
 
     final accountId = args['accountId'] as String?;
     final accounts = await _accountService.getAccounts().first;
-    final openAccounts =
-        accounts.where((a) => a.closingDate == null).toList();
+    final openAccounts = accounts.where((a) => a.closingDate == null).toList();
     if (openAccounts.isEmpty) {
       return AiToolResult.error(
         'No open account available.',
@@ -147,8 +142,8 @@ class CreateTransactionTool implements AiTool {
     }
 
     final rawCurrencyArg = args['currency'];
-    final voicedCurrencyCode = (rawCurrencyArg is String &&
-            rawCurrencyArg.trim().isNotEmpty)
+    final voicedCurrencyCode =
+        (rawCurrencyArg is String && rawCurrencyArg.trim().isNotEmpty)
         ? rawCurrencyArg.trim().toUpperCase()
         : null;
 
@@ -161,8 +156,9 @@ class CreateTransactionTool implements AiTool {
     if (voicedCurrencyCode != null) {
       final currentCode = resolved.currency.code.toUpperCase();
       if (currentCode != voicedCurrencyCode) {
-        final match = openAccounts
-            .where((a) => a.currency.code.toUpperCase() == voicedCurrencyCode);
+        final match = openAccounts.where(
+          (a) => a.currency.code.toUpperCase() == voicedCurrencyCode,
+        );
         if (match.isNotEmpty) {
           resolved = match.first;
         } else {
@@ -183,8 +179,9 @@ class CreateTransactionTool implements AiTool {
     final now = DateTime.now();
     DateTime date = now;
     final rawDate = args['date'];
-    final dateArg =
-        (rawDate is String && rawDate.trim().isNotEmpty) ? rawDate.trim() : null;
+    final dateArg = (rawDate is String && rawDate.trim().isNotEmpty)
+        ? rawDate.trim()
+        : null;
     DateTime? parsed;
     if (dateArg != null) {
       parsed = DateTime.tryParse(dateArg);
@@ -224,7 +221,8 @@ class CreateTransactionTool implements AiTool {
         rawText: [title, notes].whereType<String>().join(' - '),
         channel: captureChannel,
         confidence: 0.9,
-        proposedCategoryId: categoryId ??
+        proposedCategoryId:
+            categoryId ??
             (txType == TransactionType.expense
                 ? _kFallbackExpenseCategoryId
                 : null),
@@ -233,8 +231,9 @@ class CreateTransactionTool implements AiTool {
     }
 
     final newId = generateUUID();
-    final signedValue =
-        txType == TransactionType.expense ? -rawAmount : rawAmount;
+    final signedValue = txType == TransactionType.expense
+        ? -rawAmount
+        : rawAmount;
 
     final transactionToInsert = TransactionInDB(
       id: newId,
@@ -243,7 +242,8 @@ class CreateTransactionTool implements AiTool {
       isHidden: false,
       type: txType,
       accountID: resolved.id,
-      categoryID: categoryId ??
+      categoryID:
+          categoryId ??
           (txType == TransactionType.expense
               ? _kFallbackExpenseCategoryId
               : null),

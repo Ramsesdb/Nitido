@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart' as drift;
@@ -68,15 +68,13 @@ class TransactionFormPage extends StatefulWidget {
        linkedDebt = null,
        voicePrefill = null;
 
-  const TransactionFormPage.fromVoice({
-    super.key,
-    required this.voicePrefill,
-  }) : mode = null,
-       fromAccount = null,
-       transactionToEdit = null,
-       linkedDebt = null,
-       receiptPrefill = null,
-       pendingAttachmentPath = null;
+  const TransactionFormPage.fromVoice({super.key, required this.voicePrefill})
+    : mode = null,
+      fromAccount = null,
+      transactionToEdit = null,
+      linkedDebt = null,
+      receiptPrefill = null,
+      pendingAttachmentPath = null;
 
   final TransactionType? mode;
 

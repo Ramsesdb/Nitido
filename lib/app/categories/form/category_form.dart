@@ -1,4 +1,4 @@
-﻿import 'package:drift/drift.dart' as drift;
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:nitido/app/categories/form/category_form_functions.dart';
 import 'package:nitido/app/categories/form/icon_and_color_selector.dart';
@@ -119,9 +119,7 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
           .then((value) {
             if (mounted) RouteUtils.popRoute();
 
-            NitidoSnackbar.success(
-              SnackbarParams(t.categories.create_success),
-            );
+            NitidoSnackbar.success(SnackbarParams(t.categories.create_success));
           })
           .catchError((error) {
             NitidoSnackbar.error(SnackbarParams.fromError(error));
@@ -357,23 +355,23 @@ class _CategoryFormPageState extends State<CategoryFormPage> {
                                     subcategory,
                                   );
                                 } else if (value == 'edit') {
-                                      CategoryFormFunctions.openSubcategoryForm(
-                                        context,
-                                        color: _color,
-                                        subcategory: subcategory,
-                                        onSubmit: (name, icon) {
-                                          CategoryService.instance.updateCategory(
-                                            CategoryInDB(
-                                              id: subcategory.id,
-                                              displayOrder: 10,
-                                              name: name,
-                                              iconId: icon.id,
-                                              parentCategoryID:
-                                                  widget.categoryUUID!,
-                                            ),
-                                          );
-                                        },
+                                  CategoryFormFunctions.openSubcategoryForm(
+                                    context,
+                                    color: _color,
+                                    subcategory: subcategory,
+                                    onSubmit: (name, icon) {
+                                      CategoryService.instance.updateCategory(
+                                        CategoryInDB(
+                                          id: subcategory.id,
+                                          displayOrder: 10,
+                                          name: name,
+                                          iconId: icon.id,
+                                          parentCategoryID:
+                                              widget.categoryUUID!,
+                                        ),
                                       );
+                                    },
+                                  );
                                 } else if (value == 'merge') {
                                   CategoryFormFunctions.mergeCategory(
                                     context,

@@ -67,12 +67,9 @@ class TransactionService {
   final AttachmentsService attachmentsService;
 
   TransactionService._(this.db, {AttachmentsService? attachmentsService})
-      : attachmentsService = attachmentsService ?? AttachmentsService.instance;
+    : attachmentsService = attachmentsService ?? AttachmentsService.instance;
 
-  TransactionService.forTesting(
-    this.db, {
-    required this.attachmentsService,
-  });
+  TransactionService.forTesting(this.db, {required this.attachmentsService});
 
   static final TransactionService instance = TransactionService._(
     AppDB.instance,
@@ -179,8 +176,7 @@ class TransactionService {
           predicate: predicate,
           preferredCurrency:
               appStateSettings[SettingKey.preferredCurrency] ?? 'USD',
-          rateSource:
-              appStateSettings[SettingKey.preferredRateSource] ?? 'bcv',
+          rateSource: appStateSettings[SettingKey.preferredRateSource] ?? 'bcv',
           orderBy: orderBy,
           limit: (t, a, accountCurrency, ra, receivingAccountCurrency, c, pc) =>
               Limit(limit ?? -1, offset),
@@ -252,7 +248,7 @@ class TransactionService {
   /// missing — identical behaviour to [getTransactionsValueBalance], but
   /// with the missing-currency Set exposed so the UI can flag the user.
   Stream<TransactionQueryStatResultWithMissing>
-      getTransactionsCountAndBalanceWithMissing({
+  getTransactionsCountAndBalanceWithMissing({
     TransactionFilterSet filters = const TransactionFilterSet(),
     DateTime? exchDate,
   }) {
@@ -270,8 +266,7 @@ class TransactionService {
     // can route the map through the helper's full
     // `convertMixedCurrenciesToTarget` (which exposes the missing set)
     // instead of the count-collapsed `convertMixedCurrenciesToTotal`.
-    return _countByNativeStreamCombined(filters: filters)
-        .switchMap((stat) {
+    return _countByNativeStreamCombined(filters: filters).switchMap((stat) {
       return CurrencyConversionHelper.instance
           .convertMixedCurrenciesToTarget(
             byNative: Stream.value(stat.byNative),
@@ -332,9 +327,7 @@ class TransactionService {
   /// [getTransactionsCountAndBalanceWithMissing] can route the map through
   /// the missing-aware variant of [CurrencyConversionHelper].
   Stream<({int count, Map<String, double> byNative})>
-      _countByNativeStreamCombined({
-    required TransactionFilterSet filters,
-  }) {
+  _countByNativeStreamCombined({required TransactionFilterSet filters}) {
     if (filters.transactionTypes == null ||
         filters.transactionTypes!
             .map((e) => e.index)
@@ -457,7 +450,9 @@ class TransactionService {
   }) {
     return db
         .countTransactions(
-          predicate: filters.toTransactionExpression(extraFilters: extraFilters),
+          predicate: filters.toTransactionExpression(
+            extraFilters: extraFilters,
+          ),
         )
         .watch();
   }
@@ -613,12 +608,9 @@ class TransactionService {
         transfersFromDestiny$,
         (incomeExp, txOrigin, txDestiny) {
           return TransactionQueryStatResult(
-            numberOfRes:
-                incomeExp.numberOfRes + txOrigin.numberOfRes,
+            numberOfRes: incomeExp.numberOfRes + txOrigin.numberOfRes,
             valueSum:
-                incomeExp.valueSum -
-                txOrigin.valueSum +
-                txDestiny.valueSum,
+                incomeExp.valueSum - txOrigin.valueSum + txDestiny.valueSum,
           );
         },
       );
@@ -648,8 +640,7 @@ class TransactionService {
               ) => transaction.id.equals(id),
           preferredCurrency:
               appStateSettings[SettingKey.preferredCurrency] ?? 'USD',
-          rateSource:
-              appStateSettings[SettingKey.preferredRateSource] ?? 'bcv',
+          rateSource: appStateSettings[SettingKey.preferredRateSource] ?? 'bcv',
           limit: (t, a, accountCurrency, ra, receivingAccountCurrency, c, pc) =>
               Limit(1, 0),
         )

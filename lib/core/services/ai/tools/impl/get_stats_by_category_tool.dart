@@ -7,10 +7,8 @@ import '../ai_tool.dart';
 class GetStatsByCategoryTool implements AiTool {
   final TransactionService _transactionService;
 
-  GetStatsByCategoryTool({
-    TransactionService? transactionService,
-  }) : _transactionService =
-            transactionService ?? TransactionService.instance;
+  GetStatsByCategoryTool({TransactionService? transactionService})
+    : _transactionService = transactionService ?? TransactionService.instance;
 
   @override
   String get name => 'get_stats_by_category';
@@ -25,26 +23,26 @@ class GetStatsByCategoryTool implements AiTool {
 
   @override
   Map<String, dynamic> get parametersSchema => {
-        'type': 'object',
-        'properties': {
-          'fromDate': {
-            'type': 'string',
-            'description': 'Fecha inicial inclusiva (ISO 8601 YYYY-MM-DD).',
-          },
-          'toDate': {
-            'type': 'string',
-            'description': 'Fecha final exclusiva (ISO 8601 YYYY-MM-DD).',
-          },
-          'type': {
-            'type': 'string',
-            'enum': ['expense', 'income'],
-            'description': 'Tipo de transaccion a agregar (default expense).',
-            'default': 'expense',
-          },
-        },
-        'required': ['fromDate', 'toDate'],
-        'additionalProperties': false,
-      };
+    'type': 'object',
+    'properties': {
+      'fromDate': {
+        'type': 'string',
+        'description': 'Fecha inicial inclusiva (ISO 8601 YYYY-MM-DD).',
+      },
+      'toDate': {
+        'type': 'string',
+        'description': 'Fecha final exclusiva (ISO 8601 YYYY-MM-DD).',
+      },
+      'type': {
+        'type': 'string',
+        'enum': ['expense', 'income'],
+        'description': 'Tipo de transaccion a agregar (default expense).',
+        'default': 'expense',
+      },
+    },
+    'required': ['fromDate', 'toDate'],
+    'additionalProperties': false,
+  };
 
   @override
   Future<AiToolResult> execute(Map<String, dynamic> args) async {

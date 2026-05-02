@@ -103,7 +103,8 @@ class MoneyTransaction extends TransactionInDB {
   double? getCurrentBalanceInPreferredCurrency() {
     if (currentValueInPreferredCurrency == null) return null;
     if (type == TransactionType.transfer) {
-      final destiny = currentValueInDestinyInPreferredCurrency ??
+      final destiny =
+          currentValueInDestinyInPreferredCurrency ??
           currentValueInPreferredCurrency!;
       return destiny - currentValueInPreferredCurrency!;
     }

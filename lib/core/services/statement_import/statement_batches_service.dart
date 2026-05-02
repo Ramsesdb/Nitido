@@ -8,8 +8,7 @@ import 'package:nitido/core/services/firebase_sync_service.dart';
 import 'package:nitido/core/utils/uuid.dart';
 
 class StatementBatchesService {
-  StatementBatchesService({AppDB? database})
-      : _db = database ?? AppDB.instance;
+  StatementBatchesService({AppDB? database}) : _db = database ?? AppDB.instance;
 
   static final StatementBatchesService instance = StatementBatchesService();
 
@@ -30,15 +29,17 @@ class StatementBatchesService {
         insertedIds.add(tx.id);
       }
 
-      await _db.into(_db.statementImportBatches).insert(
-        StatementImportBatchInDB(
-          id: batchId,
-          accountId: accountId,
-          createdAt: now,
-          mode: jsonEncode(activeModes),
-          transactionIds: jsonEncode(insertedIds),
-        ),
-      );
+      await _db
+          .into(_db.statementImportBatches)
+          .insert(
+            StatementImportBatchInDB(
+              id: batchId,
+              accountId: accountId,
+              createdAt: now,
+              mode: jsonEncode(activeModes),
+              transactionIds: jsonEncode(insertedIds),
+            ),
+          );
     });
 
     _db.markTablesUpdated([
@@ -56,9 +57,9 @@ class StatementBatchesService {
 
   Future<void> undo(String batchId) async {
     await _db.transaction(() async {
-      final batch = await (_db.select(_db.statementImportBatches)
-            ..where((t) => t.id.equals(batchId)))
-          .getSingleOrNull();
+      final batch = await (_db.select(
+        _db.statementImportBatches,
+      )..where((t) => t.id.equals(batchId))).getSingleOrNull();
 
       if (batch == null) {
         debugPrint('StatementBatchesService.undo: batch $batchId not found');
@@ -74,18 +75,16 @@ class StatementBatchesService {
       }
 
       if (ids.isNotEmpty) {
-        await (_db.delete(_db.transactions)
-              ..where((t) => t.id.isIn(ids)))
-            .go();
+        await (_db.delete(_db.transactions)..where((t) => t.id.isIn(ids))).go();
 
         for (final id in ids) {
           unawaited(FirebaseSyncService.instance.deleteTransaction(id));
         }
       }
 
-      await (_db.delete(_db.statementImportBatches)
-            ..where((t) => t.id.equals(batchId)))
-          .go();
+      await (_db.delete(
+        _db.statementImportBatches,
+      )..where((t) => t.id.equals(batchId))).go();
     });
 
     _db.markTablesUpdated([
@@ -106,10 +105,8 @@ class StatementBatchesService {
                 t.createdAt.isBiggerOrEqualValue(cutoff),
           )
           ..orderBy([
-            (t) => OrderingTerm(
-              expression: t.createdAt,
-              mode: OrderingMode.desc,
-            ),
+            (t) =>
+                OrderingTerm(expression: t.createdAt, mode: OrderingMode.desc),
           ]))
         .watch();
   }
@@ -130,9 +127,9 @@ class StatementBatchesService {
 
   Future<void> purge() async {
     final cutoff = DateTime.now().subtract(const Duration(days: 7));
-    final deleted = await (_db.delete(_db.statementImportBatches)
-          ..where((t) => t.createdAt.isSmallerThanValue(cutoff)))
-        .go();
+    final deleted = await (_db.delete(
+      _db.statementImportBatches,
+    )..where((t) => t.createdAt.isSmallerThanValue(cutoff))).go();
     if (deleted > 0) {
       debugPrint(
         'StatementBatchesService.purge: removed $deleted stale batch(es)',

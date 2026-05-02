@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/dashboard_layout.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/widget_descriptor.dart';
 import 'package:nitido/app/home/dashboard_widgets/services/dashboard_layout_service.dart';
@@ -18,73 +18,72 @@ import 'package:nitido/app/home/dashboard_widgets/services/dashboard_layout_serv
 /// the service produces the expected new order on its stream. The end-to-
 /// end gesture path is captured in the manual checklist (Phase 3 task 3.11).
 WidgetDescriptor _stub(String id) => WidgetDescriptor(
-      instanceId: id,
-      type: WidgetType.quickUse,
-      size: WidgetSize.fullWidth,
-    );
+  instanceId: id,
+  type: WidgetType.quickUse,
+  size: WidgetSize.fullWidth,
+);
 
 void main() {
-  test('three widgets — moving the first to position 2 produces b,a,c',
-      () async {
-    final service = DashboardLayoutService.forTesting(
-      writer: (_) async {},
-    );
-    service.add(_stub('a'));
-    service.add(_stub('b'));
-    service.add(_stub('c'));
+  test(
+    'three widgets — moving the first to position 2 produces b,a,c',
+    () async {
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
+      service.add(_stub('a'));
+      service.add(_stub('b'));
+      service.add(_stub('c'));
 
-    // ReorderableListView semantics: when `to > from`, `to` is post-removal,
-    // so dragging from 0 to 2 moves "a" past "b" → b,a,c.
-    service.reorder(0, 2);
+      // ReorderableListView semantics: when `to > from`, `to` is post-removal,
+      // so dragging from 0 to 2 moves "a" past "b" → b,a,c.
+      service.reorder(0, 2);
 
-    expect(
-      service.current.widgets.map((w) => w.instanceId).toList(),
-      equals(<String>['b', 'a', 'c']),
-    );
-  });
+      expect(
+        service.current.widgets.map((w) => w.instanceId).toList(),
+        equals(<String>['b', 'a', 'c']),
+      );
+    },
+  );
 
-  test('three widgets — moving the last to position 0 produces c,a,b',
-      () async {
-    final service = DashboardLayoutService.forTesting(
-      writer: (_) async {},
-    );
-    service.add(_stub('a'));
-    service.add(_stub('b'));
-    service.add(_stub('c'));
+  test(
+    'three widgets — moving the last to position 0 produces c,a,b',
+    () async {
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
+      service.add(_stub('a'));
+      service.add(_stub('b'));
+      service.add(_stub('c'));
 
-    service.reorder(2, 0);
+      service.reorder(2, 0);
 
-    expect(
-      service.current.widgets.map((w) => w.instanceId).toList(),
-      equals(<String>['c', 'a', 'b']),
-    );
-  });
+      expect(
+        service.current.widgets.map((w) => w.instanceId).toList(),
+        equals(<String>['c', 'a', 'b']),
+      );
+    },
+  );
 
-  test('reorder emits a new layout on the stream within the same microtask',
-      () async {
-    final service = DashboardLayoutService.forTesting(
-      writer: (_) async {},
-    );
-    service.add(_stub('a'));
-    service.add(_stub('b'));
-    service.add(_stub('c'));
+  test(
+    'reorder emits a new layout on the stream within the same microtask',
+    () async {
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
+      service.add(_stub('a'));
+      service.add(_stub('b'));
+      service.add(_stub('c'));
 
-    final emissions = <DashboardLayout>[];
-    final sub = service.stream.listen(emissions.add);
+      final emissions = <DashboardLayout>[];
+      final sub = service.stream.listen(emissions.add);
 
-    service.reorder(0, 2);
-    await Future<void>.delayed(Duration.zero);
+      service.reorder(0, 2);
+      await Future<void>.delayed(Duration.zero);
 
-    expect(emissions, isNotEmpty);
-    expect(
-      emissions.last.widgets.map((w) => w.instanceId).toList(),
-      equals(<String>['b', 'a', 'c']),
-    );
-    await sub.cancel();
-  });
+      expect(emissions, isNotEmpty);
+      expect(
+        emissions.last.widgets.map((w) => w.instanceId).toList(),
+        equals(<String>['b', 'a', 'c']),
+      );
+      await sub.cancel();
+    },
+  );
 
-  test('reorder schedules a debounced write via the writer callback',
-      () async {
+  test('reorder schedules a debounced write via the writer callback', () async {
     var writes = 0;
     String? lastEncoded;
     final service = DashboardLayoutService.forTesting(

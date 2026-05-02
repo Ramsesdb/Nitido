@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -76,9 +76,7 @@ class CurrencyManagerPage extends StatelessWidget {
     await persistCurrencyModeChange(writes);
 
     if (!context.mounted) return;
-    NitidoSnackbar.success(
-      SnackbarParams(_modeChangeMessage(choice.mode)),
-    );
+    NitidoSnackbar.success(SnackbarParams(_modeChangeMessage(choice.mode)));
   }
 
   /// Open the manual-override dialog (Phase 5 task 5.4). Returns once the
@@ -93,9 +91,7 @@ class CurrencyManagerPage extends StatelessWidget {
     );
     if (!context.mounted) return;
     if (saved) {
-      NitidoSnackbar.success(
-        SnackbarParams('Tasa manual guardada.'),
-      );
+      NitidoSnackbar.success(SnackbarParams('Tasa manual guardada.'));
     }
   }
 
@@ -127,9 +123,7 @@ class CurrencyManagerPage extends StatelessWidget {
   }
 
   Future<void> forceRefreshRates(BuildContext context) async {
-    NitidoSnackbar.success(
-      SnackbarParams('Actualizando tasas...'),
-    );
+    NitidoSnackbar.success(SnackbarParams('Actualizando tasas...'));
     try {
       final result = await RateRefreshService.instance.refreshNow();
       if (!context.mounted) return;
@@ -220,8 +214,9 @@ class CurrencyManagerPage extends StatelessWidget {
             // returns from the bottom sheet.
             createListSeparator(context, 'Modo de moneda'),
             StreamBuilder<String?>(
-              stream: UserSettingService.instance
-                  .getSettingFromDB(SettingKey.currencyMode),
+              stream: UserSettingService.instance.getSettingFromDB(
+                SettingKey.currencyMode,
+              ),
               builder: (context, modeSnap) {
                 final mode = CurrencyMode.fromDb(modeSnap.data);
                 final primary =
@@ -233,10 +228,9 @@ class CurrencyManagerPage extends StatelessWidget {
                     width: 42,
                     height: 42,
                     decoration: BoxDecoration(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withValues(alpha: 0.125),
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.125),
                       borderRadius: BorderRadius.circular(100),
                     ),
                     alignment: Alignment.center,
@@ -401,9 +395,11 @@ class CurrencyManagerPage extends StatelessWidget {
 
                         if (currency == null) return;
 
-                        unawaited(RouteUtils.pushRoute(
-                          ExchangeRateDetailsPage(currency: currency),
-                        ));
+                        unawaited(
+                          RouteUtils.pushRoute(
+                            ExchangeRateDetailsPage(currency: currency),
+                          ),
+                        );
                       },
                     );
                   },
@@ -549,8 +545,9 @@ class CurrencyManagerPage extends StatelessWidget {
 
                           try {
                             final preferredCurrency =
-                                appStateSettings[SettingKey.preferredCurrency] ??
-                                    'USD';
+                                appStateSettings[SettingKey
+                                    .preferredCurrency] ??
+                                'USD';
                             // DolarAPI returns: 1 USD = rate.promedio VES
                             // DB convention: 1 unit of currencyCode = X preferred currency units
                             final String storeCurrencyCode;
@@ -581,9 +578,7 @@ class CurrencyManagerPage extends StatelessWidget {
                             }
                           } catch (e) {
                             if (context.mounted) {
-                              NitidoSnackbar.error(
-                                SnackbarParams('Error: $e'),
-                              );
+                              NitidoSnackbar.error(SnackbarParams('Error: $e'));
                             }
                           }
                         },

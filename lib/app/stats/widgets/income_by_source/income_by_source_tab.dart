@@ -33,10 +33,10 @@ class _IncomeBySourceTabState extends State<IncomeBySourceTab> {
   BreakdownDimension _dimension = BreakdownDimension.tag;
 
   TransactionFilterSet get _incomeFilters => widget.filters.copyWith(
-        transactionTypes: [TransactionType.income],
-        minDate: widget.dateRangeService.startDate,
-        maxDate: widget.dateRangeService.endDate,
-      );
+    transactionTypes: [TransactionType.income],
+    minDate: widget.dateRangeService.startDate,
+    maxDate: widget.dateRangeService.endDate,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +66,7 @@ class _IncomeBySourceTabState extends State<IncomeBySourceTab> {
           // Stacked bar chart — evolution by period
           CardWithHeader(
             title: 'Evolución por periodo', // TODO: i18n
-            bodyPadding: const EdgeInsets.only(
-              bottom: 12,
-              top: 16,
-              right: 16,
-            ),
+            bodyPadding: const EdgeInsets.only(bottom: 12, top: 16, right: 16),
             body: IncomeStackedBarChart(
               filters: incomeFilters,
               dimension: _dimension,
@@ -84,10 +80,7 @@ class _IncomeBySourceTabState extends State<IncomeBySourceTab> {
             title: _dimension == BreakdownDimension.tag
                 ? 'Distribución por Tag' // TODO: i18n
                 : 'Distribución por Categoría', // TODO: i18n
-            body: IncomePieChart(
-              filters: incomeFilters,
-              dimension: _dimension,
-            ),
+            body: IncomePieChart(filters: incomeFilters, dimension: _dimension),
           ),
           const SizedBox(height: 16),
 
@@ -132,7 +125,8 @@ class _TotalIncomeKPI extends StatelessWidget {
           child: Center(
             child: CurrencyDisplayer(
               amountToConvert: total,
-              integerStyle: Theme.of(context).textTheme.headlineMedium!.copyWith(
+              integerStyle: Theme.of(context).textTheme.headlineMedium!
+                  .copyWith(
                     fontWeight: FontWeight.bold,
                     color: Theme.of(context).colorScheme.primary,
                   ),

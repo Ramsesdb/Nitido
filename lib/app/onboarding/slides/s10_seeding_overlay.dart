@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/onboarding/widgets/v3_seeding_overlay.dart';
 import 'package:nitido/core/database/utils/personal_ve_seeders.dart';
 
@@ -58,7 +58,8 @@ class _Slide10SeedingOverlayState extends State<Slide10SeedingOverlay> {
   Widget build(BuildContext context) {
     return const V3SeedingOverlay(
       title: 'Preparando tu Nitido…',
-      subtitle: 'Creamos tus cuentas y categorías iniciales. Tomará un momento.',
+      subtitle:
+          'Creamos tus cuentas y categorías iniciales. Tomará un momento.',
     );
   }
 }

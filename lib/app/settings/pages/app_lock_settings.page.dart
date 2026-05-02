@@ -34,7 +34,10 @@ class _AppLockSettingsPageState extends State<AppLockSettingsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              createListSeparator(context, t.settings.security.biometric.section_title),
+              createListSeparator(
+                context,
+                t.settings.security.biometric.section_title,
+              ),
               SwitchListTile.adaptive(
                 secondary: const Icon(Icons.fingerprint_outlined),
                 title: Text(t.settings.security.biometric.title),

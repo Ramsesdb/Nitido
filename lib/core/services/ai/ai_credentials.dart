@@ -38,10 +38,10 @@ class AiCredentials {
   /// JSON shape stored in `flutter_secure_storage`. Provider type is implied
   /// by the storage key, so it is NOT serialized inside the payload.
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'apiKey': apiKey,
-        if (model != null && model!.isNotEmpty) 'model': model,
-        if (baseUrl != null && baseUrl!.isNotEmpty) 'baseUrl': baseUrl,
-      };
+    'apiKey': apiKey,
+    if (model != null && model!.isNotEmpty) 'model': model,
+    if (baseUrl != null && baseUrl!.isNotEmpty) 'baseUrl': baseUrl,
+  };
 
   String toJsonString() => jsonEncode(toJson());
 

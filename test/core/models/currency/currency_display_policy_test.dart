@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/models/currency/currency_display_policy.dart';
 import 'package:nitido/core/models/currency/currency_display_policy_resolver.dart';
 import 'package:nitido/core/services/rate_providers/rate_source.dart';
@@ -208,8 +208,10 @@ void main() {
 
     test('Same currency returns null', () {
       expect(
-        const DualMode(primary: 'USD', secondary: 'VES')
-            .rateSourceForPair('USD', 'USD'),
+        const DualMode(
+          primary: 'USD',
+          secondary: 'VES',
+        ).rateSourceForPair('USD', 'USD'),
         isNull,
       );
       expect(
@@ -223,7 +225,10 @@ void main() {
       // resolve identically for the same (from, to) pair.
       const single = SingleMode(code: 'USD');
       expect(single.rateSourceForPair('USD', 'VES'), RateSource.bcv);
-      expect(single.rateSourceForPair('USD', 'EUR'), RateSource.autoFrankfurter);
+      expect(
+        single.rateSourceForPair('USD', 'EUR'),
+        RateSource.autoFrankfurter,
+      );
     });
   });
 

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/models/chat_card_payload.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
@@ -33,10 +33,7 @@ class BalanceCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              payload.kickerLabel.toUpperCase(),
-              style: tokens.cardKicker,
-            ),
+            Text(payload.kickerLabel.toUpperCase(), style: tokens.cardKicker),
             const SizedBox(height: 6),
             _AmountDisplay(
               total: payload.total,

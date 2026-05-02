@@ -23,28 +23,26 @@ class FinancialContextBuilder {
 
       final accounts = results[0] as List<dynamic>;
       final allCategories = results[1] as List<dynamic>;
-      final expenseCategories =
-          allCategories.where((c) => c.type.isExpense).toList();
-      final incomeCategories =
-          allCategories.where((c) => c.type.isIncome).toList();
+      final expenseCategories = allCategories
+          .where((c) => c.type.isExpense)
+          .toList();
+      final incomeCategories = allCategories
+          .where((c) => c.type.isIncome)
+          .toList();
 
       final accountsText = accounts.isEmpty
           ? '- (sin cuentas)'
           : accounts
-              .map((a) => '- ${a.id}: ${a.name} (${a.currency.code})')
-              .join('\n');
+                .map((a) => '- ${a.id}: ${a.name} (${a.currency.code})')
+                .join('\n');
 
       final expenseCatsText = expenseCategories.isEmpty
           ? '- (sin categorias)'
-          : expenseCategories
-              .map((c) => '- ${c.id}: ${c.name}')
-              .join('\n');
+          : expenseCategories.map((c) => '- ${c.id}: ${c.name}').join('\n');
 
       final incomeCatsText = incomeCategories.isEmpty
           ? '- (sin categorias)'
-          : incomeCategories
-              .map((c) => '- ${c.id}: ${c.name}')
-              .join('\n');
+          : incomeCategories.map((c) => '- ${c.id}: ${c.name}').join('\n');
 
       var ctx = _compose(
         accountsText: accountsText,

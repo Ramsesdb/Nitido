@@ -68,8 +68,9 @@ ThemeData getThemeData(
       seedColor: darkDynamic.primary,
       brightness: Brightness.dark,
       surface: amoledMode ? Colors.black : const Color(0xFF1A1A2E),
-      surfaceContainerHighest:
-          amoledMode ? const Color(0xFF0A0A0F) : const Color(0xFF222238),
+      surfaceContainerHighest: amoledMode
+          ? const Color(0xFF0A0A0F)
+          : const Color(0xFF222238),
     );
 
     // TODO: We can directly use the dynamic palette here, in the following way
@@ -105,8 +106,9 @@ ThemeData getThemeData(
       seedColor: accentColorValue,
       brightness: Brightness.dark,
       surface: amoledMode ? Colors.black : const Color(0xFF1A1A2E),
-      surfaceContainerHighest:
-          amoledMode ? const Color(0xFF0A0A0F) : const Color(0xFF222238),
+      surfaceContainerHighest: amoledMode
+          ? const Color(0xFF0A0A0F)
+          : const Color(0xFF222238),
     );
   }
 

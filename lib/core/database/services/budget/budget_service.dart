@@ -29,8 +29,12 @@ class BudgetServive {
       return true;
     });
 
-    unawaited(FirebaseSyncService.instance
-        .pushBudget(budgetInDb, trFilters: trFiltersInDb));
+    unawaited(
+      FirebaseSyncService.instance.pushBudget(
+        budgetInDb,
+        trFilters: trFiltersInDb,
+      ),
+    );
     return toReturn;
   }
 

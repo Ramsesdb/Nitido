@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -94,10 +94,7 @@ class _ChatEmptyStateState extends State<ChatEmptyState> {
       double total = 0.0;
       for (final account in filtered) {
         final balance = await accountService
-            .getAccountMoney(
-              account: account,
-              convertToPreferredCurrency: true,
-            )
+            .getAccountMoney(account: account, convertToPreferredCurrency: true)
             .first;
         total += balance;
       }
@@ -247,10 +244,7 @@ class _ChatEmptyStateState extends State<ChatEmptyState> {
           const SizedBox(height: 28),
           for (int i = 0; i < prompts.length; i++) ...[
             if (i > 0) const SizedBox(height: 8),
-            _PromptPill(
-              prompt: prompts[i],
-              onTap: widget.onSuggestionTap,
-            ),
+            _PromptPill(prompt: prompts[i], onTap: widget.onSuggestionTap),
           ],
           const Spacer(),
         ],
@@ -294,9 +288,7 @@ class _PromptPill extends StatelessWidget {
           height: 52,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              NitidoAiTokens.innerCardRadius,
-            ),
+            borderRadius: BorderRadius.circular(NitidoAiTokens.innerCardRadius),
             border: Border.all(color: tokens.border, width: 1),
           ),
           child: Row(

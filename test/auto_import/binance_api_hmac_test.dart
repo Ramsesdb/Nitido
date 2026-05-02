@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/auto_import/binance/binance_api_client.dart';
 
 void main() {
@@ -26,10 +26,14 @@ void main() {
     test('different secrets produce different signatures', () {
       const queryString = 'symbol=ETHUSDT&timestamp=1712000000000';
 
-      final sig1 =
-          BinanceApiClient.sign(queryString, 'fake_secret_a_for_tests');
-      final sig2 =
-          BinanceApiClient.sign(queryString, 'fake_secret_b_for_tests');
+      final sig1 = BinanceApiClient.sign(
+        queryString,
+        'fake_secret_a_for_tests',
+      );
+      final sig2 = BinanceApiClient.sign(
+        queryString,
+        'fake_secret_b_for_tests',
+      );
 
       expect(sig1, isNot(sig2));
     });
@@ -37,10 +41,8 @@ void main() {
     test('different query strings produce different signatures', () {
       const secret = 'fake_shared_secret_for_tests';
 
-      final sig1 =
-          BinanceApiClient.sign('timestamp=1000000000000', secret);
-      final sig2 =
-          BinanceApiClient.sign('timestamp=2000000000000', secret);
+      final sig1 = BinanceApiClient.sign('timestamp=1000000000000', secret);
+      final sig2 = BinanceApiClient.sign('timestamp=2000000000000', secret);
 
       expect(sig1, isNot(sig2));
     });

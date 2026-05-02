@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_mini_phone_frame.dart';
 import 'package:nitido/app/onboarding/widgets/v3_slide_template.dart';
@@ -124,10 +124,12 @@ class _V3RestrictedSettingsStepState extends State<V3RestrictedSettingsStep>
     // step3 is identical for both vendors ("return to Nitido").
     final step3Text = copy.step3;
 
-    final primaryLabel =
-        _userReturnedFromSettings ? copy.cta_done : copy.cta_primary;
-    final VoidCallback primaryAction =
-        _userReturnedFromSettings ? widget.onContinue : _handleOpenAppInfo;
+    final primaryLabel = _userReturnedFromSettings
+        ? copy.cta_done
+        : copy.cta_primary;
+    final VoidCallback primaryAction = _userReturnedFromSettings
+        ? widget.onContinue
+        : _handleOpenAppInfo;
 
     return V3SlideTemplate(
       primaryLabel: primaryLabel,
@@ -139,24 +141,21 @@ class _V3RestrictedSettingsStepState extends State<V3RestrictedSettingsStep>
         children: [
           Text(
             copy.title,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             copy.subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
           Align(
             alignment: Alignment.topCenter,
-            child: V3MiniPhoneFrame(
-              height: 200,
-              child: const _AppInfoMockup(),
-            ),
+            child: V3MiniPhoneFrame(height: 200, child: const _AppInfoMockup()),
           ),
           const SizedBox(height: V3Tokens.space24),
           _StepRow(index: 1, text: step1Text),
@@ -196,9 +195,9 @@ class _StepRow extends StatelessWidget {
           child: Text(
             '$index',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: V3Tokens.accent,
-                  fontWeight: FontWeight.w700,
-                ),
+              color: V3Tokens.accent,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
         const SizedBox(width: V3Tokens.spaceMd),
@@ -207,9 +206,9 @@ class _StepRow extends StatelessWidget {
             padding: const EdgeInsets.only(top: 3),
             child: Text(
               text,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: scheme.onSurface,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: scheme.onSurface),
             ),
           ),
         ),
@@ -241,19 +240,15 @@ class _AppInfoMockup extends StatelessWidget {
           // Top bar: back arrow + "App info" + highlighted kebab.
           Row(
             children: [
-              Icon(
-                Icons.arrow_back,
-                size: 16,
-                color: scheme.onSurfaceVariant,
-              ),
+              Icon(Icons.arrow_back, size: 16, color: scheme.onSurfaceVariant),
               const SizedBox(width: V3Tokens.spaceXs),
               Expanded(
                 child: Text(
                   'App info',
                   style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: scheme.onSurface,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: scheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               Container(
@@ -300,9 +295,9 @@ class _AppInfoMockup extends StatelessWidget {
               const SizedBox(width: V3Tokens.spaceMd),
               Text(
                 'Nitido',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
               ),
             ],
           ),

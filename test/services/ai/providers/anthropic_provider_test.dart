@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -36,12 +36,14 @@ void main() {
         client: client,
       );
 
-      await provider.complete(messages: [
-        {'role': 'system', 'content': 'You are a banker'},
-        {'role': 'system', 'content': 'Use VES'},
-        {'role': 'user', 'content': 'hi'},
-        {'role': 'assistant', 'content': 'previous reply'},
-      ]);
+      await provider.complete(
+        messages: [
+          {'role': 'system', 'content': 'You are a banker'},
+          {'role': 'system', 'content': 'Use VES'},
+          {'role': 'user', 'content': 'hi'},
+          {'role': 'assistant', 'content': 'previous reply'},
+        ],
+      );
 
       final request = client.lastRequest as http.Request;
       expect(request.headers['x-api-key'], 'sk-ant-test');
@@ -69,12 +71,15 @@ void main() {
         client: client,
       );
 
-      await provider.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      await provider.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
 
-      final payload = jsonDecode((client.lastRequest as http.Request).body)
-          as Map<String, dynamic>;
+      final payload =
+          jsonDecode((client.lastRequest as http.Request).body)
+              as Map<String, dynamic>;
       expect(payload['max_tokens'], 1024);
     });
 
@@ -98,8 +103,9 @@ void main() {
         maxTokens: 256,
       );
 
-      final payload = jsonDecode((client.lastRequest as http.Request).body)
-          as Map<String, dynamic>;
+      final payload =
+          jsonDecode((client.lastRequest as http.Request).body)
+              as Map<String, dynamic>;
       expect(payload['max_tokens'], 256);
     });
 
@@ -115,9 +121,11 @@ void main() {
         model: 'claude-haiku-4-5',
         client: client,
       );
-      final out = await provider.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      final out = await provider.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
       expect(out, 'trimmed reply');
     });
 
@@ -128,9 +136,11 @@ void main() {
         model: 'claude-haiku-4-5',
         client: client,
       );
-      final out = await provider.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      final out = await provider.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
       expect(out, isNull);
     });
   });

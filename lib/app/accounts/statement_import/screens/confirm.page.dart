@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/accounts/statement_import/statement_import_flow.dart';
 import 'package:nitido/app/accounts/statement_import/widgets/si_header.dart';
 import 'package:nitido/core/database/app_db.dart';
@@ -32,11 +32,8 @@ class _ConfirmPageState extends State<ConfirmPage> {
         ? [CategoryType.I, CategoryType.B]
         : [CategoryType.E, CategoryType.B];
 
-    final categories =
-        await CategoryService.instance.getCategories().first;
-    return categories
-        .where((c) => types.contains(c.type))
-        .firstOrNull;
+    final categories = await CategoryService.instance.getCategories().first;
+    return categories.where((c) => types.contains(c.type)).firstOrNull;
   }
 
   Future<void> _commit() async {
@@ -58,10 +55,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
         setState(() => _committing = false);
         NitidoSnackbar.error(
           SnackbarParams(
-            Translations.of(context)
-                .statement_import
-                .confirm
-                .error,
+            Translations.of(context).statement_import.confirm.error,
             message:
                 'No se encontró una categoría por defecto. '
                 'Crea al menos una categoría de ingreso y '
@@ -87,9 +81,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
           value: value,
           isHidden: false,
           accountID: account.id,
-          type: isIncome
-              ? TransactionType.income
-              : TransactionType.expense,
+          type: isIncome ? TransactionType.income : TransactionType.expense,
           status: TransactionStatus.reconciled,
           notes: row.description.isEmpty ? null : row.description,
           categoryID: fallbackCategory.id,
@@ -226,7 +218,8 @@ class _ConfirmPageState extends State<ConfirmPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        t.statement_import.confirm.breakdown_title.toUpperCase(),
+                        t.statement_import.confirm.breakdown_title
+                            .toUpperCase(),
                         style: tt.labelSmall?.copyWith(
                           color: cs.onSurfaceVariant,
                           letterSpacing: 0.5,
@@ -277,9 +270,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
                   ),
                   child: Text(
                     t.statement_import.confirm.undo_hint,
-                    style: tt.bodySmall?.copyWith(
-                      color: cs.onSurfaceVariant,
-                    ),
+                    style: tt.bodySmall?.copyWith(color: cs.onSurfaceVariant),
                   ),
                 ),
               ],
@@ -294,8 +285,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
                   OutlinedButton(
                     onPressed: _committing
                         ? null
-                        : () =>
-                            StatementImportFlow.of(context).backToReview(),
+                        : () => StatementImportFlow.of(context).backToReview(),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(0, 52),
                       padding: const EdgeInsets.symmetric(horizontal: 20),

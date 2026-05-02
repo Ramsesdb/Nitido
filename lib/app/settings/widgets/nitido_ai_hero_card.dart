@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/settings/pages/ai/ai_settings.page.dart';
 import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
 import 'package:nitido/core/presentation/app_colors.dart';
@@ -24,9 +24,10 @@ class _NitidoAiHeroCardState extends State<NitidoAiHeroCard>
       vsync: this,
       duration: const Duration(milliseconds: 2000),
     )..repeat(reverse: true);
-    _glowAnim = Tween<double>(begin: 0.18, end: 0.42).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _glowAnim = Tween<double>(
+      begin: 0.18,
+      end: 0.42,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -57,7 +58,9 @@ class _NitidoAiHeroCardState extends State<NitidoAiHeroCard>
     final appColors = AppColors.of(context);
 
     final aiEnabled = appStateSettings[SettingKey.nexusAiEnabled] == '1';
-    final provider = _providerLabel(appStateSettings[SettingKey.activeAiProvider]);
+    final provider = _providerLabel(
+      appStateSettings[SettingKey.activeAiProvider],
+    );
 
     return AnimatedBuilder(
       animation: _glowAnim,
@@ -70,10 +73,7 @@ class _NitidoAiHeroCardState extends State<NitidoAiHeroCard>
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [
-                cs.primary.withValues(alpha: 0.08),
-                Colors.transparent,
-              ],
+              colors: [cs.primary.withValues(alpha: 0.08), Colors.transparent],
             ),
             boxShadow: [
               BoxShadow(
@@ -118,7 +118,11 @@ class _NitidoAiHeroCardState extends State<NitidoAiHeroCard>
                   ],
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, size: 14, color: appColors.textHint),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+                color: appColors.textHint,
+              ),
             ],
           ),
         ),

@@ -1,4 +1,4 @@
-﻿import 'package:drift/drift.dart' as drift;
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:nitido/app/categories/selectors/category_picker.dart';
 import 'package:nitido/app/categories/subcategory_form.dart';
@@ -59,9 +59,7 @@ class CategoryFormFunctions {
       CategoryService.instance
           .deleteCategory(categoryId)
           .then((value) {
-            NitidoSnackbar.success(
-              SnackbarParams(t.categories.delete_success),
-            );
+            NitidoSnackbar.success(SnackbarParams(t.categories.delete_success));
 
             RouteUtils.popRoute();
           })
@@ -240,9 +238,7 @@ class CategoryFormFunctions {
         await Future.wait(futures);
 
         RouteUtils.popRoute();
-        NitidoSnackbar.success(
-          SnackbarParams(t.categories.make_child_success),
-        );
+        NitidoSnackbar.success(SnackbarParams(t.categories.make_child_success));
       });
     });
   }

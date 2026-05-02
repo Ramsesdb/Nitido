@@ -23,10 +23,11 @@ class GeminiProvider implements AiProvider {
     required this.model,
     http.Client? client,
     Duration requestTimeout = const Duration(seconds: 20),
-  })  : _client = client ?? http.Client(),
-        _requestTimeout = requestTimeout;
+  }) : _client = client ?? http.Client(),
+       _requestTimeout = requestTimeout;
 
-  static const _baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models';
+  static const _baseUrl =
+      'https://generativelanguage.googleapis.com/v1beta/models';
 
   final String apiKey;
   final String model;
@@ -39,8 +40,9 @@ class GeminiProvider implements AiProvider {
   /// Translates an OpenAI-style message list into Gemini's `contents` +
   /// `systemInstruction` shape. System messages are concatenated into a
   /// single instruction; assistant messages map to `role: 'model'`.
-  static ({String? systemText, List<Map<String, dynamic>> contents})
-      _convert(List<Map<String, String>> input) {
+  static ({String? systemText, List<Map<String, dynamic>> contents}) _convert(
+    List<Map<String, String>> input,
+  ) {
     final systemBuf = StringBuffer();
     final contents = <Map<String, dynamic>>[];
     for (final msg in input) {
@@ -81,11 +83,11 @@ class GeminiProvider implements AiProvider {
     }
 
     final converted = _convert(messages);
-    final resolvedModel = (model != null && model.isNotEmpty) ? model : this.model;
+    final resolvedModel = (model != null && model.isNotEmpty)
+        ? model
+        : this.model;
 
-    final body = <String, dynamic>{
-      'contents': converted.contents,
-    };
+    final body = <String, dynamic>{'contents': converted.contents};
     if (converted.systemText != null) {
       body['systemInstruction'] = {
         'parts': [

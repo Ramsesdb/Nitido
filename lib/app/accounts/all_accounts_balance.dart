@@ -72,33 +72,31 @@ class _AllAccountBalancePageState extends State<AllAccountBalancePage> {
           !element.isClosed || element.closingDate!.compareTo(date) >= 0,
     );
 
-    final balances = accounts.map(
-      (account) async {
-        final converted = await AccountService.instance
-            .getAccountMoney(
-              account: account,
-              trFilters: filters,
-              convertToPreferredCurrency: true,
-              date: date,
-            )
-            .first;
+    final balances = accounts.map((account) async {
+      final converted = await AccountService.instance
+          .getAccountMoney(
+            account: account,
+            trFilters: filters,
+            convertToPreferredCurrency: true,
+            date: date,
+          )
+          .first;
 
-        final native = await AccountService.instance
-            .getAccountMoney(
-              account: account,
-              trFilters: filters,
-              convertToPreferredCurrency: false,
-              date: date,
-            )
-            .first;
+      final native = await AccountService.instance
+          .getAccountMoney(
+            account: account,
+            trFilters: filters,
+            convertToPreferredCurrency: false,
+            date: date,
+          )
+          .first;
 
-        return AccountWithMoney(
-          moneyConverted: converted,
-          moneyNative: native,
-          account: account,
-        );
-      },
-    );
+      return AccountWithMoney(
+        moneyConverted: converted,
+        moneyNative: native,
+        account: account,
+      );
+    });
 
     final toReturn = await Future.wait(balances);
     toReturn.sort((a, b) => b.effectiveMoney.compareTo(a.effectiveMoney));

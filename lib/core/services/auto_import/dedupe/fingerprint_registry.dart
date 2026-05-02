@@ -59,14 +59,14 @@ class SeenFingerprint {
   }
 
   Map<String, dynamic> toJson() => {
-        'stable': stable,
-        'contentOnly': contentOnly,
-        'firstSeen': firstSeen.toIso8601String(),
-        'lastSeen': lastSeen.toIso8601String(),
-        'occurrences': occurrences,
-        'linkedTransactionId': linkedTransactionId,
-        'userRemoved': userRemoved,
-      };
+    'stable': stable,
+    'contentOnly': contentOnly,
+    'firstSeen': firstSeen.toIso8601String(),
+    'lastSeen': lastSeen.toIso8601String(),
+    'occurrences': occurrences,
+    'linkedTransactionId': linkedTransactionId,
+    'userRemoved': userRemoved,
+  };
 
   static SeenFingerprint? fromJson(Map<String, dynamic> json) {
     try {
@@ -194,10 +194,7 @@ class FingerprintRegistry {
   /// and `occurrences`. If a [transactionId] is provided on a subsequent
   /// call, it overwrites a previously-null link (useful when the first
   /// call happens before the tx is persisted).
-  Future<void> markSeen(
-    NotifFingerprint fp, {
-    String? transactionId,
-  }) async {
+  Future<void> markSeen(NotifFingerprint fp, {String? transactionId}) async {
     await hydrate();
     final now = DateTime.now();
     final existing = _byStable[fp.stable] ?? _byContent[fp.contentOnly];
@@ -219,8 +216,7 @@ class FingerprintRegistry {
         contentOnly: fp.contentOnly,
         lastSeen: now,
         occurrences: existing.occurrences + 1,
-        linkedTransactionId:
-            transactionId ?? existing.linkedTransactionId,
+        linkedTransactionId: transactionId ?? existing.linkedTransactionId,
       );
     }
 
@@ -249,10 +245,7 @@ class FingerprintRegistry {
         userRemoved: true,
       );
     } else {
-      upserted = existing.copyWith(
-        lastSeen: now,
-        userRemoved: true,
-      );
+      upserted = existing.copyWith(lastSeen: now, userRemoved: true);
     }
 
     _byStable[upserted.stable] = upserted;

@@ -1,15 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_mini_phone_frame.dart';
 import 'package:nitido/app/onboarding/widgets/v3_notification_card.dart';
 import 'package:nitido/app/onboarding/widgets/v3_slide_template.dart';
 
 class Slide05AutoImportSell extends StatelessWidget {
-  const Slide05AutoImportSell({
-    super.key,
-    required this.onNext,
-    this.onSkip,
-  });
+  const Slide05AutoImportSell({super.key, required this.onNext, this.onSkip});
 
   final VoidCallback onNext;
   final VoidCallback? onSkip;
@@ -25,16 +21,16 @@ class Slide05AutoImportSell extends StatelessWidget {
         children: [
           Text(
             'Registra tus gastos solo.',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Nitido lee tus notificaciones de banco y agrega transacciones automáticamente.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
           const SizedBox(height: V3Tokens.space24),
           // V3MiniPhone (300x280) centered, framing two stacked notifs:

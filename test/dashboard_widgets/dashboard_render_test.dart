@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/home/dashboard_widgets/dashboard_layout_body.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/dashboard_layout.dart';
@@ -21,10 +21,7 @@ DashboardWidgetSpec _stubSpec(
     displayName: (_) => label,
     icon: Icons.widgets_outlined,
     defaultSize: WidgetSize.fullWidth,
-    allowedSizes: const <WidgetSize>{
-      WidgetSize.medium,
-      WidgetSize.fullWidth,
-    },
+    allowedSizes: const <WidgetSize>{WidgetSize.medium, WidgetSize.fullWidth},
     builder: (_, descriptor, {required editing}) {
       // Use a unique key derived from the descriptor so the test can find
       // the rendered widget even when the body wraps it in a slot.
@@ -41,13 +38,7 @@ DashboardWidgetSpec _stubSpec(
 
 Widget _harness(Widget child) {
   return MaterialApp(
-    home: Scaffold(
-      body: SizedBox(
-        width: 400,
-        height: 800,
-        child: child,
-      ),
-    ),
+    home: Scaffold(body: SizedBox(width: 400, height: 800, child: child)),
   );
 }
 
@@ -60,8 +51,9 @@ void main() {
     DashboardWidgetRegistry.instance.reset();
   });
 
-  testWidgets('renders three slots with stable layout-slot-<instanceId> keys',
-      (tester) async {
+  testWidgets('renders three slots with stable layout-slot-<instanceId> keys', (
+    tester,
+  ) async {
     final registry = DashboardWidgetRegistry.instance;
     registry.register(_stubSpec(WidgetType.quickUse, 'QU'));
     registry.register(_stubSpec(WidgetType.totalBalanceSummary, 'TBS'));
@@ -105,25 +97,18 @@ void main() {
     );
 
     // Stub builders rendered with their own keys.
-    expect(
-      find.byKey(const ValueKey<String>('stub-id-1')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey<String>('stub-id-2')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey<String>('stub-id-3')),
-      findsOneWidget,
-    );
+    expect(find.byKey(const ValueKey<String>('stub-id-1')), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('stub-id-2')), findsOneWidget);
+    expect(find.byKey(const ValueKey<String>('stub-id-3')), findsOneWidget);
   });
 
-  testWidgets('descriptors with unregistered types are skipped silently',
-      (tester) async {
+  testWidgets('descriptors with unregistered types are skipped silently', (
+    tester,
+  ) async {
     // Only register quickUse — totalBalanceSummary will be missing.
-    DashboardWidgetRegistry.instance
-        .register(_stubSpec(WidgetType.quickUse, 'QU'));
+    DashboardWidgetRegistry.instance.register(
+      _stubSpec(WidgetType.quickUse, 'QU'),
+    );
 
     final layout = DashboardLayout(
       schemaVersion: DashboardLayout.currentSchemaVersion,
@@ -153,12 +138,16 @@ void main() {
     );
   });
 
-  testWidgets('empty layout renders SizedBox.shrink with no slots',
-      (tester) async {
-    DashboardWidgetRegistry.instance
-        .register(_stubSpec(WidgetType.quickUse, 'QU'));
+  testWidgets('empty layout renders SizedBox.shrink with no slots', (
+    tester,
+  ) async {
+    DashboardWidgetRegistry.instance.register(
+      _stubSpec(WidgetType.quickUse, 'QU'),
+    );
 
-    await tester.pumpWidget(_harness(DashboardLayoutBody(layout: DashboardLayout.empty())));
+    await tester.pumpWidget(
+      _harness(DashboardLayoutBody(layout: DashboardLayout.empty())),
+    );
 
     // No slots emitted when widgets list is empty.
     expect(
@@ -168,77 +157,75 @@ void main() {
   });
 
   testWidgets(
-      'descriptors with shouldRender == false are skipped in view mode',
-      (tester) async {
-    final registry = DashboardWidgetRegistry.instance;
-    // QU se muestra siempre (sin predicado), TBS está oculto por
-    // `shouldRender: false`.
-    registry.register(_stubSpec(WidgetType.quickUse, 'QU'));
-    registry.register(
-      _stubSpec(
-        WidgetType.totalBalanceSummary,
-        'TBS',
-        shouldRender: (_) => false,
-      ),
-    );
-
-    final layout = DashboardLayout(
-      schemaVersion: DashboardLayout.currentSchemaVersion,
-      widgets: <WidgetDescriptor>[
-        WidgetDescriptor(
-          instanceId: 'visible',
-          type: WidgetType.quickUse,
-          size: WidgetSize.fullWidth,
+    'descriptors with shouldRender == false are skipped in view mode',
+    (tester) async {
+      final registry = DashboardWidgetRegistry.instance;
+      // QU se muestra siempre (sin predicado), TBS está oculto por
+      // `shouldRender: false`.
+      registry.register(_stubSpec(WidgetType.quickUse, 'QU'));
+      registry.register(
+        _stubSpec(
+          WidgetType.totalBalanceSummary,
+          'TBS',
+          shouldRender: (_) => false,
         ),
-        WidgetDescriptor(
-          instanceId: 'hidden',
-          type: WidgetType.totalBalanceSummary,
-          size: WidgetSize.fullWidth,
-        ),
-      ],
-    );
+      );
 
-    await tester.pumpWidget(_harness(DashboardLayoutBody(layout: layout)));
+      final layout = DashboardLayout(
+        schemaVersion: DashboardLayout.currentSchemaVersion,
+        widgets: <WidgetDescriptor>[
+          WidgetDescriptor(
+            instanceId: 'visible',
+            type: WidgetType.quickUse,
+            size: WidgetSize.fullWidth,
+          ),
+          WidgetDescriptor(
+            instanceId: 'hidden',
+            type: WidgetType.totalBalanceSummary,
+            size: WidgetSize.fullWidth,
+          ),
+        ],
+      );
 
-    expect(
-      find.byKey(const ValueKey<String>('layout-slot-visible')),
-      findsOneWidget,
-    );
-    expect(
-      find.byKey(const ValueKey<String>('layout-slot-hidden')),
-      findsNothing,
-      reason: 'view mode debe saltarse los slots cuyo shouldRender es false',
-    );
-  });
+      await tester.pumpWidget(_harness(DashboardLayoutBody(layout: layout)));
+
+      expect(
+        find.byKey(const ValueKey<String>('layout-slot-visible')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const ValueKey<String>('layout-slot-hidden')),
+        findsNothing,
+        reason: 'view mode debe saltarse los slots cuyo shouldRender es false',
+      );
+    },
+  );
 
   testWidgets(
-      'descriptors with shouldRender == true are rendered like normal',
-      (tester) async {
-    final registry = DashboardWidgetRegistry.instance;
-    registry.register(
-      _stubSpec(
-        WidgetType.quickUse,
-        'QU',
-        shouldRender: (_) => true,
-      ),
-    );
+    'descriptors with shouldRender == true are rendered like normal',
+    (tester) async {
+      final registry = DashboardWidgetRegistry.instance;
+      registry.register(
+        _stubSpec(WidgetType.quickUse, 'QU', shouldRender: (_) => true),
+      );
 
-    final layout = DashboardLayout(
-      schemaVersion: DashboardLayout.currentSchemaVersion,
-      widgets: <WidgetDescriptor>[
-        WidgetDescriptor(
-          instanceId: 'visible',
-          type: WidgetType.quickUse,
-          size: WidgetSize.fullWidth,
-        ),
-      ],
-    );
+      final layout = DashboardLayout(
+        schemaVersion: DashboardLayout.currentSchemaVersion,
+        widgets: <WidgetDescriptor>[
+          WidgetDescriptor(
+            instanceId: 'visible',
+            type: WidgetType.quickUse,
+            size: WidgetSize.fullWidth,
+          ),
+        ],
+      );
 
-    await tester.pumpWidget(_harness(DashboardLayoutBody(layout: layout)));
+      await tester.pumpWidget(_harness(DashboardLayoutBody(layout: layout)));
 
-    expect(
-      find.byKey(const ValueKey<String>('layout-slot-visible')),
-      findsOneWidget,
-    );
-  });
+      expect(
+        find.byKey(const ValueKey<String>('layout-slot-visible')),
+        findsOneWidget,
+      );
+    },
+  );
 }

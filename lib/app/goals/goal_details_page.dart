@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/goals/goal_form_page.dart';
 import 'package:nitido/app/layout/page_framework.dart';
 import 'package:nitido/app/stats/widgets/movements_distribution/pie_chart_by_categories.dart';
@@ -111,9 +111,7 @@ class _GoalDetailsPageState extends State<GoalDetailsPage>
                             );
                           })
                           .catchError((err) {
-                            NitidoSnackbar.error(
-                              SnackbarParams.fromError(err),
-                            );
+                            NitidoSnackbar.error(SnackbarParams.fromError(err));
                           });
                     });
                   },

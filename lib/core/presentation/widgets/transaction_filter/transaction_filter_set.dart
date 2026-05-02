@@ -179,118 +179,120 @@ class TransactionFilterSet {
           appStateSettings[SettingKey.preferredCurrency] ?? 'USD';
 
       return buildDriftExpr([
-      if (tagsIDs != null)
-        CustomExpression(
-          "t.id IN (SELECT transactionID FROM transactionTags WHERE tagID IN (${tagsIDs!.where((element) => element != null).map((s) => "'$s'").join(', ')})) ${tagsIDs!.any((element) => element == null) ? 'OR t.id NOT IN (SELECT transactionID FROM transactionTags)' : ''}",
-        ),
+        if (tagsIDs != null)
+          CustomExpression(
+            "t.id IN (SELECT transactionID FROM transactionTags WHERE tagID IN (${tagsIDs!.where((element) => element != null).map((s) => "'$s'").join(', ')})) ${tagsIDs!.any((element) => element == null) ? 'OR t.id NOT IN (SELECT transactionID FROM transactionTags)' : ''}",
+          ),
 
-      // Phase 6.x cleanup — the previous CustomExpression referenced the
-      // `excRate` SQL alias from a CTE that Phase 9 removed from
-      // `countTransactions`. The same predicate is consumed by BOTH
-      // `getTransactionsWithFullData` (which still has the JOIN) and
-      // `countTransactions` (which doesn't), so referencing `excRate` would
-      // crash any saved filter with min/max value applied through the count
-      // path. We migrate to `t.exchangeRateApplied` — the immutable per-row
-      // rate captured at insert time (per transactions/spec.md
-      // "exchangeRateApplied inmutable por transacción"). This decouples the
-      // predicate from any JOIN alias and is the more correct semantic too:
-      // a min/max filter on a tx now compares against its locked-in
-      // converted value, not against today's (possibly changed) rate.
-      if (maxValue != null)
-        CustomExpression(
-          '(ABS(t.value * CASE WHEN a.currencyId = \'$preferredCurrency\' THEN 1.0 ELSE t.exchangeRateApplied END) <= $maxValue)',
-        ),
+        // Phase 6.x cleanup — the previous CustomExpression referenced the
+        // `excRate` SQL alias from a CTE that Phase 9 removed from
+        // `countTransactions`. The same predicate is consumed by BOTH
+        // `getTransactionsWithFullData` (which still has the JOIN) and
+        // `countTransactions` (which doesn't), so referencing `excRate` would
+        // crash any saved filter with min/max value applied through the count
+        // path. We migrate to `t.exchangeRateApplied` — the immutable per-row
+        // rate captured at insert time (per transactions/spec.md
+        // "exchangeRateApplied inmutable por transacción"). This decouples the
+        // predicate from any JOIN alias and is the more correct semantic too:
+        // a min/max filter on a tx now compares against its locked-in
+        // converted value, not against today's (possibly changed) rate.
+        if (maxValue != null)
+          CustomExpression(
+            '(ABS(t.value * CASE WHEN a.currencyId = \'$preferredCurrency\' THEN 1.0 ELSE t.exchangeRateApplied END) <= $maxValue)',
+          ),
 
-      if (minValue != null)
-        CustomExpression(
-          '(ABS(t.value * CASE WHEN a.currencyId = \'$preferredCurrency\' THEN 1.0 ELSE t.exchangeRateApplied END) >= $minValue)',
-        ),
+        if (minValue != null)
+          CustomExpression(
+            '(ABS(t.value * CASE WHEN a.currencyId = \'$preferredCurrency\' THEN 1.0 ELSE t.exchangeRateApplied END) >= $minValue)',
+          ),
 
-      // Transaction types:
-      if (transactionTypes != null)
-        transaction.type.isInValues(transactionTypes!),
+        // Transaction types:
+        if (transactionTypes != null)
+          transaction.type.isInValues(transactionTypes!),
 
-      // Is recurrent:
-      if (isRecurrent == false) transaction.intervalPeriod.isNull(),
-      if (isRecurrent == true) transaction.intervalPeriod.isNotNull(),
+        // Is recurrent:
+        if (isRecurrent == false) transaction.intervalPeriod.isNull(),
+        if (isRecurrent == true) transaction.intervalPeriod.isNotNull(),
 
-      // Other filters:
-      if (searchValue != null && searchValue!.isNotEmpty)
-        (transaction.notes.contains(searchValue!) |
-            transaction.title.contains(searchValue!) |
-            c.name.contains(searchValue!)),
-      if (minDate != null) transaction.date.isBiggerOrEqualValue(minDate!),
-      if (maxDate != null) transaction.date.isSmallerThanValue(maxDate!),
-      if (accountsIDs != null && !includeReceivingAccountsInAccountFilters)
-        transaction.accountID.isIn(accountsIDs!),
-      if (accountsIDs != null && includeReceivingAccountsInAccountFilters)
-        transaction.accountID.isIn(accountsIDs!) |
-            transaction.receivingAccountID.isIn(accountsIDs!),
-      // Exclude transactions that touch any account in [excludeAccountsIDs].
-      // For transfers this must gate **both** sides (AND), otherwise a
-      // transfer from a visible account into a hidden saving would leak. A
-      // normal transaction has receivingAccountID = NULL, so the right-hand
-      // side short-circuits to true and only accountID is checked.
-      if (excludeAccountsIDs != null && excludeAccountsIDs!.isNotEmpty)
-        transaction.accountID.isIn(excludeAccountsIDs!).not() &
-            (transaction.receivingAccountID.isNull() |
-                transaction.receivingAccountID
-                    .isIn(excludeAccountsIDs!)
-                    .not()),
-      if (categoriesIds != null && includeParentCategoriesInSearch)
-        transaction.categoryID.isIn(categoriesIds!) |
-            c.parentCategoryID.isIn(categoriesIds!),
-      if (categoriesIds != null && !includeParentCategoriesInSearch)
-        transaction.categoryID.isIn(categoriesIds!),
-      // Status filter. Defensive against NULL status rows: SQL `IN (...)`
-      // never matches NULL, so if the caller explicitly passed `null` inside
-      // the list (representing the "no status" bucket) we also include rows
-      // where status IS NULL. This protects us from edge cases where a
-      // transaction slips through without a status being assigned (see v26
-      // backfill migration and the proposal_review / import_csv fixes).
-      if (status != null)
-        () {
-          final nonNullStatuses = status!.whereType<TransactionStatus>().toList();
-          final includeNull = status!.any((s) => s == null);
-          if (nonNullStatuses.isEmpty && includeNull) {
-            return transaction.status.isNull();
-          }
-          if (includeNull) {
-            return transaction.status.isInValues(nonNullStatuses) |
-                transaction.status.isNull();
-          }
-          return transaction.status.isInValues(nonNullStatuses);
-        }(),
-      if (debtId != null) transaction.debtId.equals(debtId!),
-      if (excludeDebtId != null)
-        (transaction.debtId.isNull() |
-            transaction.debtId.equals(excludeDebtId!).not()),
-      // Pre-tracking period: when enabled, exclude transactions whose date
-      // falls before the origin account's `trackedSince`. For transfers, the
-      // receiving account (`ra`, LEFT JOIN) may be NULL — the left side of
-      // the OR handles that case. The symmetric check on the receiving
-      // account guarantees that a transfer crossing the frontier on only one
-      // side is ignored on both legs, avoiding asymmetrical balance drift.
-      if (respectTrackedSince) ...[
-        (account.trackedSince.isNull() |
-            transaction.date.isBiggerOrEqual(account.trackedSince)),
-        (receivingAccount.id.isNull() |
-            receivingAccount.trackedSince.isNull() |
-            transaction.date.isBiggerOrEqual(receivingAccount.trackedSince)),
-      ],
-      if (extraFilters != null)
-        buildDriftExpr(
-          extraFilters(
-            transaction,
-            account,
-            accountCurrency,
-            receivingAccount,
-            receivingAccountCurrency,
-            c,
-            p6,
-          ).toList(),
-        ),
-    ]);
+        // Other filters:
+        if (searchValue != null && searchValue!.isNotEmpty)
+          (transaction.notes.contains(searchValue!) |
+              transaction.title.contains(searchValue!) |
+              c.name.contains(searchValue!)),
+        if (minDate != null) transaction.date.isBiggerOrEqualValue(minDate!),
+        if (maxDate != null) transaction.date.isSmallerThanValue(maxDate!),
+        if (accountsIDs != null && !includeReceivingAccountsInAccountFilters)
+          transaction.accountID.isIn(accountsIDs!),
+        if (accountsIDs != null && includeReceivingAccountsInAccountFilters)
+          transaction.accountID.isIn(accountsIDs!) |
+              transaction.receivingAccountID.isIn(accountsIDs!),
+        // Exclude transactions that touch any account in [excludeAccountsIDs].
+        // For transfers this must gate **both** sides (AND), otherwise a
+        // transfer from a visible account into a hidden saving would leak. A
+        // normal transaction has receivingAccountID = NULL, so the right-hand
+        // side short-circuits to true and only accountID is checked.
+        if (excludeAccountsIDs != null && excludeAccountsIDs!.isNotEmpty)
+          transaction.accountID.isIn(excludeAccountsIDs!).not() &
+              (transaction.receivingAccountID.isNull() |
+                  transaction.receivingAccountID
+                      .isIn(excludeAccountsIDs!)
+                      .not()),
+        if (categoriesIds != null && includeParentCategoriesInSearch)
+          transaction.categoryID.isIn(categoriesIds!) |
+              c.parentCategoryID.isIn(categoriesIds!),
+        if (categoriesIds != null && !includeParentCategoriesInSearch)
+          transaction.categoryID.isIn(categoriesIds!),
+        // Status filter. Defensive against NULL status rows: SQL `IN (...)`
+        // never matches NULL, so if the caller explicitly passed `null` inside
+        // the list (representing the "no status" bucket) we also include rows
+        // where status IS NULL. This protects us from edge cases where a
+        // transaction slips through without a status being assigned (see v26
+        // backfill migration and the proposal_review / import_csv fixes).
+        if (status != null)
+          () {
+            final nonNullStatuses = status!
+                .whereType<TransactionStatus>()
+                .toList();
+            final includeNull = status!.any((s) => s == null);
+            if (nonNullStatuses.isEmpty && includeNull) {
+              return transaction.status.isNull();
+            }
+            if (includeNull) {
+              return transaction.status.isInValues(nonNullStatuses) |
+                  transaction.status.isNull();
+            }
+            return transaction.status.isInValues(nonNullStatuses);
+          }(),
+        if (debtId != null) transaction.debtId.equals(debtId!),
+        if (excludeDebtId != null)
+          (transaction.debtId.isNull() |
+              transaction.debtId.equals(excludeDebtId!).not()),
+        // Pre-tracking period: when enabled, exclude transactions whose date
+        // falls before the origin account's `trackedSince`. For transfers, the
+        // receiving account (`ra`, LEFT JOIN) may be NULL — the left side of
+        // the OR handles that case. The symmetric check on the receiving
+        // account guarantees that a transfer crossing the frontier on only one
+        // side is ignored on both legs, avoiding asymmetrical balance drift.
+        if (respectTrackedSince) ...[
+          (account.trackedSince.isNull() |
+              transaction.date.isBiggerOrEqual(account.trackedSince)),
+          (receivingAccount.id.isNull() |
+              receivingAccount.trackedSince.isNull() |
+              transaction.date.isBiggerOrEqual(receivingAccount.trackedSince)),
+        ],
+        if (extraFilters != null)
+          buildDriftExpr(
+            extraFilters(
+              transaction,
+              account,
+              accountCurrency,
+              receivingAccount,
+              receivingAccountCurrency,
+              c,
+              p6,
+            ).toList(),
+          ),
+      ]);
     };
   }
 

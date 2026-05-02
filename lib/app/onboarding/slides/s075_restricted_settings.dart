@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/onboarding/widgets/v3_restricted_settings_step.dart';
 import 'package:nitido/core/services/auto_import/capture/device_quirks_service.dart';
 
@@ -24,10 +24,7 @@ import 'package:nitido/core/services/auto_import/capture/device_quirks_service.d
 /// `SettingKey.notifListenerEnabled = '0'` skip persistence stays scoped to
 /// `s08_activate_listener.dart`).
 class Slide075RestrictedSettings extends StatelessWidget {
-  const Slide075RestrictedSettings({
-    super.key,
-    required this.onNext,
-  });
+  const Slide075RestrictedSettings({super.key, required this.onNext});
 
   /// Host advance callback. Invoked when the user taps "Skip for now" OR when
   /// the shared widget's lifecycle observer auto-advances after detecting the

@@ -158,13 +158,9 @@ class _SegmentedCalendarButtonState extends State<SegmentedCalendarButton> {
                           // ranges (cycle / lastDays) so savings data cannot
                           // leak via "all time" or a custom range while the
                           // app is locked.
-                          final isLocked =
-                              HiddenModeService.instance.isLocked;
+                          final isLocked = HiddenModeService.instance.isLocked;
                           final allowedTypes = isLocked
-                              ? const [
-                                  PeriodType.cycle,
-                                  PeriodType.lastDays,
-                                ]
+                              ? const [PeriodType.cycle, PeriodType.lastDays]
                               : null;
 
                           final currentType =

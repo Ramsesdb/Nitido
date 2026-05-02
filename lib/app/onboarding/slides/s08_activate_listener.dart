@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_notif_access_mockup.dart';
@@ -8,10 +8,7 @@ import 'package:nitido/core/services/auto_import/capture/device_quirks_service.d
 import 'package:nitido/core/services/auto_import/capture/permission_coordinator.dart';
 
 class Slide08ActivateListener extends StatefulWidget {
-  const Slide08ActivateListener({
-    super.key,
-    required this.onNext,
-  });
+  const Slide08ActivateListener({super.key, required this.onNext});
 
   final VoidCallback onNext;
 
@@ -169,16 +166,16 @@ class _Slide08ActivateListenerState extends State<Slide08ActivateListener>
         children: [
           Text(
             'Activa el listener',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Concede acceso a las notificaciones para que Nitido registre automáticamente tus transacciones.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
           // V3MiniPhone shell (300x300) showing a mock of the Android
@@ -240,9 +237,9 @@ class _OemInstructions extends StatelessWidget {
               const SizedBox(width: V3Tokens.spaceXs),
               Text(
                 'Pasos extra en ${quirk.name.toUpperCase()}',
-                style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.w700),
               ),
             ],
           ),
@@ -254,18 +251,15 @@ class _OemInstructions extends StatelessWidget {
             ),
             Text(
               step.descEs,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: scheme.onSurfaceVariant,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
             ),
             const SizedBox(height: V3Tokens.spaceXs),
           ],
           if (showBatteryTile) ...[
             const SizedBox(height: V3Tokens.spaceXs),
-            _BatteryTile(
-              ignored: batteryIgnored,
-              onTap: onTapBattery,
-            ),
+            _BatteryTile(ignored: batteryIgnored, onTap: onTapBattery),
           ],
         ],
       ),
@@ -274,10 +268,7 @@ class _OemInstructions extends StatelessWidget {
 }
 
 class _BatteryTile extends StatelessWidget {
-  const _BatteryTile({
-    required this.ignored,
-    required this.onTap,
-  });
+  const _BatteryTile({required this.ignored, required this.onTap});
 
   final bool ignored;
   final VoidCallback onTap;
@@ -302,9 +293,9 @@ class _BatteryTile extends StatelessWidget {
             Expanded(
               child: Text(
                 'Batería sin restricciones',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -328,19 +319,25 @@ class _BatteryTile extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Icon(Icons.battery_charging_full,
-                  color: V3Tokens.accent, size: 18),
+              const Icon(
+                Icons.battery_charging_full,
+                color: V3Tokens.accent,
+                size: 18,
+              ),
               const SizedBox(width: V3Tokens.spaceXs),
               Expanded(
                 child: Text(
                   'Toca para quitar la restricción de batería',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ),
-              Icon(Icons.chevron_right,
-                  color: scheme.onSurfaceVariant, size: 18),
+              Icon(
+                Icons.chevron_right,
+                color: scheme.onSurfaceVariant,
+                size: 18,
+              ),
             ],
           ),
         ),

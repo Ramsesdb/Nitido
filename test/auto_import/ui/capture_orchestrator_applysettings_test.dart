@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -21,8 +21,8 @@ class _FakeCaptureSource implements CaptureSource {
   _FakeCaptureSource({
     required CaptureChannel channel,
     bool hasPermission = true,
-  })  : _channel = channel,
-        _hasPermission = hasPermission;
+  }) : _channel = channel,
+       _hasPermission = hasPermission;
 
   @override
   CaptureChannel get channel => _channel;
@@ -90,8 +90,7 @@ void main() {
       expect(orchestrator.sources, isEmpty);
     });
 
-    test(
-        'autoImportEnabled=true + binanceApiEnabled=true + hasCredentials '
+    test('autoImportEnabled=true + binanceApiEnabled=true + hasCredentials '
         'registers 1 Binance source', () async {
       appStateSettings[SettingKey.autoImportEnabled] = '1';
       appStateSettings[SettingKey.smsImportEnabled] = '0';
@@ -107,10 +106,7 @@ void main() {
       // The sourceFactory simulates that Binance has credentials
       await orchestrator.applySettings(
         sourceFactory: (channel) async {
-          return _FakeCaptureSource(
-            channel: channel,
-            hasPermission: true,
-          );
+          return _FakeCaptureSource(channel: channel, hasPermission: true);
         },
       );
 
@@ -121,8 +117,7 @@ void main() {
       expect(orchestrator.sources.first.channel, CaptureChannel.api);
     });
 
-    test(
-        'autoImportEnabled=true + smsEnabled=true + no permission '
+    test('autoImportEnabled=true + smsEnabled=true + no permission '
         'results in 0 SMS sources', () async {
       appStateSettings[SettingKey.autoImportEnabled] = '1';
       appStateSettings[SettingKey.smsImportEnabled] = '1';
@@ -163,10 +158,8 @@ void main() {
       );
 
       await orchestrator.applySettings(
-        sourceFactory: (channel) async => _FakeCaptureSource(
-          channel: channel,
-          hasPermission: true,
-        ),
+        sourceFactory: (channel) async =>
+            _FakeCaptureSource(channel: channel, hasPermission: true),
       );
 
       expect(orchestrator.sources, isNotEmpty);
@@ -189,10 +182,8 @@ void main() {
       appStateSettings[SettingKey.binanceApiEnabled] = '1';
 
       await orchestrator.applySettings(
-        sourceFactory: (channel) async => _FakeCaptureSource(
-          channel: channel,
-          hasPermission: true,
-        ),
+        sourceFactory: (channel) async =>
+            _FakeCaptureSource(channel: channel, hasPermission: true),
       );
       expect(orchestrator.sources.length, 1);
 
@@ -200,10 +191,8 @@ void main() {
       appStateSettings[SettingKey.autoImportEnabled] = '0';
 
       await orchestrator.applySettings(
-        sourceFactory: (channel) async => _FakeCaptureSource(
-          channel: channel,
-          hasPermission: true,
-        ),
+        sourceFactory: (channel) async =>
+            _FakeCaptureSource(channel: channel, hasPermission: true),
       );
       expect(orchestrator.sources, isEmpty);
     });

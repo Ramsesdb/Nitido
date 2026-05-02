@@ -54,8 +54,8 @@ class FrankfurterRateProvider extends RateProvider {
   FrankfurterRateProvider({
     http.Client? httpClient,
     Duration timeout = const Duration(seconds: 10),
-  })  : _httpClient = httpClient ?? http.Client(),
-        _timeout = timeout;
+  }) : _httpClient = httpClient ?? http.Client(),
+       _timeout = timeout;
 
   @override
   String get name => 'Frankfurter';
@@ -145,9 +145,7 @@ class FrankfurterRateProvider extends RateProvider {
       return null;
     }
 
-    final uri = Uri.parse(
-      '$_baseUrl/latest?from=$upperFrom&to=$upperTo',
-    );
+    final uri = Uri.parse('$_baseUrl/latest?from=$upperFrom&to=$upperTo');
     try {
       final response = await _httpClient
           .get(uri, headers: const {'Accept': 'application/json'})

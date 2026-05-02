@@ -33,7 +33,7 @@ class AgentRunner {
   final NexusAiService _nexus;
 
   AgentRunner({NexusAiService? nexus})
-      : _nexus = nexus ?? NexusAiService.instance;
+    : _nexus = nexus ?? NexusAiService.instance;
 
   Future<AgentRunResult> run({
     required AgentProfile profile,
@@ -101,8 +101,8 @@ class AgentRunner {
             error: anyInvalidArgs
                 ? 'tool_arguments_invalid'
                 : (anyToolDispatchError
-                    ? 'tool_dispatch_failed'
-                    : 'empty_response'),
+                      ? 'tool_dispatch_failed'
+                      : 'empty_response'),
             messages: messages,
           );
         }
@@ -118,14 +118,16 @@ class AgentRunner {
         'role': 'assistant',
         'content': r.content ?? '',
         'tool_calls': r.toolCalls
-            .map((tc) => <String, dynamic>{
-                  'id': tc.id,
-                  'type': 'function',
-                  'function': <String, dynamic>{
-                    'name': tc.name,
-                    'arguments': tc.argumentsJson,
-                  },
-                })
+            .map(
+              (tc) => <String, dynamic>{
+                'id': tc.id,
+                'type': 'function',
+                'function': <String, dynamic>{
+                  'name': tc.name,
+                  'arguments': tc.argumentsJson,
+                },
+              },
+            )
             .toList(),
       });
 
@@ -141,11 +143,13 @@ class AgentRunner {
           } catch (_) {
             args = <String, dynamic>{};
           }
-          pending.add(PendingApproval(
-            toolCallId: call.id,
-            toolName: call.name,
-            arguments: args,
-          ));
+          pending.add(
+            PendingApproval(
+              toolCallId: call.id,
+              toolName: call.name,
+              arguments: args,
+            ),
+          );
         }
       }
 
@@ -173,7 +177,7 @@ class AgentRunner {
               'error': 'invalid_arguments_json',
               'message':
                   'Tool arguments could not be parsed (stream incomplete or '
-                      'malformed JSON).',
+                  'malformed JSON).',
             }),
           });
           continue;
@@ -251,9 +255,7 @@ class AgentRunner {
         status: AgentRunStatus.error,
         error: anyInvalidArgs
             ? 'tool_arguments_invalid'
-            : (anyToolDispatchError
-                ? 'tool_dispatch_failed'
-                : 'no_progress'),
+            : (anyToolDispatchError ? 'tool_dispatch_failed' : 'no_progress'),
         messages: messages,
       );
     }

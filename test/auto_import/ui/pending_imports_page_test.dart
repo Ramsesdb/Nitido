@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/transactions/auto_import/widgets/pending_import_tile.dart';
 import 'package:nitido/core/database/app_db.dart';
@@ -50,9 +50,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: PendingImportTile(pendingImport: item),
-          ),
+          home: Scaffold(body: PendingImportTile(pendingImport: item)),
         ),
       );
 
@@ -74,17 +72,16 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: PendingImportTile(pendingImport: item),
-          ),
+          home: Scaffold(body: PendingImportTile(pendingImport: item)),
         ),
       );
 
       expect(find.textContaining('Pagaste'), findsOneWidget);
     });
 
-    testWidgets('shows correct status chips for different statuses',
-        (tester) async {
+    testWidgets('shows correct status chips for different statuses', (
+      tester,
+    ) async {
       final items = [
         _makePendingImport(id: 'p1', status: 'pending'),
         _makePendingImport(id: 'p2', status: 'duplicate'),
@@ -112,8 +109,9 @@ void main() {
       expect(find.text('Confirmado'), findsOneWidget);
     });
 
-    testWidgets('shows "Sin contraparte" when counterparty is null',
-        (tester) async {
+    testWidgets('shows "Sin contraparte" when counterparty is null', (
+      tester,
+    ) async {
       final item = _makePendingImport(
         id: 'test-no-counterparty',
         counterpartyName: null,
@@ -122,9 +120,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: PendingImportTile(pendingImport: item),
-          ),
+          home: Scaffold(body: PendingImportTile(pendingImport: item)),
         ),
       );
 
@@ -142,9 +138,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: PendingImportTile(pendingImport: item),
-          ),
+          home: Scaffold(body: PendingImportTile(pendingImport: item)),
         ),
       );
 
@@ -162,9 +156,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: PendingImportTile(pendingImport: item),
-          ),
+          home: Scaffold(body: PendingImportTile(pendingImport: item)),
         ),
       );
 
@@ -180,9 +172,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: PendingImportTile(pendingImport: item),
-          ),
+          home: Scaffold(body: PendingImportTile(pendingImport: item)),
         ),
       );
 
@@ -199,9 +189,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: PendingImportTile(pendingImport: item),
-          ),
+          home: Scaffold(body: PendingImportTile(pendingImport: item)),
         ),
       );
 

@@ -52,7 +52,8 @@ class Slide02Currency extends StatefulWidget {
     CurrencyMode mode,
     String primaryCurrency,
     String? secondaryCurrency,
-  ) onChange;
+  )
+  onChange;
 
   final VoidCallback onNext;
   final VoidCallback? onSkip;
@@ -78,11 +79,7 @@ class _Slide02CurrencyState extends State<Slide02Currency> {
       context,
       CurrencySelectorModal(
         onCurrencySelected: (currency) {
-          widget.onChange(
-            CurrencyMode.single_other,
-            currency.code,
-            null,
-          );
+          widget.onChange(CurrencyMode.single_other, currency.code, null);
         },
       ),
     );
@@ -96,8 +93,8 @@ class _Slide02CurrencyState extends State<Slide02Currency> {
     final primary = (widget.mode == CurrencyMode.dual)
         ? widget.primaryCurrency
         : 'USD';
-    final secondary = (widget.mode == CurrencyMode.dual &&
-            widget.secondaryCurrency != null)
+    final secondary =
+        (widget.mode == CurrencyMode.dual && widget.secondaryCurrency != null)
         ? widget.secondaryCurrency!
         : 'VES';
     widget.onChange(CurrencyMode.dual, primary, secondary);
@@ -160,16 +157,16 @@ class _Slide02CurrencyState extends State<Slide02Currency> {
         children: [
           Text(
             '¿En qué moneda piensas?',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Tu moneda preferida. La usamos para mostrar totales y presupuestos.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
           V3CurrencyTile(
@@ -289,10 +286,7 @@ class _DualCurrencyRow extends StatelessWidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: pillBg,
                 borderRadius: BorderRadius.circular(V3Tokens.radiusPill),

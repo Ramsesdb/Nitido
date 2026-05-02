@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/settings/pages/ai/wizard/steps/s1_welcome.step.dart';
 import 'package:nitido/app/settings/pages/ai/wizard/steps/s2_choose_provider.step.dart';
 import 'package:nitido/app/settings/pages/ai/wizard/steps/s3_get_key.step.dart';
@@ -60,8 +60,7 @@ class _AiWizardPageState extends State<AiWizardPage> {
   }
 
   Future<void> _loadConfiguredProviders() async {
-    final list =
-        await AiCredentialsStore.instance.listConfiguredProviders();
+    final list = await AiCredentialsStore.instance.listConfiguredProviders();
     if (!mounted) return;
     setState(() {
       _configuredProviders
@@ -257,7 +256,8 @@ class _AiWizardPageState extends State<AiWizardPage> {
           // Re-key on credential change so the test re-runs when the user
           // edits + re-submits.
           key: ValueKey<int>(
-              creds.apiKey.hashCode ^ (creds.model?.hashCode ?? 0)),
+            creds.apiKey.hashCode ^ (creds.model?.hashCode ?? 0),
+          ),
           currentStep: 4,
           totalSteps: _totalSteps,
           credentials: creds,

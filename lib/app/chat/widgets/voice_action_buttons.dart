@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 import 'package:nitido/i18n/generated/translations.g.dart';
 
@@ -43,10 +43,7 @@ class VoiceActionButtons extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _CancelCircle(
-          onTap: isSending ? null : onCancel,
-          tokens: tokens,
-        ),
+        _CancelCircle(onTap: isSending ? null : onCancel, tokens: tokens),
         const SizedBox(width: 12),
         _SendPill(
           label: label,
@@ -74,7 +71,10 @@ class _CancelCircle extends StatelessWidget {
       child: Material(
         color: tokens.surfaceAlt.withValues(alpha: 0.5),
         shape: CircleBorder(
-          side: BorderSide(color: tokens.border.withValues(alpha: 0.4), width: 1),
+          side: BorderSide(
+            color: tokens.border.withValues(alpha: 0.4),
+            width: 1,
+          ),
         ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(

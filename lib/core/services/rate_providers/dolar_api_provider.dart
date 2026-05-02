@@ -49,10 +49,7 @@ class DolarApiProvider extends RateProvider {
 
     try {
       final response = await http
-          .get(
-            Uri.parse(endpoint),
-            headers: {'Accept': 'application/json'},
-          )
+          .get(Uri.parse(endpoint), headers: {'Accept': 'application/json'})
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode == 200) {

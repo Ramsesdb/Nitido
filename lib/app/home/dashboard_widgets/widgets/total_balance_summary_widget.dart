@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -96,8 +96,7 @@ class _TotalBalanceSummaryWidgetState extends State<TotalBalanceSummaryWidget> {
     if (oldWidget.rateSource != widget.rateSource ||
         oldWidget.dateRangeService.startDate !=
             widget.dateRangeService.startDate ||
-        oldWidget.dateRangeService.endDate !=
-            widget.dateRangeService.endDate ||
+        oldWidget.dateRangeService.endDate != widget.dateRangeService.endDate ||
         oldWidget.displayCurrency != widget.displayCurrency ||
         oldWidget.refreshTick != widget.refreshTick) {
       _balanceVariationStream = _getBalanceVariationStream();
@@ -107,8 +106,9 @@ class _TotalBalanceSummaryWidgetState extends State<TotalBalanceSummaryWidget> {
         _totalBalancePrimary = _getTotalBalanceStreamFor(_primaryCurrencyCode!);
       }
       if (_secondaryCurrencyCode != null) {
-        _totalBalanceSecondary =
-            _getTotalBalanceStreamFor(_secondaryCurrencyCode!);
+        _totalBalanceSecondary = _getTotalBalanceStreamFor(
+          _secondaryCurrencyCode!,
+        );
       }
     }
   }
@@ -353,11 +353,11 @@ class _TotalBalanceSummaryWidgetState extends State<TotalBalanceSummaryWidget> {
                             builder: (context) {
                               final double integerFontSize =
                                   snapshot.data! >= 100000000 &&
-                                          BreakPoint.of(
-                                            context,
-                                          ).isSmallerOrEqualTo(BreakpointID.xs)
-                                      ? 32
-                                      : 42;
+                                      BreakPoint.of(
+                                        context,
+                                      ).isSmallerOrEqualTo(BreakpointID.xs)
+                                  ? 32
+                                  : 42;
                               return CurrencyDisplayer(
                                 amountToConvert: snapshot.data!,
                                 integerStyle: TextStyle(
@@ -437,17 +437,15 @@ void registerTotalBalanceSummaryWidget() {
   DashboardWidgetRegistry.instance.register(
     DashboardWidgetSpec(
       type: WidgetType.totalBalanceSummary,
-      displayName: (ctx) =>
-          Translations.of(ctx).home.dashboard_widgets.total_balance_summary.name,
+      displayName: (ctx) => Translations.of(
+        ctx,
+      ).home.dashboard_widgets.total_balance_summary.name,
       description: (ctx) => Translations.of(
         ctx,
       ).home.dashboard_widgets.total_balance_summary.description,
       icon: Icons.account_balance_wallet_rounded,
       defaultSize: WidgetSize.fullWidth,
-      allowedSizes: const <WidgetSize>{
-        WidgetSize.medium,
-        WidgetSize.fullWidth,
-      },
+      allowedSizes: const <WidgetSize>{WidgetSize.medium, WidgetSize.fullWidth},
       defaultConfig: const <String, dynamic>{
         'displayCurrency': null,
         'rateSource': null,

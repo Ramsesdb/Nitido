@@ -26,7 +26,9 @@ class _SettingsQuickAccessState extends State<SettingsQuickAccess> {
     final initialPrivateMode = appStateSettings[SettingKey.privateMode] == '1';
     final autoImport = appStateSettings[SettingKey.autoImportEnabled] == '1';
 
-    final themeMode = getThemeFromString(appStateSettings[SettingKey.themeMode]);
+    final themeMode = getThemeFromString(
+      appStateSettings[SettingKey.themeMode],
+    );
     final IconData themeIcon;
     switch (themeMode) {
       case ThemeMode.light:
@@ -58,10 +60,7 @@ class _SettingsQuickAccessState extends State<SettingsQuickAccess> {
               return ListTile(
                 dense: true,
                 visualDensity: VisualDensity.compact,
-                leading: Icon(
-                  Icons.visibility_off_outlined,
-                  color: cs.primary,
-                ),
+                leading: Icon(Icons.visibility_off_outlined, color: cs.primary),
                 title: Text(t.settings.security.private_mode),
                 trailing: Switch.adaptive(
                   value: privateMode,
@@ -112,7 +111,9 @@ class _SettingsQuickAccessState extends State<SettingsQuickAccess> {
                 );
                 if (mounted) setState(() {});
                 if (v && mounted) {
-                  unawaited(RouteUtils.pushRoute(const AutoImportSettingsPage()));
+                  unawaited(
+                    RouteUtils.pushRoute(const AutoImportSettingsPage()),
+                  );
                 }
               },
             ),

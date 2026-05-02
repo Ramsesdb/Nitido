@@ -1,4 +1,4 @@
-﻿import 'dart:io' show Platform;
+import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
@@ -59,13 +59,10 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
   }
 
   void _loadSettings() {
-    _autoImportEnabled =
-        appStateSettings[SettingKey.autoImportEnabled] == '1';
+    _autoImportEnabled = appStateSettings[SettingKey.autoImportEnabled] == '1';
     _smsEnabled = appStateSettings[SettingKey.smsImportEnabled] == '1';
-    _notifEnabled =
-        appStateSettings[SettingKey.notifListenerEnabled] == '1';
-    _binanceApiEnabled =
-        appStateSettings[SettingKey.binanceApiEnabled] == '1';
+    _notifEnabled = appStateSettings[SettingKey.notifListenerEnabled] == '1';
+    _binanceApiEnabled = appStateSettings[SettingKey.binanceApiEnabled] == '1';
     _bdvSmsProfileEnabled =
         appStateSettings[SettingKey.bdvSmsProfileEnabled] != '0';
     _bdvNotifProfileEnabled =
@@ -94,15 +91,14 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
       } catch (_) {}
     }
     try {
-      _hasBinanceCreds =
-          await BinanceCredentialsStore.instance.hasCredentials();
+      _hasBinanceCreds = await BinanceCredentialsStore.instance
+          .hasCredentials();
     } catch (_) {}
     if (mounted) setState(() {});
   }
 
   Future<void> _saveSetting(SettingKey key, bool value) async {
-    await UserSettingService.instance
-        .setItem(key, value ? '1' : '0');
+    await UserSettingService.instance.setItem(key, value ? '1' : '0');
     if (mounted) {
       _loadSettings();
       setState(() {});
@@ -137,9 +133,7 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
     final t = Translations.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.settings.auto_import.menu_title),
-      ),
+      appBar: AppBar(title: Text(t.settings.auto_import.menu_title)),
       body: ListView(
         padding: const EdgeInsets.only(bottom: 32),
         children: [
@@ -148,9 +142,11 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Icon(Icons.auto_mode,
-                    size: 40,
-                    color: theme.colorScheme.primary),
+                Icon(
+                  Icons.auto_mode,
+                  size: 40,
+                  color: theme.colorScheme.primary,
+                ),
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
@@ -179,7 +175,9 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
                         'SMS y notificaciones push solo funcionan en Android. '
                         'Binance API funciona en todas las plataformas.',
                         style: TextStyle(
-                            color: Colors.blue.shade900, fontSize: 13),
+                          color: Colors.blue.shade900,
+                          fontSize: 13,
+                        ),
                       ),
                     ),
                   ],
@@ -189,13 +187,17 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
 
           // Master toggle
           SwitchListTile(
-            secondary: Icon(Icons.auto_mode,
-                color: _autoImportEnabled ? theme.colorScheme.primary : null),
-            title: const Text('Auto-import activo',
-                style: TextStyle(fontWeight: FontWeight.w600)),
-            subtitle: Text(_autoImportEnabled
-                ? 'Capturando movimientos'
-                : 'Desactivado'),
+            secondary: Icon(
+              Icons.auto_mode,
+              color: _autoImportEnabled ? theme.colorScheme.primary : null,
+            ),
+            title: const Text(
+              'Auto-import activo',
+              style: TextStyle(fontWeight: FontWeight.w600),
+            ),
+            subtitle: Text(
+              _autoImportEnabled ? 'Capturando movimientos' : 'Desactivado',
+            ),
             value: _autoImportEnabled,
             onChanged: (v) => _saveSetting(SettingKey.autoImportEnabled, v),
           ),
@@ -215,18 +217,19 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
             // SMS (Android only)
             if (isAndroid) ...[
               SwitchListTile(
-                secondary: Icon(Icons.sms_outlined,
-                    color: _smsStatusColor()),
+                secondary: Icon(Icons.sms_outlined, color: _smsStatusColor()),
                 title: const Text('SMS'),
                 subtitle: Text(_smsStatusText()),
                 value: _smsEnabled,
-                onChanged: (v) =>
-                    _saveSetting(SettingKey.smsImportEnabled, v),
+                onChanged: (v) => _saveSetting(SettingKey.smsImportEnabled, v),
               ),
               if (_smsEnabled && !_hasSmsPermission)
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 72, right: 16, bottom: 8),
+                  padding: const EdgeInsets.only(
+                    left: 72,
+                    right: 16,
+                    bottom: 8,
+                  ),
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.lock_open, size: 18),
                     label: const Text('Solicitar permiso SMS'),
@@ -238,8 +241,10 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
             // Notifications (Android only)
             if (isAndroid) ...[
               SwitchListTile(
-                secondary: Icon(Icons.notifications_outlined,
-                    color: _notifStatusColor()),
+                secondary: Icon(
+                  Icons.notifications_outlined,
+                  color: _notifStatusColor(),
+                ),
                 title: const Text('Notificaciones push'),
                 subtitle: Text(_notifStatusText()),
                 value: _notifEnabled,
@@ -248,12 +253,14 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
               ),
               if (_notifEnabled && !_hasNotifPermission)
                 Padding(
-                  padding:
-                      const EdgeInsets.only(left: 72, right: 16, bottom: 8),
+                  padding: const EdgeInsets.only(
+                    left: 72,
+                    right: 16,
+                    bottom: 8,
+                  ),
                   child: OutlinedButton.icon(
                     icon: const Icon(Icons.settings, size: 18),
-                    label: const Text(
-                        'Configurar acceso a notificaciones'),
+                    label: const Text('Configurar acceso a notificaciones'),
                     onPressed: _requestNotifPermission,
                   ),
                 ),
@@ -261,26 +268,24 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
 
             // Binance API (all platforms)
             SwitchListTile(
-              secondary:
-                  Icon(Icons.sync, color: _binanceStatusColor()),
+              secondary: Icon(Icons.sync, color: _binanceStatusColor()),
               title: const Text('Binance API'),
               subtitle: Text(_binanceStatusText()),
               value: _binanceApiEnabled,
-              onChanged: (v) =>
-                  _saveSetting(SettingKey.binanceApiEnabled, v),
+              onChanged: (v) => _saveSetting(SettingKey.binanceApiEnabled, v),
             ),
             if (_binanceApiEnabled)
               Padding(
-                padding:
-                    const EdgeInsets.only(left: 72, right: 16, bottom: 8),
+                padding: const EdgeInsets.only(left: 72, right: 16, bottom: 8),
                 child: OutlinedButton.icon(
                   icon: const Icon(Icons.key, size: 18),
-                  label: Text(_hasBinanceCreds
-                      ? 'Configurar credenciales'
-                      : 'Agregar credenciales'),
+                  label: Text(
+                    _hasBinanceCreds
+                        ? 'Configurar credenciales'
+                        : 'Agregar credenciales',
+                  ),
                   onPressed: () async {
-                    await RouteUtils.pushRoute(
-                        const BinanceApiConfigPage());
+                    await RouteUtils.pushRoute(const BinanceApiConfigPage());
                     await _checkPermissions();
                     // Re-apply settings after config change
                     try {
@@ -307,8 +312,7 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
               ),
               SwitchListTile(
                 title: const Text('BDV (Notificaciones)'),
-                subtitle:
-                    const Text('Banco de Venezuela via notificaciones'),
+                subtitle: const Text('Banco de Venezuela via notificaciones'),
                 value: _bdvNotifProfileEnabled,
                 onChanged: (v) =>
                     _saveSetting(SettingKey.bdvNotifProfileEnabled, v),
@@ -326,10 +330,13 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
               subtitle: const Text('Proximamente'),
               enabled: false,
               trailing: Chip(
-                label: Text('Pronto',
-                    style: TextStyle(
-                        fontSize: 11,
-                        color: theme.colorScheme.onSurfaceVariant)),
+                label: Text(
+                  'Pronto',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
                 visualDensity: VisualDensity.compact,
               ),
             ),
@@ -339,8 +346,7 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
             // Pending imports link
             _sectionLabel(context, 'Bandeja de movimientos'),
             StreamBuilder<int>(
-              stream:
-                  PendingImportService.instance.watchPendingCount(),
+              stream: PendingImportService.instance.watchPendingCount(),
               builder: (context, snapshot) {
                 final count = snapshot.data ?? 0;
                 return ListTile(
@@ -348,8 +354,7 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
                   title: const Text('Ver bandeja de movimientos'),
                   subtitle: Text('$count pendiente(s)'),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => RouteUtils.pushRoute(
-                      const PendingImportsPage()),
+                  onTap: () => RouteUtils.pushRoute(const PendingImportsPage()),
                 );
               },
             ),
@@ -372,15 +377,16 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                'Sincronizacion completada ($count fuentes)'),
+                              'Sincronizacion completada ($count fuentes)',
+                            ),
                           ),
                         );
                       }
                     } catch (e) {
                       if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Error: $e')),
-                        );
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text('Error: $e')));
                       }
                     }
                   },
@@ -389,10 +395,11 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
                   title: const Text('Ver historial de capturas'),
                   leading: const Icon(Icons.history),
                   subtitle: const Text(
-                      'Diagnostico detallado de cada notificacion/SMS'),
+                    'Diagnostico detallado de cada notificacion/SMS',
+                  ),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => RouteUtils.pushRoute(
-                      const CaptureDiagnosticsPage()),
+                  onTap: () =>
+                      RouteUtils.pushRoute(const CaptureDiagnosticsPage()),
                 ),
               ],
             ),
@@ -403,11 +410,14 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
             // whitelist and OEM-specific battery tweaks.
             if (isAndroid)
               ListTile(
-                leading: Icon(Icons.shield_outlined,
-                    color: theme.colorScheme.primary),
+                leading: Icon(
+                  Icons.shield_outlined,
+                  color: theme.colorScheme.primary,
+                ),
                 title: const Text('Permisos del listener'),
                 subtitle: const Text(
-                    'Autoarranque, batería y accesos para Xiaomi/MIUI'),
+                  'Autoarranque, batería y accesos para Xiaomi/MIUI',
+                ),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () =>
                     RouteUtils.pushRoute(const CapturePermissionsPage()),
@@ -424,9 +434,9 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
       child: Text(
         label,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.w600,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -480,11 +490,9 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: const Text(
-                'Permiso de SMS denegado. Abre configuracion del sistema.'),
-            action: SnackBarAction(
-              label: 'Abrir',
-              onPressed: openAppSettings,
+              'Permiso de SMS denegado. Abre configuracion del sistema.',
             ),
+            action: SnackBarAction(label: 'Abrir', onPressed: openAppSettings),
           ),
         );
       }
@@ -506,11 +514,9 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text(
-              'Habilita el acceso a notificaciones en configuracion del sistema.'),
-          action: SnackBarAction(
-            label: 'Abrir',
-            onPressed: openAppSettings,
+            'Habilita el acceso a notificaciones en configuracion del sistema.',
           ),
+          action: SnackBarAction(label: 'Abrir', onPressed: openAppSettings),
         ),
       );
     }
@@ -523,9 +529,7 @@ class _AutoImportSettingsPageState extends State<AutoImportSettingsPage> {
 class _CaptureHealthBanner extends StatelessWidget {
   final Future<void> Function() onRequestPermission;
 
-  const _CaptureHealthBanner({
-    required this.onRequestPermission,
-  });
+  const _CaptureHealthBanner({required this.onRequestPermission});
 
   @override
   Widget build(BuildContext context) {
@@ -572,24 +576,19 @@ class _CaptureHealthBanner extends StatelessWidget {
                             const SizedBox(height: 2),
                             Text(
                               subtitle,
-                              style: TextStyle(
-                                color: fg,
-                                fontSize: 12.5,
-                              ),
+                              style: TextStyle(color: fg, fontSize: 12.5),
                             ),
                           ],
                           const SizedBox(height: 2),
                           ValueListenableBuilder<DateTime?>(
                             valueListenable: CaptureHealthMonitor
-                                .instance.lastResubscribeAtNotifier,
+                                .instance
+                                .lastResubscribeAtNotifier,
                             builder: (context, ts, _) {
                               return Text(
                                 'Última reconexión automática: '
                                 '${ts == null ? 'nunca' : _relative(ts)}',
-                                style: TextStyle(
-                                  color: fg,
-                                  fontSize: 12.5,
-                                ),
+                                style: TextStyle(color: fg, fontSize: 12.5),
                               );
                             },
                           ),
@@ -606,10 +605,7 @@ class _CaptureHealthBanner extends StatelessWidget {
     );
   }
 
-  Future<void> _onTap(
-    BuildContext context,
-    CaptureHealthStatus status,
-  ) async {
+  Future<void> _onTap(BuildContext context, CaptureHealthStatus status) async {
     switch (status) {
       case CaptureHealthStatus.permissionMissing:
         // Tanda 3: route to the guided permissions checklist instead of

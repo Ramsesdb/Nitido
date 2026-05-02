@@ -136,18 +136,18 @@ class _ProcessingPageState extends State<ProcessingPage>
           icon: const Icon(Icons.arrow_back),
           onPressed: _cancel,
         ),
-        title: Text(_done ? t.statement_import.success.done : t.statement_import.processing.title),
+        title: Text(
+          _done
+              ? t.statement_import.success.done
+              : t.statement_import.processing.title,
+        ),
       ),
       body: Column(
         children: [
           SiHeader(account: account),
           Expanded(
             child: _error != null
-                ? _ErrorBody(
-                    error: _error!,
-                    onRetry: _retry,
-                    onBack: _cancel,
-                  )
+                ? _ErrorBody(error: _error!, onRetry: _retry, onBack: _cancel)
                 : _ProcessingBody(
                     scanCtrl: _scanCtrl,
                     foundCount: _foundCount,
@@ -208,7 +208,9 @@ class _ProcessingBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      done ? t.statement_import.success.done : t.statement_import.processing.title,
+                      done
+                          ? t.statement_import.success.done
+                          : t.statement_import.processing.title,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
@@ -388,18 +390,14 @@ class _ErrorBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: cs.error,
-          ),
+          Icon(Icons.error_outline, size: 64, color: cs.error),
           const SizedBox(height: 16),
           Text(
             t.statement_import.processing.error_generic,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w700,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 6),
           Text(
@@ -407,9 +405,9 @@ class _ErrorBody extends StatelessWidget {
                 ? t.statement_import.processing.error_timeout
                 : t.statement_import.processing.error_generic,
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: cs.onSurfaceVariant,
-            ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
           ),
           const SizedBox(height: 24),
           FilledButton.icon(

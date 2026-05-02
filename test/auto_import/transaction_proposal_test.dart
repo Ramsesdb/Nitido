@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/models/auto_import/capture_channel.dart';
 import 'package:nitido/core/models/auto_import/transaction_proposal.dart';
 import 'package:nitido/core/models/auto_import/transaction_proposal_status.dart';
@@ -83,8 +83,10 @@ void main() {
       expect(companion.type.value, 'E');
       expect(companion.counterpartyName.value, '0416-1234567');
       expect(companion.bankRef.value, '987654321098');
-      expect(companion.rawText.value,
-          'Realizaste un PagomovilBDV por Bs. 23.500,00');
+      expect(
+        companion.rawText.value,
+        'Realizaste un PagomovilBDV por Bs. 23.500,00',
+      );
       expect(companion.channel.value, 'sms');
       expect(companion.sender.value, '2662');
       expect(companion.confidence.value, 0.95);

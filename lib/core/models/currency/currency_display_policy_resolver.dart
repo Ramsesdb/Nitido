@@ -33,9 +33,7 @@ class CurrencyDisplayPolicyResolver {
   /// uses [instance].
   static CurrencyDisplayPolicyResolver forTesting({
     required UserSettingService userSettingService,
-  }) => CurrencyDisplayPolicyResolver._(
-    userSettingService: userSettingService,
-  );
+  }) => CurrencyDisplayPolicyResolver._(userSettingService: userSettingService);
 
   final UserSettingService _userSettingService;
 

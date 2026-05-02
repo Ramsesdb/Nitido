@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/widget_descriptor.dart';
 import 'package:nitido/app/home/dashboard_widgets/registry.dart';
@@ -24,7 +24,8 @@ DashboardWidgetSpec _stubSpec(
     displayName: (_) => type.name,
     icon: Icons.widgets_outlined,
     defaultSize: defaultSize,
-    allowedSizes: allowedSizes ??
+    allowedSizes:
+        allowedSizes ??
         const <WidgetSize>{WidgetSize.medium, WidgetSize.fullWidth},
     recommendedFor: recommendedFor ?? const <String>{},
     unique: unique,
@@ -73,10 +74,7 @@ void main() {
       final registry = DashboardWidgetRegistry.instance;
       expect(
         () => registry.register(
-          _stubSpec(
-            WidgetType.quickUse,
-            allowedSizes: const <WidgetSize>{},
-          ),
+          _stubSpec(WidgetType.quickUse, allowedSizes: const <WidgetSize>{}),
         ),
         throwsStateError,
       );
@@ -143,8 +141,10 @@ void main() {
         ),
       );
 
-      final result =
-          registry.recommendedFor(<String>{'save_usd'}).map((s) => s.type).toList();
+      final result = registry
+          .recommendedFor(<String>{'save_usd'})
+          .map((s) => s.type)
+          .toList();
 
       // recommendedFor for save_usd: exchangeRateCard, recentTransactions
       // (in registration order). The remaining specs trail in registration
@@ -170,8 +170,10 @@ void main() {
       );
       registry.register(_stubSpec(WidgetType.totalBalanceSummary));
 
-      final result =
-          registry.recommendedFor(<String>{}).map((s) => s.type).toList();
+      final result = registry
+          .recommendedFor(<String>{})
+          .map((s) => s.type)
+          .toList();
       expect(
         result,
         equals(<WidgetType>[
@@ -187,7 +189,8 @@ void main() {
       registry.register(_stubSpec(WidgetType.quickUse));
 
       final result = registry
-          .recommendedFor(<String>{'goal_no_spec_cares_about'}).map((s) => s.type)
+          .recommendedFor(<String>{'goal_no_spec_cares_about'})
+          .map((s) => s.type)
           .toList();
       expect(
         result,

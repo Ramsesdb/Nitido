@@ -104,10 +104,7 @@ class V3PrimaryButton extends StatelessWidget {
               border: border,
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 26,
-                vertical: 15,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,

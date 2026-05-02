@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/core/models/currency/currency.dart';
 
 /// Card brandeado que se renderiza off-screen y se captura como PNG para
@@ -75,10 +75,7 @@ class ShareCard extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              colors.primaryContainer,
-              colors.surfaceContainerHighest,
-            ],
+            colors: [colors.primaryContainer, colors.surfaceContainerHighest],
           ),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: colors.outlineVariant, width: 1),

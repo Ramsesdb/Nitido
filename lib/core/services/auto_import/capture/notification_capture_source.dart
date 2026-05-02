@@ -26,9 +26,7 @@ class NotificationCaptureSource implements CaptureSource {
 
   StreamSubscription<ServiceNotificationEvent>? _subscription;
 
-  NotificationCaptureSource({
-    required this.allowlistPackages,
-  });
+  NotificationCaptureSource({required this.allowlistPackages});
 
   @override
   CaptureChannel get channel => CaptureChannel.notification;
@@ -158,15 +156,17 @@ class NotificationCaptureSource implements CaptureSource {
       final nativeId = event.id?.toString();
       final wasRemoved = event.hasRemoved == true;
 
-      _controller.add(RawCaptureEvent(
-        rawText: rawText,
-        sender: packageName,
-        receivedAt: DateTime.now(),
-        channel: CaptureChannel.notification,
-        nativeNotifId: nativeId,
-        nativeNotifPostTime: nowMs,
-        hasRemoved: wasRemoved,
-      ));
+      _controller.add(
+        RawCaptureEvent(
+          rawText: rawText,
+          sender: packageName,
+          receivedAt: DateTime.now(),
+          channel: CaptureChannel.notification,
+          nativeNotifId: nativeId,
+          nativeNotifPostTime: nowMs,
+          hasRemoved: wasRemoved,
+        ),
+      );
     } catch (e) {
       debugPrint(
         'NotificationCaptureSource: Error processing notification event: $e',

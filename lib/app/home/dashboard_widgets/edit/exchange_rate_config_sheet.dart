@@ -73,14 +73,11 @@ class _ExchangeRateConfigSheetState extends State<ExchangeRateConfigSheet> {
       (w) => w.instanceId == widget.descriptor.instanceId,
       orElse: () => widget.descriptor,
     );
-    service.updateConfig(
-      widget.descriptor.instanceId,
-      <String, dynamic>{
-        ...live.config,
-        'currencies': List<String>.unmodifiable(_shown),
-        'pivotCurrency': _pivot,
-      },
-    );
+    service.updateConfig(widget.descriptor.instanceId, <String, dynamic>{
+      ...live.config,
+      'currencies': List<String>.unmodifiable(_shown),
+      'pivotCurrency': _pivot,
+    });
   }
 
   void _addCurrency(String code) {
@@ -146,10 +143,7 @@ class _ExchangeRateConfigSheetState extends State<ExchangeRateConfigSheet> {
               maxHeight: MediaQuery.of(context).size.height * 0.6,
             ),
             child: ListView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               shrinkWrap: true,
               children: [
                 _buildShownSection(context),
@@ -171,7 +165,9 @@ class _ExchangeRateConfigSheetState extends State<ExchangeRateConfigSheet> {
   Widget _buildPivotSection(BuildContext context) {
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final t = Translations.of(context).home.dashboard_widgets.exchange_rate_card;
+    final t = Translations.of(
+      context,
+    ).home.dashboard_widgets.exchange_rate_card;
 
     // El catálogo del dropdown = "Automático" + cada divisa mostrada
     // (filtramos duplicados y conservamos el orden de _shown). Si el pivot
@@ -183,15 +179,9 @@ class _ExchangeRateConfigSheetState extends State<ExchangeRateConfigSheet> {
     if (current != null) codes.add(current);
 
     final items = <DropdownMenuItem<String?>>[
-      DropdownMenuItem<String?>(
-        value: null,
-        child: Text(t.pivot_auto),
-      ),
+      DropdownMenuItem<String?>(value: null, child: Text(t.pivot_auto)),
       for (final code in codes)
-        DropdownMenuItem<String?>(
-          value: code,
-          child: Text(code),
-        ),
+        DropdownMenuItem<String?>(value: code, child: Text(code)),
     ];
 
     return Column(
@@ -210,10 +200,7 @@ class _ExchangeRateConfigSheetState extends State<ExchangeRateConfigSheet> {
           isDense: true,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
-            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           ),
           items: items,
           onChanged: _setPivot,
@@ -302,10 +289,9 @@ class _ExchangeRateConfigSheetState extends State<ExchangeRateConfigSheet> {
             // menos las que ya están mostradas. ADR-4 / REQ-5: filtramos
             // por filas reales para garantizar que toda divisa agregable
             // produzca una fila visible en el widget.
-            final available = snap.data!
-                .map((r) => r.currencyCode.toUpperCase())
-                .toSet()
-              ..removeAll(_shown);
+            final available =
+                snap.data!.map((r) => r.currencyCode.toUpperCase()).toSet()
+                  ..removeAll(_shown);
 
             if (available.isEmpty) {
               return Text(

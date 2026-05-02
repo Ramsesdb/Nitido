@@ -31,18 +31,16 @@ class RowTile extends StatelessWidget {
     final IconData kindIcon = isIncome
         ? Icons.arrow_downward_rounded
         : isFee
-            ? Icons.paid_outlined
-            : Icons.arrow_upward_rounded;
+        ? Icons.paid_outlined
+        : Icons.arrow_upward_rounded;
 
     final Color kindColor = isIncome
         ? Colors.green.shade400
         : isFee
-            ? cs.onSurfaceVariant
-            : cs.onSurface;
+        ? cs.onSurfaceVariant
+        : cs.onSurface;
 
-    final amountColor = isIncome
-        ? Colors.green.shade400
-        : cs.error;
+    final amountColor = isIncome ? Colors.green.shade400 : cs.error;
 
     final signedAmount = isIncome ? row.amount : -row.amount;
     final sign = isIncome ? '+' : '-';
@@ -80,7 +78,9 @@ class RowTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    row.description.isEmpty ? '(sin descripción)' : row.description,
+                    row.description.isEmpty
+                        ? '(sin descripción)'
+                        : row.description,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: tt.bodyMedium?.copyWith(
@@ -179,11 +179,7 @@ class _TagsRow extends StatelessWidget {
 }
 
 class _MiniTag extends StatelessWidget {
-  const _MiniTag({
-    required this.label,
-    required this.fg,
-    required this.bg,
-  });
+  const _MiniTag({required this.label, required this.fg, required this.bg});
 
   final String label;
   final Color fg;

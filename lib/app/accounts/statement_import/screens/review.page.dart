@@ -130,7 +130,8 @@ class _ReviewPageState extends State<ReviewPage> {
     final total = results.length;
 
     final trackedSince = account.trackedSince;
-    final showWarning = _activeModes.contains('informative') &&
+    final showWarning =
+        _activeModes.contains('informative') &&
         trackedSince != null &&
         _selectedVisibleResults.any((r) => !r.row.date.isBefore(trackedSince));
 
@@ -159,8 +160,7 @@ class _ReviewPageState extends State<ReviewPage> {
       ),
       body: results.isEmpty
           ? _EmptyState(
-              onBack: () =>
-                  StatementImportFlow.of(context).backToCapture(),
+              onBack: () => StatementImportFlow.of(context).backToCapture(),
             )
           : Column(
               children: [
@@ -211,8 +211,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       const SizedBox(height: 8),
                       ...results.map((r) {
                         final visible = _rowPassesActiveModes(r);
-                        final selected =
-                            !_deselectedRowIds.contains(r.row.id);
+                        final selected = !_deselectedRowIds.contains(r.row.id);
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 8),
                           child: AnimatedOpacity(
@@ -243,7 +242,9 @@ class _ReviewPageState extends State<ReviewPage> {
                         minimumSize: const Size.fromHeight(52),
                       ),
                       child: Text(
-                        t.statement_import.review.continue_cta(n: filteredCount),
+                        t.statement_import.review.continue_cta(
+                          n: filteredCount,
+                        ),
                       ),
                     ),
                   ),
@@ -274,17 +275,17 @@ class _EmptyState extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               t.statement_import.review.empty,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
             Text(
               'Prueba con una imagen más nítida o un estado de cuenta distinto.',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: cs.onSurfaceVariant,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),

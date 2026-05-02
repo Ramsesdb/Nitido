@@ -120,18 +120,18 @@ class _S5TestingStepState extends State<S5TestingStep> {
           Text(
             _titleForState(),
             textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             _bodyForState(),
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                  height: 1.45,
-                ),
+              color: scheme.onSurfaceVariant,
+              height: 1.45,
+            ),
           ),
           if (_state == _TestState.failure && _errorMessage != null) ...[
             const SizedBox(height: V3Tokens.space24),
@@ -149,11 +149,7 @@ class _S5TestingStepState extends State<S5TestingStep> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 18,
-                  ),
+                  const Icon(Icons.error_outline, color: Colors.red, size: 18),
                   const SizedBox(width: V3Tokens.spaceMd),
                   Expanded(
                     child: Text(
@@ -239,11 +235,7 @@ class _StatusIcon extends StatelessWidget {
             border: Border.all(color: Colors.red, width: 2),
           ),
           alignment: Alignment.center,
-          child: const Icon(
-            Icons.close_rounded,
-            size: 36,
-            color: Colors.red,
-          ),
+          child: const Icon(Icons.close_rounded, size: 36, color: Colors.red),
         );
     }
   }

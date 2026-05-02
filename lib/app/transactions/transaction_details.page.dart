@@ -1,4 +1,4 @@
-﻿import 'dart:math';
+import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -429,16 +429,20 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 if (transaction.isIncomeOrExpense)
                                   LabelValueInfoItem(
                                     value: buildInfoTileWithIconAndColor(
-                                      icon: transaction.category?.icon ??
+                                      icon:
+                                          transaction.category?.icon ??
                                           SupportedIconService
-                                              .instance.defaultSupportedIcon,
-                                      color: ColorHex.get(
-                                        transaction.category?.color ?? '737373',
-                                      ).lighten(
-                                        isAppInDarkBrightness(context)
-                                            ? 0.5
-                                            : 0,
-                                      ),
+                                              .instance
+                                              .defaultSupportedIcon,
+                                      color:
+                                          ColorHex.get(
+                                            transaction.category?.color ??
+                                                '737373',
+                                          ).lighten(
+                                            isAppInDarkBrightness(context)
+                                                ? 0.5
+                                                : 0,
+                                          ),
                                       data: transaction.category?.name ?? '',
                                     ),
                                     label: t.general.category,

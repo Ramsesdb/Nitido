@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -58,12 +58,11 @@ void main() {
         recommendedFor: <String>{'track_expenses'},
       ),
     );
-    registry.register(
-      _stubSpec(WidgetType.quickUse, 'Atajos'),
-    );
+    registry.register(_stubSpec(WidgetType.quickUse, 'Atajos'));
 
-    appStateSettings[SettingKey.onboardingGoals] =
-        jsonEncode(<String>['save_usd']);
+    appStateSettings[SettingKey.onboardingGoals] = jsonEncode(<String>[
+      'save_usd',
+    ]);
 
     await tester.pumpWidget(
       const MaterialApp(home: Scaffold(body: AddWidgetSheet())),
@@ -82,16 +81,19 @@ void main() {
     expect(recommendedBadge, findsOneWidget);
 
     // The badge is in the same tile as "Tasas".
-    final tasasTile =
-        find.ancestor(of: find.text('Tasas'), matching: find.byType(Material));
+    final tasasTile = find.ancestor(
+      of: find.text('Tasas'),
+      matching: find.byType(Material),
+    );
     expect(
       find.descendant(of: tasasTile, matching: find.text('Recomendado')),
       findsOneWidget,
     );
   });
 
-  testWidgets('with no goals set, no recommended badge appears',
-      (tester) async {
+  testWidgets('with no goals set, no recommended badge appears', (
+    tester,
+  ) async {
     final registry = DashboardWidgetRegistry.instance;
     registry.register(
       _stubSpec(
@@ -109,16 +111,16 @@ void main() {
     expect(find.text('Recomendado'), findsNothing);
   });
 
-  testWidgets('tap on a tile adds a new descriptor to the live service',
-      (tester) async {
+  testWidgets('tap on a tile adds a new descriptor to the live service', (
+    tester,
+  ) async {
     final registry = DashboardWidgetRegistry.instance;
     registry.register(_stubSpec(WidgetType.quickUse, 'Atajos'));
 
     // Reset the service singleton's value by overwriting via a reorder no-op.
     // The singleton is shared across the test session, so we record the
     // baseline length and assert the delta.
-    final baseline =
-        DashboardLayoutService.instance.current.widgets.length;
+    final baseline = DashboardLayoutService.instance.current.widgets.length;
 
     await tester.pumpWidget(
       MaterialApp(

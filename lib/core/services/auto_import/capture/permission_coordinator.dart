@@ -49,14 +49,14 @@ class CapturePermissionsState {
   });
 
   factory CapturePermissionsState.initial() => const CapturePermissionsState(
-        notificationListener: false,
-        postNotifications: false,
-        batteryOptimizationsIgnored: false,
-        autostartUserConfirmed: null,
-        oemBatteryUserConfirmed: null,
-        quirk: OemQuirk.none,
-        restrictedSettingsAllowed: true,
-      );
+    notificationListener: false,
+    postNotifications: false,
+    batteryOptimizationsIgnored: false,
+    autostartUserConfirmed: null,
+    oemBatteryUserConfirmed: null,
+    quirk: OemQuirk.none,
+    restrictedSettingsAllowed: true,
+  );
 
   /// The three permissions that must be granted for the capture pipeline to
   /// be considered wired up. Autostart / OEM battery extras degrade
@@ -111,14 +111,14 @@ class CapturePermissionsState {
 
   @override
   int get hashCode => Object.hash(
-        notificationListener,
-        postNotifications,
-        batteryOptimizationsIgnored,
-        autostartUserConfirmed,
-        oemBatteryUserConfirmed,
-        quirk,
-        restrictedSettingsAllowed,
-      );
+    notificationListener,
+    postNotifications,
+    batteryOptimizationsIgnored,
+    autostartUserConfirmed,
+    oemBatteryUserConfirmed,
+    quirk,
+    restrictedSettingsAllowed,
+  );
 }
 
 /// Singleton that evaluates every permission the capture pipeline depends on
@@ -135,8 +135,7 @@ class PermissionCoordinator {
       'capture_perms_oem_battery_confirmed';
 
   final ValueNotifier<CapturePermissionsState> _stateNotifier =
-      ValueNotifier<CapturePermissionsState>(
-          CapturePermissionsState.initial());
+      ValueNotifier<CapturePermissionsState>(CapturePermissionsState.initial());
 
   ValueListenable<CapturePermissionsState> get stateNotifier => _stateNotifier;
   CapturePermissionsState get state => _stateNotifier.value;
@@ -166,20 +165,24 @@ class PermissionCoordinator {
       final prefs = await SharedPreferences.getInstance();
       final quirk = await DeviceQuirksService.instance.detect();
 
-      final notifListener =
-          await _safe(() => NotificationListenerService.isPermissionGranted(),
-              fallback: false);
-      final postNotif =
-          await _safe(() async => (await Permission.notification.status).isGranted,
-              fallback: false);
+      final notifListener = await _safe(
+        () => NotificationListenerService.isPermissionGranted(),
+        fallback: false,
+      );
+      final postNotif = await _safe(
+        () async => (await Permission.notification.status).isGranted,
+        fallback: false,
+      );
       final batteryOk = await _safe(
-          () => DeviceQuirksService.instance.isIgnoringBatteryOptimizations(),
-          fallback: false);
+        () => DeviceQuirksService.instance.isIgnoringBatteryOptimizations(),
+        fallback: false,
+      );
 
       bool? autostart;
       bool? oemBattery;
-      final quirkInstructions =
-          DeviceQuirksService.instance.instructionsFor(quirk);
+      final quirkInstructions = DeviceQuirksService.instance.instructionsFor(
+        quirk,
+      );
       for (final ins in quirkInstructions) {
         if (ins.id == 'miui_autostart' ||
             ins.id == 'huawei_protected' ||
@@ -257,9 +260,7 @@ class PermissionCoordinator {
       await check();
       return status.isGranted;
     } catch (e) {
-      debugPrint(
-        'PermissionCoordinator: requestPostNotifications error: $e',
-      );
+      debugPrint('PermissionCoordinator: requestPostNotifications error: $e');
       return false;
     }
   }

@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/models/chat_card_payload.dart';
@@ -67,19 +67,21 @@ class ChatCardDispatcher {
       final sortedEntries = byCurrency.entries.toList()
         ..sort((a, b) => b.value.abs().compareTo(a.value.abs()));
       for (final e in sortedEntries) {
-        rows.add(BalanceBreakdownRow(
-          currencyCode: e.key,
-          amount: e.value,
-          percent: total == 0 ? 0.0 : e.value.abs() / total.abs(),
-        ));
+        rows.add(
+          BalanceBreakdownRow(
+            currencyCode: e.key,
+            amount: e.value,
+            percent: total == 0 ? 0.0 : e.value.abs() / total.abs(),
+          ),
+        );
       }
     }
 
     final preferred = byCurrency.isNotEmpty
         ? (byCurrency.entries.toList()
-              ..sort((a, b) => b.value.abs().compareTo(a.value.abs())))
-            .first
-            .key
+                ..sort((a, b) => b.value.abs().compareTo(a.value.abs())))
+              .first
+              .key
         : 'USD';
 
     return BalancePayload(
@@ -114,12 +116,14 @@ class ChatCardDispatcher {
           // Category lookup is best-effort; fallback color is acceptable.
         }
       }
-      rows.add(ExpenseCategoryRow(
-        label: name,
-        dotColor: dotColor,
-        amount: amount,
-        percent: total == 0 ? 0.0 : amount / total,
-      ));
+      rows.add(
+        ExpenseCategoryRow(
+          label: name,
+          dotColor: dotColor,
+          amount: amount,
+          percent: total == 0 ? 0.0 : amount / total,
+        ),
+      );
     }
 
     if (rows.isEmpty) return null;
@@ -152,18 +156,22 @@ class ChatCardDispatcher {
       final bal = await AccountService.instance
           .getAccountMoney(account: a, convertToPreferredCurrency: false)
           .first;
-      final initial = a.name.isEmpty ? '?' : a.name.characters.first.toUpperCase();
+      final initial = a.name.isEmpty
+          ? '?'
+          : a.name.characters.first.toUpperCase();
       final color = a.color != null
           ? ColorHex.get(a.color!)
           : NitidoAiTokens.hexBank;
-      items.add(AccountPickItem(
-        id: a.id,
-        name: a.name,
-        initial: initial,
-        tileColor: color,
-        balance: bal,
-        currencyCode: a.currency.code,
-      ));
+      items.add(
+        AccountPickItem(
+          id: a.id,
+          name: a.name,
+          initial: initial,
+          tileColor: color,
+          balance: bal,
+          currencyCode: a.currency.code,
+        ),
+      );
     }
     return AccountPickPayload(accounts: items, prompt: prompt);
   }

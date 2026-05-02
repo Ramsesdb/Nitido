@@ -83,10 +83,7 @@ class AddWidgetSheet extends StatelessWidget {
           Flexible(
             child: ListView.separated(
               shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               itemCount: specs.length,
               separatorBuilder: (_, _) => const SizedBox(height: 4),
               itemBuilder: (context, index) {
@@ -183,10 +180,7 @@ class _AddWidgetTile extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Icon(
-                Icons.add_rounded,
-                color: cs.primary,
-              ),
+              Icon(Icons.add_rounded, color: cs.primary),
             ],
           ),
         ),

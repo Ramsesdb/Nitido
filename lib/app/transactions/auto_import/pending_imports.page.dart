@@ -71,9 +71,7 @@ class _PendingImportsPageState extends State<PendingImportsPage>
             icon: const Icon(Icons.settings_outlined),
             tooltip: 'Configuracion auto-import',
             onPressed: () {
-              RouteUtils.pushRoute(
-                const AutoImportSettingsPage(),
-              );
+              RouteUtils.pushRoute(const AutoImportSettingsPage());
             },
           ),
         ],
@@ -89,9 +87,7 @@ class _PendingImportsPageState extends State<PendingImportsPage>
         controller: _tabController,
         children: [
           _PendingList(
-            statusFilter: const [
-              TransactionProposalStatus.pending,
-            ],
+            statusFilter: const [TransactionProposalStatus.pending],
             emptyMessage:
                 'No hay movimientos por revisar.\nLas capturas apareceran aqui.',
             onRefresh: _onRefresh,
@@ -135,9 +131,10 @@ class _PendingList extends StatelessWidget {
 
         final allItems = snapshot.data ?? [];
         final items = allItems
-            .where((item) => statusFilter
-                .map((s) => s.dbValue)
-                .contains(item.status))
+            .where(
+              (item) =>
+                  statusFilter.map((s) => s.dbValue).contains(item.status),
+            )
             .toList();
 
         if (items.isEmpty) {
@@ -149,21 +146,19 @@ class _PendingList extends StatelessWidget {
                 Icon(
                   Icons.inbox_outlined,
                   size: 64,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.3),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   emptyMessage,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.5),
-                      ),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.onSurface.withValues(alpha: 0.5),
+                  ),
                 ),
               ],
             ),
@@ -185,10 +180,9 @@ class _PendingList extends StatelessWidget {
     );
   }
 
-  Widget _buildDismissibleTile(
-      BuildContext context, PendingImportInDB item) {
-    final isPending = item.status ==
-            TransactionProposalStatus.pending.dbValue ||
+  Widget _buildDismissibleTile(BuildContext context, PendingImportInDB item) {
+    final isPending =
+        item.status == TransactionProposalStatus.pending.dbValue ||
         item.status == TransactionProposalStatus.duplicate.dbValue;
 
     if (!isPending) {
@@ -254,4 +248,3 @@ class _PendingList extends StatelessWidget {
     RouteUtils.pushRoute(ProposalReviewPage(pendingImport: item));
   }
 }
-

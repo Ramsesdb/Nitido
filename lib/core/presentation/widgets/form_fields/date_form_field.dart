@@ -40,9 +40,7 @@ class DateTimeFormField extends FormField<DateTime> {
                decoration ?? const InputDecoration();
 
            final InputDecoration effectiveDecoration =
-               decorationWithThemeDefaults.copyWith(
-                 errorText: field.errorText,
-               );
+               decorationWithThemeDefaults.copyWith(errorText: field.errorText);
 
            void onChangedHandler(DateTime value) {
              if (onDateSelected != null) {

@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/models/chat_card_payload.dart';
 import 'package:nitido/app/chat/theme/nitido_ai_tokens.dart';
 
@@ -78,12 +78,14 @@ class ExpenseCard extends StatelessWidget {
       amount += r.amount;
       percent += r.percent;
     }
-    top.add(ExpenseCategoryRow(
-      label: 'Otros',
-      dotColor: top.last.dotColor,
-      amount: amount,
-      percent: percent,
-    ));
+    top.add(
+      ExpenseCategoryRow(
+        label: 'Otros',
+        dotColor: top.last.dotColor,
+        amount: amount,
+        percent: percent,
+      ),
+    );
     return top;
   }
 }

@@ -15,9 +15,7 @@ class RateProviderManager {
   static final RateProviderManager instance = RateProviderManager._();
   RateProviderManager._();
 
-  final List<RateProvider> _providers = [
-    DolarApiProvider(),
-  ];
+  final List<RateProvider> _providers = [DolarApiProvider()];
 
   /// Fetch a rate with automatic fallback through the provider chain.
   ///
@@ -37,13 +35,19 @@ class RateProviderManager {
     // No provider currently supports historical rates.
     // Return null early to avoid unnecessary network calls.
     if (!isToday) {
-      debugPrint('[$_tag] No historical provider available; returning null for $date');
+      debugPrint(
+        '[$_tag] No historical provider available; returning null for $date',
+      );
       return null;
     }
 
     for (final p in _providers) {
       try {
-        final r = await p.fetchRate(date: date, source: source, currencyCode: currencyCode);
+        final r = await p.fetchRate(
+          date: date,
+          source: source,
+          currencyCode: currencyCode,
+        );
         if (r != null) return r;
       } catch (e) {
         debugPrint('[$_tag] ${p.name} failed: $e');

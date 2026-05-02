@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -45,8 +45,9 @@ class _BannerState extends State<_Banner> {
   bool _working = false;
 
   int get _txCount {
-    final ids =
-        StatementBatchesService.instance.decodeTransactionIds(widget.batch);
+    final ids = StatementBatchesService.instance.decodeTransactionIds(
+      widget.batch,
+    );
     return ids.length;
   }
 
@@ -83,9 +84,7 @@ class _BannerState extends State<_Banner> {
       );
     } catch (e) {
       if (!mounted) return;
-      NitidoSnackbar.error(
-        SnackbarParams.fromError(e),
-      );
+      NitidoSnackbar.error(SnackbarParams.fromError(e));
     } finally {
       if (mounted) setState(() => _working = false);
     }
@@ -120,9 +119,7 @@ class _BannerState extends State<_Banner> {
       decoration: BoxDecoration(
         color: cs.primary.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: cs.primary.withValues(alpha: 0.25),
-        ),
+        border: Border.all(color: cs.primary.withValues(alpha: 0.25)),
       ),
       child: Row(
         children: [
@@ -135,18 +132,14 @@ class _BannerState extends State<_Banner> {
               children: [
                 Text(
                   '${t.statement_import.undo.banner_title} · ${t.statement_import.undo.banner_body(n: count, date: relative)}',
-                  style: tt.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+                  style: tt.labelLarge?.copyWith(fontWeight: FontWeight.w700),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   '$relative$modeTag',
-                  style: tt.labelSmall?.copyWith(
-                    color: cs.onSurfaceVariant,
-                  ),
+                  style: tt.labelSmall?.copyWith(color: cs.onSurfaceVariant),
                 ),
               ],
             ),

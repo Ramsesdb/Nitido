@@ -171,7 +171,7 @@ Future<void> fillWithDemoData() async {
             title: title,
             isHidden: false,
             status: TransactionStatus.reconciled,
-  
+
             createdAt: DateTime.now(),
           ),
         );
@@ -229,7 +229,7 @@ Future<void> fillWithDemoData() async {
             title: title,
             isHidden: false,
             status: TransactionStatus.reconciled,
-  
+
             createdAt: DateTime.now(),
           ),
         );
@@ -283,4 +283,3 @@ Future<void> fillWithDemoData() async {
 
   Logger.printDebug('Demo data seeding finished.');
 }
-

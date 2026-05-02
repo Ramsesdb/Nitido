@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -428,12 +428,12 @@ class TransactionListTile extends StatelessWidget {
           return false;
         }
 
-        unawaited(Future.delayed(const Duration(milliseconds: 200)).then((
-          _,
-        ) async {
-          if (!context.mounted) return;
-          await executeTransactionSwipeAction(context, transaction, action);
-        }));
+        unawaited(
+          Future.delayed(const Duration(milliseconds: 200)).then((_) async {
+            if (!context.mounted) return;
+            await executeTransactionSwipeAction(context, transaction, action);
+          }),
+        );
 
         return false;
       },
@@ -446,7 +446,9 @@ class TransactionListTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       margin: const EdgeInsets.only(left: 2),
       decoration: BoxDecoration(
-        color: transaction.nextPayStatus!.color(context).withValues(alpha: 0.15),
+        color: transaction.nextPayStatus!
+            .color(context)
+            .withValues(alpha: 0.15),
         border: Border.all(
           color: transaction.nextPayStatus!.color(context),
           width: 1,

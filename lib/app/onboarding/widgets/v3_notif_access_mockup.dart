@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/onboarding/theme/v3_tokens.dart';
 import 'package:nitido/app/onboarding/widgets/v3_mini_phone_frame.dart';
 
@@ -118,18 +118,15 @@ class _AppRow extends StatefulWidget {
   State<_AppRow> createState() => _AppRowState();
 }
 
-class _AppRowState extends State<_AppRow>
-    with SingleTickerProviderStateMixin {
+class _AppRowState extends State<_AppRow> with SingleTickerProviderStateMixin {
   AnimationController? _pulseCtrl;
 
   @override
   void initState() {
     super.initState();
     if (widget.highlighted) {
-      _pulseCtrl = AnimationController(
-        vsync: this,
-        duration: V3Tokens.pulse,
-      )..repeat();
+      _pulseCtrl = AnimationController(vsync: this, duration: V3Tokens.pulse)
+        ..repeat();
     }
   }
 
@@ -137,10 +134,8 @@ class _AppRowState extends State<_AppRow>
   void didUpdateWidget(covariant _AppRow oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.highlighted && _pulseCtrl == null) {
-      _pulseCtrl = AnimationController(
-        vsync: this,
-        duration: V3Tokens.pulse,
-      )..repeat();
+      _pulseCtrl = AnimationController(vsync: this, duration: V3Tokens.pulse)
+        ..repeat();
     } else if (!widget.highlighted && _pulseCtrl != null) {
       _pulseCtrl?.dispose();
       _pulseCtrl = null;

@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
@@ -90,17 +90,19 @@ void main() {
   setUp(() async {
     extractor = ReceiptExtractorService();
     imageService = ReceiptImageService();
-    tempRoot = await Directory.systemTemp.createTemp('nitido_receipt_ocr_test_');
+    tempRoot = await Directory.systemTemp.createTemp(
+      'nitido_receipt_ocr_test_',
+    );
     appStateSettings[SettingKey.nexusAiEnabled] = '1';
     appStateSettings[SettingKey.receiptAiEnabled] = '1';
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(pathProviderChannel, (MethodCall call) async {
-      if (call.method == 'getTemporaryDirectory') {
-        return tempRoot.path;
-      }
-      return tempRoot.path;
-    });
+          if (call.method == 'getTemporaryDirectory') {
+            return tempRoot.path;
+          }
+          return tempRoot.path;
+        });
   });
 
   tearDown(() async {
@@ -111,28 +113,31 @@ void main() {
     }
   });
 
-  test('2.6 extractor parses BDV OCR text with amount, bankRef, date and type', () async {
-    const ocrText =
-        'PagomovilBDV recibido\n'
-        'Recibiste un PagomovilBDV por Bs.100,00 del 0412-7171711 Ref: 184891460184 en fecha 16-04-26 hora: 10:17.';
+  test(
+    '2.6 extractor parses BDV OCR text with amount, bankRef, date and type',
+    () async {
+      const ocrText =
+          'PagomovilBDV recibido\n'
+          'Recibiste un PagomovilBDV por Bs.100,00 del 0412-7171711 Ref: 184891460184 en fecha 16-04-26 hora: 10:17.';
 
-    final result = await extractor.extractFromOcrText(
-      ocrText,
-      accountId: 'acc-bdv-001',
-      preferredCurrency: 'USD',
-    );
+      final result = await extractor.extractFromOcrText(
+        ocrText,
+        accountId: 'acc-bdv-001',
+        preferredCurrency: 'USD',
+      );
 
-    expect(result.isSuccess, isTrue);
-    expect(result.proposal, isNotNull);
+      expect(result.isSuccess, isTrue);
+      expect(result.proposal, isNotNull);
 
-    final proposal = result.proposal!;
-    expect(proposal.amount, 100.00);
-    expect(proposal.bankRef, '184891460184');
-    expect(proposal.date, DateTime(2026, 4, 16, 10, 17));
-    expect(proposal.type, TransactionType.income);
-    expect(proposal.counterpartyName, '0412-7171711');
-    expect(proposal.channel, CaptureChannel.receiptImage);
-  });
+      final proposal = result.proposal!;
+      expect(proposal.amount, 100.00);
+      expect(proposal.bankRef, '184891460184');
+      expect(proposal.date, DateTime(2026, 4, 16, 10, 17));
+      expect(proposal.type, TransactionType.income);
+      expect(proposal.counterpartyName, '0412-7171711');
+      expect(proposal.channel, CaptureChannel.receiptImage);
+    },
+  );
 
   test('2.7 extractor returns empty when OCR text is empty', () async {
     final result = await extractor.extractFromOcrText('   ');
@@ -142,42 +147,50 @@ void main() {
     expect(result.proposal, isNull);
   });
 
-  test('2.8 extractor returns noAmount when amount cannot be extracted', () async {
-    const ocrText =
-        'Comprobante\n'
-        'Transferencia recibida\n'
-        'Operacion completada sin monto visible';
+  test(
+    '2.8 extractor returns noAmount when amount cannot be extracted',
+    () async {
+      const ocrText =
+          'Comprobante\n'
+          'Transferencia recibida\n'
+          'Operacion completada sin monto visible';
 
-    final result = await extractor.extractFromOcrText(ocrText);
+      final result = await extractor.extractFromOcrText(ocrText);
 
-    expect(result.outcome, ExtractionOutcome.noAmount);
-    expect(result.errorKey, 'error.no_amount');
-    expect(result.proposal, isNull);
-  });
+      expect(result.outcome, ExtractionOutcome.noAmount);
+      expect(result.errorKey, 'error.no_amount');
+      expect(result.proposal, isNull);
+    },
+  );
 
-  test('2.9 receipt_image_service compresses 4k image to <=1600px and jpg', () async {
-    final big = img.Image(width: 4096, height: 3072);
-    for (var y = 0; y < big.height; y++) {
-      for (var x = 0; x < big.width; x++) {
-        big.setPixelRgba(x, y, x % 255, y % 255, (x + y) % 255, 255);
+  test(
+    '2.9 receipt_image_service compresses 4k image to <=1600px and jpg',
+    () async {
+      final big = img.Image(width: 4096, height: 3072);
+      for (var y = 0; y < big.height; y++) {
+        for (var x = 0; x < big.width; x++) {
+          big.setPixelRgba(x, y, x % 255, y % 255, (x + y) % 255, 255);
+        }
       }
-    }
 
-    final source = File('${tempRoot.path}/source_4k.png')
-      ..writeAsBytesSync(img.encodePng(big, level: 0));
+      final source = File('${tempRoot.path}/source_4k.png')
+        ..writeAsBytesSync(img.encodePng(big, level: 0));
 
-    final compressed = await imageService.compressToTemp(source);
+      final compressed = await imageService.compressToTemp(source);
 
-    expect(await compressed.exists(), isTrue);
-    expect(compressed.path.endsWith('.jpg'), isTrue);
+      expect(await compressed.exists(), isTrue);
+      expect(compressed.path.endsWith('.jpg'), isTrue);
 
-    final decoded = img.decodeJpg(await compressed.readAsBytes());
-    expect(decoded, isNotNull);
+      final decoded = img.decodeJpg(await compressed.readAsBytes());
+      expect(decoded, isNotNull);
 
-    final maxSide = decoded!.width > decoded.height ? decoded.width : decoded.height;
-    expect(maxSide, lessThanOrEqualTo(1600));
-    expect(await compressed.length(), lessThan(await source.length()));
-  });
+      final maxSide = decoded!.width > decoded.height
+          ? decoded.width
+          : decoded.height;
+      expect(maxSide, lessThanOrEqualTo(1600));
+      expect(await compressed.length(), lessThan(await source.length()));
+    },
+  );
 
   test('3.8 AI valid JSON returns proposal and skips regex fallback', () async {
     final profile = _CountingProfile(result: null);
@@ -185,24 +198,25 @@ void main() {
     final extractorWithAi = ReceiptExtractorService(
       ocrService: _FakeOcrService('Texto OCR cualquiera'),
       profile: profile,
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        aiCalls++;
-        return jsonEncode({
-          'amount': 24.5,
-          'currencyCode': 'USD',
-          'date': '2026-04-17T10:24:00Z',
-          'type': 'E',
-          'counterpartyName': 'Farmatodo',
-          'bankRef': '005717108313',
-          'bankName': 'BDV',
-          'confidence': 0.88,
-        });
-      },
+      multimodalComplete:
+          ({
+            required systemPrompt,
+            required userPrompt,
+            required imageBase64,
+            temperature = 0.1,
+          }) async {
+            aiCalls++;
+            return jsonEncode({
+              'amount': 24.5,
+              'currencyCode': 'USD',
+              'date': '2026-04-17T10:24:00Z',
+              'type': 'E',
+              'counterpartyName': 'Farmatodo',
+              'bankRef': '005717108313',
+              'bankName': 'BDV',
+              'confidence': 0.88,
+            });
+          },
     );
 
     final image = File('${tempRoot.path}/ai_success.jpg')
@@ -225,15 +239,16 @@ void main() {
     var aiCalls = 0;
     final extractorWithAi = ReceiptExtractorService(
       ocrService: _FakeOcrService(ocrText),
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        aiCalls++;
-        return 'texto sin json valido';
-      },
+      multimodalComplete:
+          ({
+            required systemPrompt,
+            required userPrompt,
+            required imageBase64,
+            temperature = 0.1,
+          }) async {
+            aiCalls++;
+            return 'texto sin json valido';
+          },
     );
 
     final image = File('${tempRoot.path}/ai_bad.jpg')
@@ -277,8 +292,11 @@ void main() {
         ..writeAsBytesSync(List.filled(128, 3));
       final result = await extractorWithAi.extractFromImage(image);
 
-      expect(blockingClient.sendCalls, 1,
-          reason: 'Nexus service must actually hit the HTTP layer.');
+      expect(
+        blockingClient.sendCalls,
+        1,
+        reason: 'Nexus service must actually hit the HTTP layer.',
+      );
       expect(result.isSuccess, isTrue);
       expect(result.proposal!.confidence, 0.7);
       expect(result.proposal!.bankRef, '184891460184');
@@ -291,15 +309,16 @@ void main() {
     var aiCalls = 0;
     final extractorWithAi = ReceiptExtractorService(
       ocrService: _FakeOcrService('Comprobante sin monto'),
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        aiCalls++;
-        return '{}';
-      },
+      multimodalComplete:
+          ({
+            required systemPrompt,
+            required userPrompt,
+            required imageBase64,
+            temperature = 0.1,
+          }) async {
+            aiCalls++;
+            return '{}';
+          },
     );
 
     final image = File('${tempRoot.path}/ai_disabled.jpg')
@@ -314,18 +333,19 @@ void main() {
     final extractorWithAi = ReceiptExtractorService(
       ocrService: _FakeOcrService('Texto OCR cualquiera'),
       profile: profile,
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        return '```json\n'
-            '{"amount": 12.34, "currencyCode": "USD", "date": "2026-04-17T10:00:00Z", '
-            '"type": "E", "counterpartyName": "Farmatodo", "bankRef": "999", '
-            '"confidence": 0.91}\n'
-            '```';
-      },
+      multimodalComplete:
+          ({
+            required systemPrompt,
+            required userPrompt,
+            required imageBase64,
+            temperature = 0.1,
+          }) async {
+            return '```json\n'
+                '{"amount": 12.34, "currencyCode": "USD", "date": "2026-04-17T10:00:00Z", '
+                '"type": "E", "counterpartyName": "Farmatodo", "bankRef": "999", '
+                '"confidence": 0.91}\n'
+                '```';
+          },
     );
 
     final image = File('${tempRoot.path}/ai_fenced.jpg')
@@ -345,18 +365,19 @@ void main() {
     final extractorWithAi = ReceiptExtractorService(
       ocrService: _FakeOcrService('Texto OCR cualquiera'),
       profile: profile,
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        return 'Aquí tienes el JSON solicitado:\n'
-            '{"amount": 5.50, "currencyCode": "USD", '
-            '"date": "2026-04-17T09:30:00Z", "type": "E", '
-            '"counterpartyName": "Panadería", "bankRef": "ABC123", '
-            '"confidence": 0.75}';
-      },
+      multimodalComplete:
+          ({
+            required systemPrompt,
+            required userPrompt,
+            required imageBase64,
+            temperature = 0.1,
+          }) async {
+            return 'Aquí tienes el JSON solicitado:\n'
+                '{"amount": 5.50, "currencyCode": "USD", '
+                '"date": "2026-04-17T09:30:00Z", "type": "E", '
+                '"counterpartyName": "Panadería", "bankRef": "ABC123", '
+                '"confidence": 0.75}';
+          },
     );
 
     final image = File('${tempRoot.path}/ai_prose.jpg')
@@ -370,44 +391,47 @@ void main() {
     expect(result.proposal!.bankRef, 'ABC123');
   });
 
-  test('3.14 Spanish field aliases (monto, moneda, fecha, tipo) are parsed',
-      () async {
-    final profile = _CountingProfile(result: null);
-    final extractorWithAi = ReceiptExtractorService(
-      ocrService: _FakeOcrService('Texto OCR cualquiera'),
-      profile: profile,
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        return jsonEncode({
-          'monto': 77.0,
-          'moneda': 'VES',
-          'fecha': '2026-04-17T11:00:00Z',
-          'tipo': 'gasto',
-          'destinatario': 'Supermercado X',
-          'referencia': 'REF-42',
-          'score': 0.66,
-        });
-      },
-    );
+  test(
+    '3.14 Spanish field aliases (monto, moneda, fecha, tipo) are parsed',
+    () async {
+      final profile = _CountingProfile(result: null);
+      final extractorWithAi = ReceiptExtractorService(
+        ocrService: _FakeOcrService('Texto OCR cualquiera'),
+        profile: profile,
+        multimodalComplete:
+            ({
+              required systemPrompt,
+              required userPrompt,
+              required imageBase64,
+              temperature = 0.1,
+            }) async {
+              return jsonEncode({
+                'monto': 77.0,
+                'moneda': 'VES',
+                'fecha': '2026-04-17T11:00:00Z',
+                'tipo': 'gasto',
+                'destinatario': 'Supermercado X',
+                'referencia': 'REF-42',
+                'score': 0.66,
+              });
+            },
+      );
 
-    final image = File('${tempRoot.path}/ai_spanish.jpg')
-      ..writeAsBytesSync(List.filled(128, 12));
+      final image = File('${tempRoot.path}/ai_spanish.jpg')
+        ..writeAsBytesSync(List.filled(128, 12));
 
-    final result = await extractorWithAi.extractFromImage(image);
+      final result = await extractorWithAi.extractFromImage(image);
 
-    expect(result.isSuccess, isTrue);
-    expect(profile.calls, 0);
-    expect(result.proposal!.amount, 77.0);
-    expect(result.proposal!.currencyId, 'VES');
-    expect(result.proposal!.type, TransactionType.expense);
-    expect(result.proposal!.counterpartyName, 'Supermercado X');
-    expect(result.proposal!.bankRef, 'REF-42');
-    expect(result.proposal!.confidence, closeTo(0.66, 1e-9));
-  });
+      expect(result.isSuccess, isTrue);
+      expect(profile.calls, 0);
+      expect(result.proposal!.amount, 77.0);
+      expect(result.proposal!.currencyId, 'VES');
+      expect(result.proposal!.type, TransactionType.expense);
+      expect(result.proposal!.counterpartyName, 'Supermercado X');
+      expect(result.proposal!.bankRef, 'REF-42');
+      expect(result.proposal!.confidence, closeTo(0.66, 1e-9));
+    },
+  );
 
   test('3.15 Garbage AI response falls through to regex fallback', () async {
     const ocrText =
@@ -416,14 +440,15 @@ void main() {
 
     final extractorWithAi = ReceiptExtractorService(
       ocrService: _FakeOcrService(ocrText),
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        return 'totalmente invalido { no json :: aqui';
-      },
+      multimodalComplete:
+          ({
+            required systemPrompt,
+            required userPrompt,
+            required imageBase64,
+            temperature = 0.1,
+          }) async {
+            return 'totalmente invalido { no json :: aqui';
+          },
     );
 
     final image = File('${tempRoot.path}/ai_garbage.jpg')
@@ -443,23 +468,24 @@ void main() {
       final extractorWithAi = ReceiptExtractorService(
         ocrService: _FakeOcrService('Texto OCR cualquiera'),
         profile: profile,
-        multimodalComplete: ({
-          required systemPrompt,
-          required userPrompt,
-          required imageBase64,
-          temperature = 0.1,
-        }) async {
-          return jsonEncode({
-            'amount': 2400.00,
-            'currencyCode': 'Bs',
-            'date': '2026-04-17',
-            'type': 'PagomóvilBDV Personas',
-            'counterpartyName': '04126638500',
-            'bankRef': '005717108313O',
-            'bankName': 'BANCO DE VENEZUELA',
-            'confidence': 0.9,
-          });
-        },
+        multimodalComplete:
+            ({
+              required systemPrompt,
+              required userPrompt,
+              required imageBase64,
+              temperature = 0.1,
+            }) async {
+              return jsonEncode({
+                'amount': 2400.00,
+                'currencyCode': 'Bs',
+                'date': '2026-04-17',
+                'type': 'PagomóvilBDV Personas',
+                'counterpartyName': '04126638500',
+                'bankRef': '005717108313O',
+                'bankName': 'BANCO DE VENEZUELA',
+                'confidence': 0.9,
+              });
+            },
       );
 
       final image = File('${tempRoot.path}/ai_unknown_type.jpg')
@@ -468,8 +494,11 @@ void main() {
       final result = await extractorWithAi.extractFromImage(image);
 
       expect(result.isSuccess, isTrue);
-      expect(profile.calls, 0,
-          reason: 'Unknown type should default to expense, not fall back.');
+      expect(
+        profile.calls,
+        0,
+        reason: 'Unknown type should default to expense, not fall back.',
+      );
       expect(result.proposal!.type, TransactionType.expense);
       expect(result.proposal!.amount, 2400.00);
     },
@@ -480,20 +509,21 @@ void main() {
     final extractorWithAi = ReceiptExtractorService(
       ocrService: _FakeOcrService('Texto OCR cualquiera'),
       profile: profile,
-      multimodalComplete: ({
-        required systemPrompt,
-        required userPrompt,
-        required imageBase64,
-        temperature = 0.1,
-      }) async {
-        return jsonEncode({
-          'amount': 100.0,
-          'currencyCode': 'Bs',
-          'date': '2026-04-17T10:00:00Z',
-          'type': 'E',
-          'confidence': 0.8,
-        });
-      },
+      multimodalComplete:
+          ({
+            required systemPrompt,
+            required userPrompt,
+            required imageBase64,
+            temperature = 0.1,
+          }) async {
+            return jsonEncode({
+              'amount': 100.0,
+              'currencyCode': 'Bs',
+              'date': '2026-04-17T10:00:00Z',
+              'type': 'E',
+              'confidence': 0.8,
+            });
+          },
     );
 
     final image = File('${tempRoot.path}/ai_bs_currency.jpg')
@@ -513,18 +543,19 @@ void main() {
       final extractorWithAi = ReceiptExtractorService(
         ocrService: _FakeOcrService('Texto OCR cualquiera'),
         profile: profile,
-        multimodalComplete: ({
-          required systemPrompt,
-          required userPrompt,
-          required imageBase64,
-          temperature = 0.1,
-        }) async {
-          // Exact captured string from the production log (2026-04-17).
-          return '{"amount":2400.00,"currencyCode":"Bs","date":"2026-04-17",'
-              '"type":"PagomóvilBDV Personas","counterpartyName":"04126638500",'
-              '"bankRef":"005717108313O","bankName":"BANCO DE VENEZUELA",'
-              '"confidence":0.9}';
-        },
+        multimodalComplete:
+            ({
+              required systemPrompt,
+              required userPrompt,
+              required imageBase64,
+              temperature = 0.1,
+            }) async {
+              // Exact captured string from the production log (2026-04-17).
+              return '{"amount":2400.00,"currencyCode":"Bs","date":"2026-04-17",'
+                  '"type":"PagomóvilBDV Personas","counterpartyName":"04126638500",'
+                  '"bankRef":"005717108313O","bankName":"BANCO DE VENEZUELA",'
+                  '"confidence":0.9}';
+            },
       );
 
       final image = File('${tempRoot.path}/ai_real_log.jpg')
@@ -533,8 +564,11 @@ void main() {
       final result = await extractorWithAi.extractFromImage(image);
 
       expect(result.isSuccess, isTrue);
-      expect(profile.calls, 0,
-          reason: 'Real-log payload must parse without regex fallback.');
+      expect(
+        profile.calls,
+        0,
+        reason: 'Real-log payload must parse without regex fallback.',
+      );
       expect(result.proposal!.amount, 2400.00);
       expect(result.proposal!.currencyId, 'VES');
       expect(result.proposal!.bankRef, '005717108313O');

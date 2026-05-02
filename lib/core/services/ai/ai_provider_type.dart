@@ -18,12 +18,7 @@ enum AiProviderType {
   openai(
     displayName: 'OpenAI',
     defaultModel: 'gpt-4o-mini',
-    models: <String>[
-      'gpt-4o',
-      'gpt-4o-mini',
-      'gpt-4.1',
-      'gpt-4.1-mini',
-    ],
+    models: <String>['gpt-4o', 'gpt-4o-mini', 'gpt-4.1', 'gpt-4.1-mini'],
     helpUrl: 'https://platform.openai.com/api-keys',
   ),
   anthropic(
@@ -39,11 +34,7 @@ enum AiProviderType {
   gemini(
     displayName: 'Google Gemini',
     defaultModel: 'gemini-2.5-flash',
-    models: <String>[
-      'gemini-2.5-flash',
-      'gemini-2.5-pro',
-      'gemini-2.0-flash',
-    ],
+    models: <String>['gemini-2.5-flash', 'gemini-2.5-pro', 'gemini-2.0-flash'],
     helpUrl: 'https://aistudio.google.com/apikey',
   );
 

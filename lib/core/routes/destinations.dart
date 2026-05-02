@@ -13,6 +13,7 @@ final GlobalKey budgetsPageKey = GlobalKey();
 final GlobalKey<TransactionsPageState> transactionsPageKey = GlobalKey();
 final GlobalKey<State<StatefulWidget>> statsPageKey = GlobalKey();
 final GlobalKey<State<StatefulWidget>> settingsPageKey = GlobalKey();
+
 enum AppMenuDestinationsID {
   dashboard,
   budgets,

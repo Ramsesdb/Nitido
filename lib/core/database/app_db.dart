@@ -37,18 +37,18 @@ class AppDB extends _$AppDB {
     required this.dbName,
     required this.inMemory,
     required this.logStatements,
-  })  : _isTestInstance = false,
-        super(openConnection(dbName, logStatements: logStatements));
+  }) : _isTestInstance = false,
+       super(openConnection(dbName, logStatements: logStatements));
 
   /// Constructor for unit/integration tests using an in-memory database.
   /// Bypasses file-based connection and the production migration/seeder logic.
   /// The [_isTestInstance] flag causes [migration] to skip `beforeOpen` hooks
   /// that depend on Flutter bindings (path_provider, asset bundle, etc.).
   AppDB.forTesting(super.executor)
-      : dbName = 'test.db',
-        inMemory = true,
-        logStatements = false,
-        _isTestInstance = true;
+    : dbName = 'test.db',
+      inMemory = true,
+      logStatements = false,
+      _isTestInstance = true;
 
   static final AppDB instance = AppDB._(
     dbName: 'database.db',

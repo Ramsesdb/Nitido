@@ -200,11 +200,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
       // Custom photo wins. Clear the preset key so other surfaces fall back
       // to the attachment-based avatar.
       await svc.setItem(SettingKey.userName, _nameController.text);
-      await svc.setItem(
-        SettingKey.avatar,
-        '',
-        updateGlobalState: true,
-      );
+      await svc.setItem(SettingKey.avatar, '', updateGlobalState: true);
     } else {
       // Preset wins. Drop any uploaded attachment so the preset shows.
       final existing = await AttachmentsService.instance.firstByOwner(
@@ -248,9 +244,7 @@ class _EditProfileModalState extends State<EditProfileModal> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   _HeroAvatar(
-                    presetName: _uploadedPhotoSelected
-                        ? null
-                        : _selectedPreset,
+                    presetName: _uploadedPhotoSelected ? null : _selectedPreset,
                     customFile: _uploadedPhotoSelected
                         ? _customAvatarFile
                         : null,
@@ -985,36 +979,42 @@ class _Footer extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.fromLTRB(22, 14, 22, 14 + bottomInset),
         child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TextButton(
-            key: const ValueKey('edit-profile-cancel'),
-            onPressed: onCancel,
-            style: TextButton.styleFrom(
-              foregroundColor: cs.onSurfaceVariant,
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
-              shape: const StadiumBorder(),
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TextButton(
+              key: const ValueKey('edit-profile-cancel'),
+              onPressed: onCancel,
+              style: TextButton.styleFrom(
+                foregroundColor: cs.onSurfaceVariant,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 12,
+                ),
+                shape: const StadiumBorder(),
+              ),
+              child: Text(cancelLabel),
             ),
-            child: Text(cancelLabel),
-          ),
-          FilledButton.icon(
-            onPressed: onSave,
-            icon: const Icon(Icons.check, size: 18),
-            label: Text(saveLabel),
-            style: FilledButton.styleFrom(
-              backgroundColor: cs.primary,
-              foregroundColor: cs.onPrimary,
-              disabledBackgroundColor: cs.surfaceContainerHigh,
-              disabledForegroundColor: cs.onSurfaceVariant,
-              padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 14),
-              shape: const StadiumBorder(),
-              textStyle: const TextStyle(
-                fontSize: 14.5,
-                fontWeight: FontWeight.w600,
+            FilledButton.icon(
+              onPressed: onSave,
+              icon: const Icon(Icons.check, size: 18),
+              label: Text(saveLabel),
+              style: FilledButton.styleFrom(
+                backgroundColor: cs.primary,
+                foregroundColor: cs.onPrimary,
+                disabledBackgroundColor: cs.surfaceContainerHigh,
+                disabledForegroundColor: cs.onSurfaceVariant,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 22,
+                  vertical: 14,
+                ),
+                shape: const StadiumBorder(),
+                textStyle: const TextStyle(
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
         ),
       ),
     );

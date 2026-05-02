@@ -1,4 +1,4 @@
-﻿import 'package:collection/collection.dart';
+import 'package:collection/collection.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
@@ -487,9 +487,7 @@ class _ImportCSVPageState extends State<ImportCSVPage> {
                     AccountSelectorModal(
                       allowMultiSelection: false,
                       filterSavingAccounts: true,
-                      selectedAccounts: [
-                        ?defaultAccount,
-                      ],
+                      selectedAccounts: [?defaultAccount],
                     ),
                   );
 
@@ -632,7 +630,8 @@ class _ImportCSVPageState extends State<ImportCSVPage> {
       scrollDirection: Axis.horizontal,
       child: DataTable(
         headingRowColor: WidgetStateProperty.resolveWith<Color?>(
-          (states) => Theme.of(context).colorScheme.primary.withValues(alpha: 0.18),
+          (states) =>
+              Theme.of(context).colorScheme.primary.withValues(alpha: 0.18),
         ),
         clipBehavior: Clip.hardEdge,
         headingTextStyle: Theme.of(context).textTheme.labelLarge,

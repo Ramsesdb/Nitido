@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:nitido/app/chat/models/chat_card_dispatcher.dart';
@@ -69,9 +69,7 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
     if (!aiEnabled || !chatEnabled) {
       setState(() {
         _isBooting = false;
-        _messages.add(
-          _ChatMessage(role: 'assistant', text: t.chat_disabled),
-        );
+        _messages.add(_ChatMessage(role: 'assistant', text: t.chat_disabled));
       });
       return;
     }
@@ -100,9 +98,9 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
 
     final trimmed = transcript.trim();
     if (trimmed.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(t.voice_empty_transcript)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(t.voice_empty_transcript)));
       return;
     }
 
@@ -129,9 +127,11 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
 
     try {
       final history = _messages
-          .where((m) =>
-              m.text.isNotEmpty &&
-              (m.role == 'user' || m.role == 'assistant'))
+          .where(
+            (m) =>
+                m.text.isNotEmpty &&
+                (m.role == 'user' || m.role == 'assistant'),
+          )
           .take(12)
           .map((m) => <String, dynamic>{'role': m.role, 'content': m.text})
           .toList();
@@ -166,12 +166,14 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
         return;
       }
       final last = _messages.removeLast();
-      _messages.add(_ChatMessage(
-        role: last.role,
-        text: '${last.text}$chunk',
-        kind: last.kind,
-        card: last.card,
-      ));
+      _messages.add(
+        _ChatMessage(
+          role: last.role,
+          text: '${last.text}$chunk',
+          kind: last.kind,
+          card: last.card,
+        ),
+      );
     });
     _scrollToBottom();
   }
@@ -189,8 +191,8 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
         // a previous loop iteration.
         final liveText =
             (_messages.isNotEmpty && _messages.last.role == 'assistant')
-                ? _messages.last.text
-                : '';
+            ? _messages.last.text
+            : '';
         final fallbackText = result.finalText?.isNotEmpty == true
             ? result.finalText!
             : t.chat_error_generic;
@@ -219,10 +221,12 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
         // If the placeholder bubble was never filled by streaming, either
         // replace it (if it exists and is empty) or insert a fresh bubble so
         // the user always sees something instead of a muted screen.
-        final hasEmptyAssistantBubble = _messages.isNotEmpty &&
+        final hasEmptyAssistantBubble =
+            _messages.isNotEmpty &&
             _messages.last.role == 'assistant' &&
             _messages.last.text.isEmpty;
-        final hasFilledAssistantBubble = _messages.isNotEmpty &&
+        final hasFilledAssistantBubble =
+            _messages.isNotEmpty &&
             _messages.last.role == 'assistant' &&
             _messages.last.text.isNotEmpty;
         if (hasFilledAssistantBubble) {
@@ -230,10 +234,9 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
           // assistant bubble with the error so context isn't lost.
           if (mounted) {
             setState(() {
-              _messages.add(_ChatMessage(
-                role: 'assistant',
-                text: t.chat_error_generic,
-              ));
+              _messages.add(
+                _ChatMessage(role: 'assistant', text: t.chat_error_generic),
+              );
             });
             _scrollToBottom();
           }
@@ -243,10 +246,9 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
           // Defensive fallback: no assistant bubble exists at all.
           if (mounted) {
             setState(() {
-              _messages.add(_ChatMessage(
-                role: 'assistant',
-                text: t.chat_error_generic,
-              ));
+              _messages.add(
+                _ChatMessage(role: 'assistant', text: t.chat_error_generic),
+              );
             });
             _scrollToBottom();
           }
@@ -260,10 +262,12 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
     try {
       final toolRoles = messages.where((m) => m['role'] == 'tool').toList();
       final assistantToolCalls = messages
-          .where((m) =>
-              m['role'] == 'assistant' &&
-              m['tool_calls'] is List &&
-              (m['tool_calls'] as List).isNotEmpty)
+          .where(
+            (m) =>
+                m['role'] == 'assistant' &&
+                m['tool_calls'] is List &&
+                (m['tool_calls'] as List).isNotEmpty,
+          )
           .toList();
       debugPrint(
         '[nitido_CHAT_CARDS] scan: total=${messages.length} '
@@ -348,12 +352,14 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
             intro = sanitized;
           }
         }
-        _messages.add(_ChatMessage(
-          role: 'assistant',
-          text: intro ?? '',
-          kind: ChatMessageKind.card,
-          card: payload,
-        ));
+        _messages.add(
+          _ChatMessage(
+            role: 'assistant',
+            text: intro ?? '',
+            kind: ChatMessageKind.card,
+            card: payload,
+          ),
+        );
       });
       _scrollToBottom();
     } catch (e, st) {
@@ -376,15 +382,15 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
   List<String> _chipsFor(ChatCardPayload payload) {
     return switch (payload) {
       ExpensePayload() => const [
-          'Compara con mes pasado',
-          '¿Dónde puedo recortar?',
-          'Top 3 categorías',
-        ],
+        'Compara con mes pasado',
+        '¿Dónde puedo recortar?',
+        'Top 3 categorías',
+      ],
       BalancePayload() => const [
-          'Detalle por cuenta',
-          'Proyección a fin de mes',
-          '¿Cuánto puedo ahorrar?',
-        ],
+        'Detalle por cuenta',
+        'Proyección a fin de mes',
+        '¿Cuánto puedo ahorrar?',
+      ],
       AccountPickPayload() => const <String>[],
     };
   }
@@ -394,9 +400,9 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
       ExpensePayload() => ExpenseCard(payload),
       BalancePayload() => BalanceCard(payload),
       AccountPickPayload() => AccountPickCard(
-          payload,
-          onTap: _onAccountPickTap,
-        ),
+        payload,
+        onTap: _onAccountPickTap,
+      ),
     };
   }
 
@@ -470,15 +476,17 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
 
     Future<String?> accountName(Object? id) async {
       if (id == null) return null;
-      final acc =
-          await AccountService.instance.getAccountById(id.toString()).first;
+      final acc = await AccountService.instance
+          .getAccountById(id.toString())
+          .first;
       return acc?.name;
     }
 
     Future<String?> categoryName(Object? id) async {
       if (id == null) return null;
-      final cat =
-          await CategoryService.instance.getCategoryById(id.toString()).first;
+      final cat = await CategoryService.instance
+          .getCategoryById(id.toString())
+          .first;
       return cat?.name;
     }
 
@@ -531,10 +539,8 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
     // Perf-fix #1: hoist every appStateSettings read out of the widget tree so
     // rebuilds do not re-hash the settings map repeatedly mid-frame. The
     // avatar id is read once per build and passed down as a plain String.
-    final nexusAiEnabled =
-        appStateSettings[SettingKey.nexusAiEnabled] == '1';
-    final aiVoiceEnabled =
-        appStateSettings[SettingKey.aiVoiceEnabled] != '0';
+    final nexusAiEnabled = appStateSettings[SettingKey.nexusAiEnabled] == '1';
+    final aiVoiceEnabled = appStateSettings[SettingKey.aiVoiceEnabled] != '0';
     final voiceAffordance = nexusAiEnabled && aiVoiceEnabled;
     final avatarId = appStateSettings[SettingKey.avatar] ?? 'man';
 
@@ -577,9 +583,9 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
                       final isUser = message.role == 'user';
                       final isThinking =
                           !isUser &&
-                              message.kind == ChatMessageKind.text &&
-                              message.text.isEmpty &&
-                              _isSending;
+                          message.kind == ChatMessageKind.text &&
+                          message.text.isEmpty &&
+                          _isSending;
 
                       if (message.kind == ChatMessageKind.card &&
                           message.card != null) {
@@ -659,7 +665,9 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
                                     ),
                             ),
                             if (isUser) ...[
-                              const SizedBox(width: NitidoAiTokens.bubbleGap / 1.5),
+                              const SizedBox(
+                                width: NitidoAiTokens.bubbleGap / 1.5,
+                              ),
                               UserAvatarDisplay(avatar: avatarId, size: 24),
                             ],
                           ],
@@ -696,7 +704,6 @@ class _NitidoChatPageState extends State<NitidoChatPage> {
       ),
     );
   }
-
 }
 
 enum ChatMessageKind { text, card }
@@ -732,18 +739,13 @@ Future<bool?> showToolApprovalSheet(
     context: context,
     isScrollControlled: true,
     showDragHandle: true,
-    builder: (ctx) => _ToolApprovalSheet(
-      toolName: toolName,
-      arguments: arguments,
-    ),
+    builder: (ctx) =>
+        _ToolApprovalSheet(toolName: toolName, arguments: arguments),
   );
 }
 
 class _ToolApprovalSheet extends StatelessWidget {
-  const _ToolApprovalSheet({
-    required this.toolName,
-    required this.arguments,
-  });
+  const _ToolApprovalSheet({required this.toolName, required this.arguments});
 
   final String toolName;
   final Map<String, dynamic> arguments;
@@ -779,9 +781,11 @@ class _ToolApprovalSheet extends StatelessWidget {
   List<_Summary> _summaryLines(TranslationsNitidoAiEn t) {
     switch (toolName) {
       case 'create_transaction':
-        final categoryLabel = arguments['__categoryLabel']?.toString() ??
+        final categoryLabel =
+            arguments['__categoryLabel']?.toString() ??
             arguments['categoryId']?.toString();
-        final accountLabel = arguments['__accountLabel']?.toString() ??
+        final accountLabel =
+            arguments['__accountLabel']?.toString() ??
             arguments['accountId']?.toString();
         return [
           if (arguments['amount'] != null)
@@ -807,17 +811,18 @@ class _ToolApprovalSheet extends StatelessWidget {
             _Summary(t.chat_tool_field_date, arguments['date'].toString()),
         ];
       case 'create_transfer':
-        final fromLabel = arguments['__fromAccountLabel']?.toString() ??
+        final fromLabel =
+            arguments['__fromAccountLabel']?.toString() ??
             arguments['fromAccountId']?.toString();
-        final toLabel = arguments['__toAccountLabel']?.toString() ??
+        final toLabel =
+            arguments['__toAccountLabel']?.toString() ??
             arguments['toAccountId']?.toString();
         return [
           if (arguments['amount'] != null)
             _Summary(t.chat_tool_field_amount, _fmtAmount(arguments['amount'])),
           if (fromLabel != null)
             _Summary(t.chat_tool_field_from_account, fromLabel),
-          if (toLabel != null)
-            _Summary(t.chat_tool_field_to_account, toLabel),
+          if (toLabel != null) _Summary(t.chat_tool_field_to_account, toLabel),
           if (arguments['valueInDestiny'] != null)
             _Summary(
               t.chat_tool_field_value_in_destiny,
@@ -884,10 +889,9 @@ class _ToolApprovalSheet extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               t.chat_tool_review_subtitle,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(color: cs.onSurfaceVariant),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
             ),
             const SizedBox(height: 16),
             Container(
@@ -906,7 +910,8 @@ class _ToolApprovalSheet extends StatelessWidget {
                         ),
                       ]
                     : lines
-                        .map((l) => Padding(
+                          .map(
+                            (l) => Padding(
                               padding: const EdgeInsets.symmetric(vertical: 4),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -933,8 +938,9 @@ class _ToolApprovalSheet extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            ))
-                        .toList(),
+                            ),
+                          )
+                          .toList(),
               ),
             ),
             const SizedBox(height: 20),

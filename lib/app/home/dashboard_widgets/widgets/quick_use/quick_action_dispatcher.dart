@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nitido/app/budgets/budgets_page.dart';
 import 'package:nitido/app/calculator/calculator.page.dart';
@@ -72,12 +72,12 @@ class QuickAction {
 ///   - **Navegación**: usan `RouteUtils.pushRoute`.
 ///   - **Quick transactions**: empujan `TransactionFormPage` con `mode`
 ///     preseleccionado.
-final Map<QuickActionId, QuickAction> kQuickActions = <QuickActionId, QuickAction>{
+final Map<QuickActionId, QuickAction>
+kQuickActions = <QuickActionId, QuickAction>{
   // ─────────── Toggles ───────────
   QuickActionId.togglePrivateMode: QuickAction(
     icon: Icons.visibility_off_outlined,
-    label: (ctx) =>
-        Translations.of(ctx).home.quick_actions.toggle_private_mode,
+    label: (ctx) => Translations.of(ctx).home.quick_actions.toggle_private_mode,
     category: QuickActionCategory.toggle,
     action: (ctx) async {
       final current = appStateSettings[SettingKey.privateMode] == '1';
@@ -87,8 +87,7 @@ final Map<QuickActionId, QuickAction> kQuickActions = <QuickActionId, QuickActio
   ),
   QuickActionId.toggleHiddenMode: QuickAction(
     icon: Icons.lock_outline,
-    label: (ctx) =>
-        Translations.of(ctx).home.quick_actions.toggle_hidden_mode,
+    label: (ctx) => Translations.of(ctx).home.quick_actions.toggle_hidden_mode,
     category: QuickActionCategory.toggle,
     action: (ctx) async {
       // Solo togglea cuando la feature está habilitada — si está
@@ -122,12 +121,10 @@ final Map<QuickActionId, QuickAction> kQuickActions = <QuickActionId, QuickActio
     // Dynamic label: shows the active currency code so the user sees the
     // chip's current value at a glance. The accessibility label routes
     // through slang via the spec's [DashboardWidgetSpec.displayName].
-    label: (ctx) =>
-        appStateSettings[SettingKey.preferredCurrency] ?? 'USD',
+    label: (ctx) => appStateSettings[SettingKey.preferredCurrency] ?? 'USD',
     category: QuickActionCategory.toggle,
     action: (ctx) async {
-      final current =
-          appStateSettings[SettingKey.preferredCurrency] ?? 'USD';
+      final current = appStateSettings[SettingKey.preferredCurrency] ?? 'USD';
       // Cicla USD → VES → DUAL → USD. DUAL es el caso multi-currency en el
       // que se muestran ambos balances (consultado en `s02_currency` del
       // onboarding). El spec acepta el ciclo aunque solo enumere USD↔VES;
@@ -216,8 +213,7 @@ final Map<QuickActionId, QuickAction> kQuickActions = <QuickActionId, QuickActio
   ),
   QuickActionId.openExchangeRates: QuickAction(
     icon: Icons.currency_exchange_rounded,
-    label: (ctx) =>
-        Translations.of(ctx).home.quick_actions.open_exchange_rates,
+    label: (ctx) => Translations.of(ctx).home.quick_actions.open_exchange_rates,
     category: QuickActionCategory.navigation,
     action: (ctx) {
       // Nitido no expone una "ExchangeRatesPage" raíz: el flujo canónico es
@@ -229,8 +225,7 @@ final Map<QuickActionId, QuickAction> kQuickActions = <QuickActionId, QuickActio
   ),
   QuickActionId.goToCalculator: QuickAction(
     icon: Icons.calculate_outlined,
-    label: (ctx) =>
-        Translations.of(ctx).home.quick_actions.go_to_calculator,
+    label: (ctx) => Translations.of(ctx).home.quick_actions.go_to_calculator,
     category: QuickActionCategory.navigation,
     action: (ctx) {
       // Calculadora FX standalone (calculadora-fx Tanda 1, task 1.5).

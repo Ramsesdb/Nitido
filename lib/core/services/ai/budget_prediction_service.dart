@@ -9,10 +9,7 @@ class BudgetPredictionResult {
   final String text;
   final bool isFallback;
 
-  const BudgetPredictionResult({
-    required this.text,
-    this.isFallback = false,
-  });
+  const BudgetPredictionResult({required this.text, this.isFallback = false});
 }
 
 class _CachedBudgetPrediction {
@@ -34,7 +31,8 @@ class BudgetPredictionService {
 
   Future<BudgetPredictionResult?> getPrediction(Budget budget) async {
     final aiEnabled = appStateSettings[SettingKey.nexusAiEnabled] == '1';
-    final featureEnabled = appStateSettings[SettingKey.aiBudgetPredictionEnabled] == '1';
+    final featureEnabled =
+        appStateSettings[SettingKey.aiBudgetPredictionEnabled] == '1';
     if (!aiEnabled || !featureEnabled) return null;
 
     final hasKey = await AiService.instance.isConfigured();
@@ -47,11 +45,17 @@ class BudgetPredictionService {
     }
 
     final range = budget.currentDateRange;
-    final totalDays = (range.end.difference(range.start).inDays + 1).clamp(1, 366);
+    final totalDays = (range.end.difference(range.start).inDays + 1).clamp(
+      1,
+      366,
+    );
     final clampedNow = now.isBefore(range.start)
         ? range.start
         : (now.isAfter(range.end) ? range.end : now);
-    final daysElapsed = (clampedNow.difference(range.start).inDays + 1).clamp(1, totalDays);
+    final daysElapsed = (clampedNow.difference(range.start).inDays + 1).clamp(
+      1,
+      totalDays,
+    );
     final daysRemaining = (totalDays - daysElapsed).clamp(0, totalDays);
 
     final currentSpend = await budget.currentValue.first;
@@ -105,7 +109,7 @@ class BudgetPredictionService {
           'role': 'system',
           'content':
               'Respondes en ESPANOL siempre. Sin markdown innecesario. '
-              'Responde en maximo 2 frases con una prediccion de gasto del presupuesto.'
+              'Responde en maximo 2 frases con una prediccion de gasto del presupuesto.',
         },
         {
           'role': 'user',
@@ -115,13 +119,15 @@ class BudgetPredictionService {
               'Gasto actual: ${currentSpend.toStringAsFixed(2)}\n'
               'Dias transcurridos: $daysElapsed\n'
               'Dias restantes: $daysRemaining\n'
-              'Historico ultimos periodos: ${history.map((e) => e.toStringAsFixed(2)).join(', ')}'
+              'Historico ultimos periodos: ${history.map((e) => e.toStringAsFixed(2)).join(', ')}',
         },
       ],
     );
 
     final result = BudgetPredictionResult(
-      text: response?.trim().isNotEmpty == true ? response!.trim() : 'IA no disponible',
+      text: response?.trim().isNotEmpty == true
+          ? response!.trim()
+          : 'IA no disponible',
     );
 
     _cache[budget.id] = _CachedBudgetPrediction(result: result, createdAt: now);

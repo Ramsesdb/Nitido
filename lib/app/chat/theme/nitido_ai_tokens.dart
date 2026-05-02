@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/core/extensions/color.extensions.dart';
 import 'package:nitido/core/presentation/app_colors.dart';
 
@@ -119,14 +119,8 @@ class NitidoAiTokens {
   /// Hero avatar halo: 1-px white outline + 8-px white wash + 18-px black
   /// drop shadow (mockup `--shadow-hero-halo`).
   List<BoxShadow> get heroHaloShadow => [
-    BoxShadow(
-      color: Colors.white.withValues(alpha: 0.05),
-      spreadRadius: 1,
-    ),
-    BoxShadow(
-      color: Colors.white.withValues(alpha: 0.025),
-      spreadRadius: 8,
-    ),
+    BoxShadow(color: Colors.white.withValues(alpha: 0.05), spreadRadius: 1),
+    BoxShadow(color: Colors.white.withValues(alpha: 0.025), spreadRadius: 8),
     BoxShadow(
       color: Colors.black.withValues(alpha: 0.5),
       blurRadius: 40,
@@ -168,8 +162,8 @@ class NitidoAiTokens {
 
   /// Big balance number display (40pt, ultra-light, tabular).
   /// Pair with [displayCurrencySymbol] for `$1,234.56`-style layouts.
-  TextStyle get displayBalance => (_tt.displayMedium ?? const TextStyle())
-      .copyWith(
+  TextStyle get displayBalance =>
+      (_tt.displayMedium ?? const TextStyle()).copyWith(
         fontSize: 40,
         fontWeight: FontWeight.w300,
         letterSpacing: -1.5,

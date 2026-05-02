@@ -107,17 +107,15 @@ void registerIncomeExpensePeriodWidget() {
   DashboardWidgetRegistry.instance.register(
     DashboardWidgetSpec(
       type: WidgetType.incomeExpensePeriod,
-      displayName: (ctx) =>
-          Translations.of(ctx).home.dashboard_widgets.income_expense_period.name,
+      displayName: (ctx) => Translations.of(
+        ctx,
+      ).home.dashboard_widgets.income_expense_period.name,
       description: (ctx) => Translations.of(
         ctx,
       ).home.dashboard_widgets.income_expense_period.description,
       icon: Icons.swap_vert_rounded,
       defaultSize: WidgetSize.medium,
-      allowedSizes: const <WidgetSize>{
-        WidgetSize.medium,
-        WidgetSize.fullWidth,
-      },
+      allowedSizes: const <WidgetSize>{WidgetSize.medium, WidgetSize.fullWidth},
       defaultConfig: const <String, dynamic>{
         'mode': 'both',
         'period': '30d',

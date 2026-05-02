@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,20 +26,18 @@ WidgetDescriptor _stub(String id, [WidgetType type = WidgetType.quickUse]) {
 void main() {
   group('forTesting constructor', () {
     test('seeds the stream with an empty layout', () {
-      final service = DashboardLayoutService.forTesting(
-        writer: (_) async {},
-      );
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
       expect(service.current.widgets, isEmpty);
-      expect(service.current.schemaVersion,
-          DashboardLayout.currentSchemaVersion);
+      expect(
+        service.current.schemaVersion,
+        DashboardLayout.currentSchemaVersion,
+      );
     });
   });
 
   group('mutations emit synchronously on the stream', () {
     test('add() appends and emits the new layout', () async {
-      final service = DashboardLayoutService.forTesting(
-        writer: (_) async {},
-      );
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
       final emissions = <DashboardLayout>[];
       final sub = service.stream.listen(emissions.add);
 
@@ -50,17 +48,18 @@ void main() {
 
       expect(service.current.widgets.length, 1);
       expect(service.current.widgets.single.instanceId, 'a');
-      expect(emissions.length, greaterThanOrEqualTo(2),
-          reason: 'one initial empty + one after add');
+      expect(
+        emissions.length,
+        greaterThanOrEqualTo(2),
+        reason: 'one initial empty + one after add',
+      );
       expect(emissions.last.widgets.single.instanceId, 'a');
 
       await sub.cancel();
     });
 
     test('removeByInstanceId() drops a descriptor and emits', () async {
-      final service = DashboardLayoutService.forTesting(
-        writer: (_) async {},
-      );
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
       service.add(_stub('a'));
       service.add(_stub('b'));
 
@@ -72,9 +71,7 @@ void main() {
     });
 
     test('removeByInstanceId() with unknown id is a no-op', () async {
-      final service = DashboardLayoutService.forTesting(
-        writer: (_) async {},
-      );
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
       service.add(_stub('a'));
       final beforeLayout = service.current;
       service.removeByInstanceId('does-not-exist');
@@ -82,9 +79,7 @@ void main() {
     });
 
     test('reorder() applies ReorderableListView semantics', () async {
-      final service = DashboardLayoutService.forTesting(
-        writer: (_) async {},
-      );
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
       service.add(_stub('a'));
       service.add(_stub('b'));
       service.add(_stub('c'));
@@ -101,9 +96,7 @@ void main() {
     });
 
     test('reorder() ignores out-of-range indices', () async {
-      final service = DashboardLayoutService.forTesting(
-        writer: (_) async {},
-      );
+      final service = DashboardLayoutService.forTesting(writer: (_) async {});
       service.add(_stub('a'));
       service.add(_stub('b'));
       final before = service.current.widgets.map((w) => w.instanceId).toList();
@@ -118,23 +111,27 @@ void main() {
       );
     });
 
-    test('updateConfig() replaces only the matching descriptor config',
-        () async {
-      final service = DashboardLayoutService.forTesting(
-        writer: (_) async {},
-      );
-      service.add(_stub('a'));
-      service.add(_stub('b'));
+    test(
+      'updateConfig() replaces only the matching descriptor config',
+      () async {
+        final service = DashboardLayoutService.forTesting(writer: (_) async {});
+        service.add(_stub('a'));
+        service.add(_stub('b'));
 
-      service.updateConfig('b', <String, dynamic>{'limit': 7});
+        service.updateConfig('b', <String, dynamic>{'limit': 7});
 
-      await Future<void>.delayed(Duration.zero);
+        await Future<void>.delayed(Duration.zero);
 
-      final a = service.current.widgets.firstWhere((w) => w.instanceId == 'a');
-      final b = service.current.widgets.firstWhere((w) => w.instanceId == 'b');
-      expect(a.config, isEmpty);
-      expect(b.config['limit'], 7);
-    });
+        final a = service.current.widgets.firstWhere(
+          (w) => w.instanceId == 'a',
+        );
+        final b = service.current.widgets.firstWhere(
+          (w) => w.instanceId == 'b',
+        );
+        expect(a.config, isEmpty);
+        expect(b.config['limit'], 7);
+      },
+    );
   });
 
   group('save debouncing + flush', () {
@@ -166,15 +163,13 @@ void main() {
         expect(writeCount, 1);
 
         // The persisted JSON reflects the final layout (5 widgets).
-        final decoded =
-            jsonDecode(lastWritten!) as Map<String, dynamic>;
+        final decoded = jsonDecode(lastWritten!) as Map<String, dynamic>;
         final widgets = decoded['widgets'] as List<dynamic>;
         expect(widgets.length, 5);
       });
     });
 
-    test('flush() forces an immediate write when a save is pending',
-        () async {
+    test('flush() forces an immediate write when a save is pending', () async {
       var writeCount = 0;
       final completer = <String>[];
       final service = DashboardLayoutService.forTesting(
@@ -234,10 +229,7 @@ void main() {
 
       expect(writes, hasLength(1));
       final decoded = jsonDecode(writes.single) as Map<String, dynamic>;
-      expect(
-        decoded['schemaVersion'],
-        DashboardLayout.currentSchemaVersion,
-      );
+      expect(decoded['schemaVersion'], DashboardLayout.currentSchemaVersion);
       expect((decoded['widgets'] as List<dynamic>).length, 2);
     });
   });

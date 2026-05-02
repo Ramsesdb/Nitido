@@ -40,9 +40,7 @@ class _SuccessPageState extends State<SuccessPage>
     // banner "Deshacer" desde la página de detalles).
     Navigator.of(context).pop();
     RouteUtils.pushRoute(
-      TransactionsPage(
-        filters: TransactionFilterSet(accountsIDs: [accountId]),
-      ),
+      TransactionsPage(filters: TransactionFilterSet(accountsIDs: [accountId])),
     );
   }
 
@@ -154,11 +152,7 @@ class _CheckRing extends StatelessWidget {
               ),
               Opacity(
                 opacity: checkT,
-                child: Icon(
-                  Icons.check_rounded,
-                  color: color,
-                  size: 46,
-                ),
+                child: Icon(Icons.check_rounded, color: color, size: 46),
               ),
             ],
           ),

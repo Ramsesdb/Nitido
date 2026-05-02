@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/widget_descriptor.dart';
 import 'package:nitido/app/home/dashboard_widgets/registry.dart';
 
@@ -70,8 +70,7 @@ class EditableWidgetFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final hasConfigEditor =
-        spec.configEditor != null && onConfigure != null;
+    final hasConfigEditor = spec.configEditor != null && onConfigure != null;
     final displayName = spec.displayName(context);
 
     return TweenAnimationBuilder<double>(
@@ -82,10 +81,7 @@ class EditableWidgetFrame extends StatelessWidget {
       builder: (context, t, child) {
         return Opacity(
           opacity: t.clamp(0.0, 1.0),
-          child: Transform.scale(
-            scale: 0.98 + (0.02 * t),
-            child: child,
-          ),
+          child: Transform.scale(scale: 0.98 + (0.02 * t), child: child),
         );
       },
       child: Padding(
@@ -127,10 +123,7 @@ class EditableWidgetFrame extends StatelessWidget {
                       else
                         Opacity(
                           opacity: 0.85,
-                          child: IgnorePointer(
-                            ignoring: true,
-                            child: child,
-                          ),
+                          child: IgnorePointer(ignoring: true, child: child),
                         ),
                     ],
                   ),
@@ -230,10 +223,7 @@ class _FrameHeaderLabel extends StatelessWidget {
 /// a la izquierda del [message]. Tono informativo, no de error — usa
 /// colores derivados de `onSurface` con alpha bajo para no alarmar.
 class _EmptyPlaceholder extends StatelessWidget {
-  const _EmptyPlaceholder({
-    required this.colorScheme,
-    required this.message,
-  });
+  const _EmptyPlaceholder({required this.colorScheme, required this.message});
 
   final ColorScheme colorScheme;
   final String message;

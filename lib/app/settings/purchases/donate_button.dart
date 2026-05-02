@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
@@ -68,14 +68,10 @@ class _DonateButtonState extends State<DonateButton> {
             SnackbarParams.fromError(t.more.help_us.donate_err),
           );
         } else if (purchaseDetails.status == PurchaseStatus.purchased) {
-          NitidoSnackbar.success(
-            SnackbarParams(t.more.help_us.donate_success),
-          );
+          NitidoSnackbar.success(SnackbarParams(t.more.help_us.donate_success));
         }
         if (purchaseDetails.pendingCompletePurchase) {
-          unawaited(
-            InAppPurchase.instance.completePurchase(purchaseDetails),
-          );
+          unawaited(InAppPurchase.instance.completePurchase(purchaseDetails));
         }
       }
     }

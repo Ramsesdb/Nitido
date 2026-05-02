@@ -23,10 +23,7 @@ import 'package:nitido/core/services/rate_providers/manual_override_provider.dar
 ///     this is what every existing reader expects (see
 ///     `ExchangeRateService.calculateExchangeRate`).
 class ManualOverrideDialog extends StatefulWidget {
-  const ManualOverrideDialog({
-    super.key,
-    this.initialCurrency,
-  });
+  const ManualOverrideDialog({super.key, this.initialCurrency});
 
   /// Optional preselected currency for the "from" side of the pair. When
   /// the user opens this dialog by tapping a row in the rates list we pass
@@ -138,10 +135,7 @@ class _ManualOverrideDialogState extends State<ManualOverrideDialog> {
               'automático para esta moneda.',
             ),
             const SizedBox(height: 16),
-            Text(
-              'Par',
-              style: Theme.of(context).textTheme.labelLarge,
-            ),
+            Text('Par', style: Theme.of(context).textTheme.labelLarge),
             const SizedBox(height: 4),
             InkWell(
               onTap: _saving ? null : _pickFromCurrency,
@@ -153,9 +147,7 @@ class _ManualOverrideDialogState extends State<ManualOverrideDialog> {
                   enabled: !_saving,
                 ),
                 child: Text(
-                  from == null
-                      ? 'Toca para elegir'
-                      : '${from.code} → $pref',
+                  from == null ? 'Toca para elegir' : '${from.code} → $pref',
                 ),
               ),
             ),
@@ -186,9 +178,7 @@ class _ManualOverrideDialogState extends State<ManualOverrideDialog> {
               const SizedBox(height: 12),
               Text(
                 _errorText!,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
             ],
           ],

@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/currency/currency_conversion_helper.dart';
 import 'package:nitido/core/services/rate_providers/rate_source.dart';
 
@@ -57,16 +57,17 @@ void main() {
       () async {
         var rateLookupCalls = 0;
         final helper = CurrencyConversionHelper.forTesting(
-          rateLookup: ({
-            required String fromCurrency,
-            required String toCurrency,
-            num amount = 1,
-            DateTime? date,
-            String? source,
-          }) {
-            rateLookupCalls += 1;
-            return Stream<double?>.value(null);
-          },
+          rateLookup:
+              ({
+                required String fromCurrency,
+                required String toCurrency,
+                num amount = 1,
+                DateTime? date,
+                String? source,
+              }) {
+                rateLookupCalls += 1;
+                return Stream<double?>.value(null);
+              },
         );
 
         final result = await helper
@@ -94,9 +95,7 @@ void main() {
         // USD account 100 USD + VES account 4000 VES, target USD,
         // 1 VES = 0.025 USD (i.e. 1 USD = 40 VES at BCV)
         final helper = CurrencyConversionHelper.forTesting(
-          rateLookup: rateTable({
-            (from: 'VES', to: 'USD'): 0.025,
-          }),
+          rateLookup: rateTable({(from: 'VES', to: 'USD'): 0.025}),
         );
 
         final result = await helper
@@ -183,77 +182,74 @@ void main() {
       expect(result.missingRateCurrencies, isEmpty);
     });
 
-    test(
-      'forwards RateSource.dbValue to the lookup as `source`',
-      () async {
-        String? capturedSource;
-        final helper = CurrencyConversionHelper.forTesting(
-          rateLookup: ({
-            required String fromCurrency,
-            required String toCurrency,
-            num amount = 1,
-            DateTime? date,
-            String? source,
-          }) {
-            capturedSource = source;
-            return Stream<double?>.value(0.025 * amount.toDouble());
-          },
-        );
+    test('forwards RateSource.dbValue to the lookup as `source`', () async {
+      String? capturedSource;
+      final helper = CurrencyConversionHelper.forTesting(
+        rateLookup:
+            ({
+              required String fromCurrency,
+              required String toCurrency,
+              num amount = 1,
+              DateTime? date,
+              String? source,
+            }) {
+              capturedSource = source;
+              return Stream<double?>.value(0.025 * amount.toDouble());
+            },
+      );
 
-        await helper
-            .convertMixedCurrenciesToTarget(
-              byNative: Stream.value({'VES': 4000.0}),
-              target: 'USD',
-              source: RateSource.paralelo,
-            )
-            .first;
+      await helper
+          .convertMixedCurrenciesToTarget(
+            byNative: Stream.value({'VES': 4000.0}),
+            target: 'USD',
+            source: RateSource.paralelo,
+          )
+          .first;
 
-        expect(capturedSource, 'paralelo');
-      },
-    );
+      expect(capturedSource, 'paralelo');
+    });
 
-    test(
-      'forwards RateSource.bcv as the dbValue',
-      () async {
-        String? capturedSource;
-        final helper = CurrencyConversionHelper.forTesting(
-          rateLookup: ({
-            required String fromCurrency,
-            required String toCurrency,
-            num amount = 1,
-            DateTime? date,
-            String? source,
-          }) {
-            capturedSource = source;
-            return Stream<double?>.value(0.025 * amount.toDouble());
-          },
-        );
+    test('forwards RateSource.bcv as the dbValue', () async {
+      String? capturedSource;
+      final helper = CurrencyConversionHelper.forTesting(
+        rateLookup:
+            ({
+              required String fromCurrency,
+              required String toCurrency,
+              num amount = 1,
+              DateTime? date,
+              String? source,
+            }) {
+              capturedSource = source;
+              return Stream<double?>.value(0.025 * amount.toDouble());
+            },
+      );
 
-        await helper
-            .convertMixedCurrenciesToTarget(
-              byNative: Stream.value({'VES': 4000.0}),
-              target: 'USD',
-              source: RateSource.bcv,
-            )
-            .first;
+      await helper
+          .convertMixedCurrenciesToTarget(
+            byNative: Stream.value({'VES': 4000.0}),
+            target: 'USD',
+            source: RateSource.bcv,
+          )
+          .first;
 
-        expect(capturedSource, 'bcv');
-      },
-    );
+      expect(capturedSource, 'bcv');
+    });
 
     test('null source forwarded as null', () async {
       String? capturedSource = '<not-set>';
       final helper = CurrencyConversionHelper.forTesting(
-        rateLookup: ({
-          required String fromCurrency,
-          required String toCurrency,
-          num amount = 1,
-          DateTime? date,
-          String? source,
-        }) {
-          capturedSource = source;
-          return Stream<double?>.value(0.025 * amount.toDouble());
-        },
+        rateLookup:
+            ({
+              required String fromCurrency,
+              required String toCurrency,
+              num amount = 1,
+              DateTime? date,
+              String? source,
+            }) {
+              capturedSource = source;
+              return Stream<double?>.value(0.025 * amount.toDouble());
+            },
       );
 
       await helper
@@ -267,95 +263,80 @@ void main() {
       expect(capturedSource, isNull);
     });
 
-    test(
-      'spec scenario — toggle BCV→Paralelo only changes non-USD '
-      'portion (USD account stays at 100)',
-      () async {
-        // From transactions/spec.md scenario "Toggle BCV→Paralelo NO
-        // altera porción nativa USD": dual(USD, VES), USD account 100,
-        // VES account 1000, BCV=40 (1 VES = 0.025 USD), Paralelo=45
-        // (1 VES ≈ 0.02222 USD). Expected total under BCV: 125 USD; under
-        // Paralelo: ~122.22. Native USD 100 must NOT change.
-        final bcvHelper = CurrencyConversionHelper.forTesting(
-          rateLookup: rateTable({
-            (from: 'VES', to: 'USD'): 1 / 40,
-          }),
-        );
-        final paraleloHelper = CurrencyConversionHelper.forTesting(
-          rateLookup: rateTable({
-            (from: 'VES', to: 'USD'): 1 / 45,
-          }),
-        );
+    test('spec scenario — toggle BCV→Paralelo only changes non-USD '
+        'portion (USD account stays at 100)', () async {
+      // From transactions/spec.md scenario "Toggle BCV→Paralelo NO
+      // altera porción nativa USD": dual(USD, VES), USD account 100,
+      // VES account 1000, BCV=40 (1 VES = 0.025 USD), Paralelo=45
+      // (1 VES ≈ 0.02222 USD). Expected total under BCV: 125 USD; under
+      // Paralelo: ~122.22. Native USD 100 must NOT change.
+      final bcvHelper = CurrencyConversionHelper.forTesting(
+        rateLookup: rateTable({(from: 'VES', to: 'USD'): 1 / 40}),
+      );
+      final paraleloHelper = CurrencyConversionHelper.forTesting(
+        rateLookup: rateTable({(from: 'VES', to: 'USD'): 1 / 45}),
+      );
 
-        final bcvResult = await bcvHelper
-            .convertMixedCurrenciesToTarget(
-              byNative: Stream.value({'USD': 100.0, 'VES': 1000.0}),
-              target: 'USD',
-            )
-            .first;
-        final paraleloResult = await paraleloHelper
-            .convertMixedCurrenciesToTarget(
-              byNative: Stream.value({'USD': 100.0, 'VES': 1000.0}),
-              target: 'USD',
-            )
-            .first;
+      final bcvResult = await bcvHelper
+          .convertMixedCurrenciesToTarget(
+            byNative: Stream.value({'USD': 100.0, 'VES': 1000.0}),
+            target: 'USD',
+          )
+          .first;
+      final paraleloResult = await paraleloHelper
+          .convertMixedCurrenciesToTarget(
+            byNative: Stream.value({'USD': 100.0, 'VES': 1000.0}),
+            target: 'USD',
+          )
+          .first;
 
-        expect(bcvResult.convertedTotal, closeTo(125.0, 1e-9));
-        expect(
-          paraleloResult.convertedTotal,
-          closeTo(100.0 + 1000.0 / 45.0, 1e-9),
-        );
-      },
-    );
+      expect(bcvResult.convertedTotal, closeTo(125.0, 1e-9));
+      expect(
+        paraleloResult.convertedTotal,
+        closeTo(100.0 + 1000.0 / 45.0, 1e-9),
+      );
+    });
 
-    test(
-      'spec scenario — single(VES) with USD + VES accounts, USD '
-      'portion converted, VES portion native',
-      () async {
-        // From transactions/spec.md "Modo single_bs con cuentas USD":
-        // USD account 50, VES account 500, BCV=40 → total 2500 VES.
-        final helper = CurrencyConversionHelper.forTesting(
-          rateLookup: rateTable({
-            (from: 'USD', to: 'VES'): 40.0,
-          }),
-        );
+    test('spec scenario — single(VES) with USD + VES accounts, USD '
+        'portion converted, VES portion native', () async {
+      // From transactions/spec.md "Modo single_bs con cuentas USD":
+      // USD account 50, VES account 500, BCV=40 → total 2500 VES.
+      final helper = CurrencyConversionHelper.forTesting(
+        rateLookup: rateTable({(from: 'USD', to: 'VES'): 40.0}),
+      );
 
-        final result = await helper
-            .convertMixedCurrenciesToTarget(
-              byNative: Stream.value({'USD': 50.0, 'VES': 500.0}),
-              target: 'VES',
-            )
-            .first;
+      final result = await helper
+          .convertMixedCurrenciesToTarget(
+            byNative: Stream.value({'USD': 50.0, 'VES': 500.0}),
+            target: 'VES',
+          )
+          .first;
 
-        expect(result.convertedTotal, 2500.0);
-        expect(result.missingRateCurrencies, isEmpty);
-      },
-    );
+      expect(result.convertedTotal, 2500.0);
+      expect(result.missingRateCurrencies, isEmpty);
+    });
 
-    test(
-      'spec scenario — single(EUR) with JPY missing rate — JPY '
-      'group excluded, missing reported',
-      () async {
-        // From transactions/spec.md "Tasa faltante para un grupo":
-        // single(EUR), JPY account 1000 with no rate → JPY excluded,
-        // EUR portion preserved.
-        final helper = CurrencyConversionHelper.forTesting(
-          rateLookup: rateTable({
-            // No JPY→EUR rate
-          }),
-        );
+    test('spec scenario — single(EUR) with JPY missing rate — JPY '
+        'group excluded, missing reported', () async {
+      // From transactions/spec.md "Tasa faltante para un grupo":
+      // single(EUR), JPY account 1000 with no rate → JPY excluded,
+      // EUR portion preserved.
+      final helper = CurrencyConversionHelper.forTesting(
+        rateLookup: rateTable({
+          // No JPY→EUR rate
+        }),
+      );
 
-        final result = await helper
-            .convertMixedCurrenciesToTarget(
-              byNative: Stream.value({'EUR': 200.0, 'JPY': 1000.0}),
-              target: 'EUR',
-            )
-            .first;
+      final result = await helper
+          .convertMixedCurrenciesToTarget(
+            byNative: Stream.value({'EUR': 200.0, 'JPY': 1000.0}),
+            target: 'EUR',
+          )
+          .first;
 
-        expect(result.convertedTotal, 200.0); // EUR identity only
-        expect(result.missingRateCurrencies, {'JPY'});
-      },
-    );
+      expect(result.convertedTotal, 200.0); // EUR identity only
+      expect(result.missingRateCurrencies, {'JPY'});
+    });
   });
 
   group('CurrencyConversionHelper.convertMixedCurrenciesToTotal', () {
@@ -376,9 +357,7 @@ void main() {
       }
 
       final helper = CurrencyConversionHelper.forTesting(
-        rateLookup: rateTable({
-          (from: 'EUR', to: 'USD'): 1.10,
-        }),
+        rateLookup: rateTable({(from: 'EUR', to: 'USD'): 1.10}),
       );
 
       final total = await helper

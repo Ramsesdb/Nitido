@@ -38,11 +38,15 @@ class IncomeBreakdownTable extends StatelessWidget {
           .toList();
 
       if (tagTxs.isNotEmpty) {
-        items.add(TrDistributionChartItem<Tag>(
-          category: tag,
-          transactions: tagTxs,
-          value: tagTxs.map((e) => e.currentValueInPreferredCurrency ?? 0.0).sum,
-        ));
+        items.add(
+          TrDistributionChartItem<Tag>(
+            category: tag,
+            transactions: tagTxs,
+            value: tagTxs
+                .map((e) => e.currentValueInPreferredCurrency ?? 0.0)
+                .sum,
+          ),
+        );
       }
     }
 
@@ -71,15 +75,17 @@ class IncomeBreakdownTable extends StatelessWidget {
         final cat = tx.category!.parentCategoryID == null
             ? Category.fromDB(tx.category!, null)
             : (await CategoryService.instance
-                  .getCategoryById(tx.category!.parentCategoryID!)
-                  .first) ??
-              Category.fromDB(tx.category!, null);
+                      .getCategoryById(tx.category!.parentCategoryID!)
+                      .first) ??
+                  Category.fromDB(tx.category!, null);
 
-        items.add(TrDistributionChartItem<Category>(
-          category: cat,
-          transactions: [tx],
-          value: trValue,
-        ));
+        items.add(
+          TrDistributionChartItem<Category>(
+            category: cat,
+            transactions: [tx],
+            value: trValue,
+          ),
+        );
       }
     }
 
@@ -171,11 +177,8 @@ class IncomeBreakdownTable extends StatelessWidget {
               items: items,
               total: total,
               nameBuilder: (cat) => cat.name,
-              leadingBuilder: (cat) => IconDisplayer.fromCategory(
-                context,
-                category: cat,
-                size: 20,
-              ),
+              leadingBuilder: (cat) =>
+                  IconDisplayer.fromCategory(context, category: cat, size: 20),
               colorBuilder: (cat) => ColorHex.get(cat.color),
             );
           },
@@ -226,8 +229,9 @@ class _BreakdownListView<T> extends StatelessWidget {
                 '${item.transactions.length} transacción${item.transactions.length != 1 ? "es" : ""}', // TODO: i18n
               ),
               Text(
-                NumberFormat.decimalPercentPattern(decimalDigits: 1)
-                    .format(percentage),
+                NumberFormat.decimalPercentPattern(
+                  decimalDigits: 1,
+                ).format(percentage),
               ),
             ],
           ),

@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:ui';
 
 // ignore: unused_import
@@ -82,8 +82,7 @@ const Color _kHairline = Color.fromRGBO(255, 255, 255, 0.08);
 const Color _kChipTint = Color.fromRGBO(255, 255, 255, 0.05);
 const Color _kRowTint = Color.fromRGBO(255, 255, 255, 0.04);
 
-Color _kAccentOf(BuildContext context) =>
-    Theme.of(context).colorScheme.primary;
+Color _kAccentOf(BuildContext context) => Theme.of(context).colorScheme.primary;
 Color _kChipBorderOf(BuildContext context) =>
     _kAccentOf(context).withValues(alpha: 0.30);
 
@@ -125,8 +124,8 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
     final p = widget.proposal;
     _amount = p.amount.abs();
     _type = p.type;
-    _description = (p.counterpartyName != null &&
-            p.counterpartyName!.trim().isNotEmpty)
+    _description =
+        (p.counterpartyName != null && p.counterpartyName!.trim().isNotEmpty)
         ? p.counterpartyName
         : null;
     // Defense-in-depth: if the LLM slipped through a clearly stale date
@@ -145,7 +144,9 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
     final p = widget.proposal;
     Account? account;
     if (p.accountId != null) {
-      account = await AccountService.instance.getAccountById(p.accountId!).first;
+      account = await AccountService.instance
+          .getAccountById(p.accountId!)
+          .first;
       debugPrint(
         'VoiceReviewSheet account path: proposal.accountId="${p.accountId}" '
         '-> resolved="${account?.name}" (${account?.id})',
@@ -169,8 +170,9 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
 
     Currency? proposalCurrency;
     if (p.currencyId.trim().isNotEmpty) {
-      proposalCurrency =
-          await CurrencyService.instance.getCurrencyByCode(p.currencyId).first;
+      proposalCurrency = await CurrencyService.instance
+          .getCurrencyByCode(p.currencyId)
+          .first;
     }
 
     if (!mounted) return;
@@ -211,9 +213,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
       return;
     }
     _tickStart = DateTime.now();
-    setState(
-      () => _autoSecondsLeft = _autoConfirmDelay.inSeconds.toDouble(),
-    );
+    setState(() => _autoSecondsLeft = _autoConfirmDelay.inSeconds.toDouble());
     // Sub-second ticker so the circular progress animates smoothly.
     _tickTimer = Timer.periodic(const Duration(milliseconds: 60), (timer) {
       if (!mounted) {
@@ -325,8 +325,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
               ),
               const SizedBox(height: 12),
               FilledButton(
-                onPressed: () =>
-                    Navigator.of(ctx).pop(controller.text.trim()),
+                onPressed: () => Navigator.of(ctx).pop(controller.text.trim()),
                 child: Text(t.voice_done),
               ),
             ],
@@ -394,9 +393,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
       if (!mounted) return;
       setState(() => _proposalCurrency = newCurrency);
     } catch (e, st) {
-      debugPrint(
-        'VoiceReviewSheet._editAccount: setState failed $e\n$st',
-      );
+      debugPrint('VoiceReviewSheet._editAccount: setState failed $e\n$st');
       if (!mounted) return;
       final t = Translations.of(context).nitido_ai;
       NitidoSnackbar.error(
@@ -412,9 +409,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
     final t = Translations.of(context).nitido_ai;
 
     if (_amount <= 0) {
-      NitidoSnackbar.warning(
-        SnackbarParams(t.voice_validation_amount_zero),
-      );
+      NitidoSnackbar.warning(SnackbarParams(t.voice_validation_amount_zero));
       return;
     }
     if (_account == null) {
@@ -433,8 +428,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
     setState(() => _isSaving = true);
 
     final newId = generateUUID();
-    final signedValue =
-        _type == TransactionType.expense ? -_amount : _amount;
+    final signedValue = _type == TransactionType.expense ? -_amount : _amount;
     final title = _description?.trim();
     final rawTranscript = widget.proposal.rawText.trim().isEmpty
         ? null
@@ -496,7 +490,8 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
 
     final updated = widget.proposal.copyWith(
       amount: _amount,
-      currencyId: _proposalCurrency?.code ??
+      currencyId:
+          _proposalCurrency?.code ??
           _account?.currency.code ??
           widget.proposal.currencyId,
       date: _date,
@@ -545,8 +540,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                   left: BorderSide(color: _kHairline, width: 0.5),
                   right: BorderSide(color: _kHairline, width: 0.5),
                 ),
-                borderRadius:
-                    BorderRadius.vertical(top: Radius.circular(28)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
               ),
               child: Stack(
                 children: [
@@ -594,8 +588,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                       // Transcript quote (if present)
                       if (widget.proposal.rawText.trim().isNotEmpty)
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(24, 10, 24, 0),
+                          padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
                           child: Text(
                             '"${widget.proposal.rawText.trim()}"',
                             maxLines: 2,
@@ -635,8 +628,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                         mainAxisSize: MainAxisSize.min,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.baseline,
-                                        textBaseline:
-                                            TextBaseline.alphabetic,
+                                        textBaseline: TextBaseline.alphabetic,
                                         children: [
                                           CurrencyDisplayer(
                                             amountToConvert: _amount,
@@ -650,19 +642,18 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                             ),
                                           ),
                                           if (displayCurrency?.code != null &&
-                                              displayCurrency!
-                                                  .code.isNotEmpty)
+                                              displayCurrency!.code.isNotEmpty)
                                             Padding(
-                                              padding: const EdgeInsets
-                                                  .only(left: 6),
+                                              padding: const EdgeInsets.only(
+                                                left: 6,
+                                              ),
                                               child: Text(
                                                 displayCurrency.code,
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w500,
                                                   color: Colors.white
-                                                      .withValues(
-                                                          alpha: 0.45),
+                                                      .withValues(alpha: 0.45),
                                                 ),
                                               ),
                                             ),
@@ -673,8 +664,9 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                 : Text(
                                     t.voice_review_amount_placeholder,
                                     style: TextStyle(
-                                      color: Colors.white
-                                          .withValues(alpha: 0.6),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.6,
+                                      ),
                                       fontSize: 22,
                                       fontWeight: FontWeight.w600,
                                       letterSpacing: -0.5,
@@ -755,8 +747,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                 height: chipHeight,
                                 child: _EditChip(
                                   icon: _AmountTypeBadge(type: _type),
-                                  label:
-                                      t.voice_review_amount_placeholder,
+                                  label: t.voice_review_amount_placeholder,
                                   valueWidget: amountValue,
                                   active: _amount > 0,
                                   onTap: _editAmount,
@@ -766,10 +757,8 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                 width: chipWidth,
                                 height: chipHeight,
                                 child: _EditChip(
-                                  icon: _CategoryChipIcon(
-                                      category: _category),
-                                  label:
-                                      t.voice_review_category_placeholder,
+                                  icon: _CategoryChipIcon(category: _category),
+                                  label: t.voice_review_category_placeholder,
                                   valueWidget: categoryValue,
                                   active: false,
                                   onTap: _editCategory,
@@ -782,11 +771,9 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                   icon: Icon(
                                     Icons.event_rounded,
                                     size: 16,
-                                    color: Colors.white
-                                        .withValues(alpha: 0.75),
+                                    color: Colors.white.withValues(alpha: 0.75),
                                   ),
-                                  label:
-                                      t.voice_review_date_placeholder,
+                                  label: t.voice_review_date_placeholder,
                                   valueWidget: dateValue,
                                   active: false,
                                   onTap: _editDate,
@@ -796,10 +783,11 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                 width: chipWidth,
                                 height: chipHeight,
                                 child: _EditChip(
-                                  icon: const Text('📝',
-                                      style: TextStyle(fontSize: 16)),
-                                  label:
-                                      t.voice_review_description_placeholder,
+                                  icon: const Text(
+                                    '📝',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
+                                  label: t.voice_review_description_placeholder,
                                   valueWidget: descriptionValue,
                                   active: false,
                                   onTap: _editDescription,
@@ -825,18 +813,19 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                 child: SingleChildScrollView(
                                   scrollDirection: Axis.horizontal,
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 20),
-                                  physics:
-                                      const BouncingScrollPhysics(),
+                                    horizontal: 20,
+                                  ),
+                                  physics: const BouncingScrollPhysics(),
                                   child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.stretch,
                                     children: [
-                                      for (var i = 0;
-                                          i < chips.length;
-                                          i++) ...[
-                                        if (i > 0)
-                                          const SizedBox(width: gap),
+                                      for (
+                                        var i = 0;
+                                        i < chips.length;
+                                        i++
+                                      ) ...[
+                                        if (i > 0) const SizedBox(width: gap),
                                         chips[i],
                                       ],
                                     ],
@@ -849,12 +838,10 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                       ),
                       // Account row
                       Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(24, 10, 24, 0),
+                        padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
                         child: _AccountRow(
                           account: _account,
-                          placeholder:
-                              t.voice_review_account_placeholder,
+                          placeholder: t.voice_review_account_placeholder,
                           onTap: _editAccount,
                         ),
                       ),
@@ -863,15 +850,13 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                           _proposalCurrency!.code.toUpperCase() !=
                               _account!.currency.code.toUpperCase())
                         Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(28, 8, 28, 0),
+                          padding: const EdgeInsets.fromLTRB(28, 8, 28, 0),
                           child: Row(
                             children: [
                               Icon(
                                 Icons.swap_horiz_rounded,
                                 size: 14,
-                                color: Colors.white
-                                    .withValues(alpha: 0.55),
+                                color: Colors.white.withValues(alpha: 0.55),
                               ),
                               const SizedBox(width: 6),
                               Expanded(
@@ -882,8 +867,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                                   'al guardar.',
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Colors.white
-                                        .withValues(alpha: 0.6),
+                                    color: Colors.white.withValues(alpha: 0.6),
                                     fontStyle: FontStyle.italic,
                                     letterSpacing: -0.1,
                                   ),
@@ -917,8 +901,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                       top: false,
                       minimum: const EdgeInsets.only(bottom: 14),
                       child: Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(20, 8, 20, 6),
+                        padding: const EdgeInsets.fromLTRB(20, 8, 20, 6),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -926,8 +909,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: TextButton(
-                                onPressed:
-                                    _isSaving ? null : _escalateToForm,
+                                onPressed: _isSaving ? null : _escalateToForm,
                                 style: TextButton.styleFrom(
                                   foregroundColor: _kAccentOf(context),
                                   padding: const EdgeInsets.symmetric(
@@ -952,8 +934,7 @@ class _VoiceReviewSheetState extends State<_VoiceReviewSheet> {
                             VoiceActionButtons(
                               onCancel: _isSaving
                                   ? () {}
-                                  : () =>
-                                      Navigator.of(context).maybePop(),
+                                  : () => Navigator.of(context).maybePop(),
                               onSend: _isSaving
                                   ? null
                                   : () async {
@@ -1035,11 +1016,7 @@ class _EditChip extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: Center(child: icon),
-                  ),
+                  SizedBox(width: 18, height: 18, child: Center(child: icon)),
                   const SizedBox(width: 8),
                   Text(
                     label,
@@ -1140,8 +1117,7 @@ class _AutoSavePill extends StatelessWidget {
         onTap: onCancel,
         borderRadius: BorderRadius.circular(9999),
         child: Container(
-          padding:
-              const EdgeInsets.fromLTRB(8, 6, 12, 6),
+          padding: const EdgeInsets.fromLTRB(8, 6, 12, 6),
           decoration: BoxDecoration(
             color: accent.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(9999),
@@ -1163,8 +1139,8 @@ class _AutoSavePill extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 Translations.of(context).nitido_ai.voice_review_auto_countdown(
-                      seconds: secondsLeft.ceil(),
-                    ),
+                  seconds: secondsLeft.ceil(),
+                ),
                 style: TextStyle(
                   color: accent,
                   fontSize: 12,
@@ -1308,4 +1284,3 @@ class _AccountRow extends StatelessWidget {
     );
   }
 }
-

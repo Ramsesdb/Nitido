@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:notification_listener_service/notification_listener_service.dart';
@@ -76,7 +76,8 @@ class CaptureHealthMonitor {
   static const String _prefsLastSuccessAt = 'capture_health_last_success_at';
   static const String _prefsLastResubscribeAt =
       'capture_health_last_resubscribe_at';
-  static const String _prefsLastBatteryWarnAt = 'capture_health_last_battery_warn_at';
+  static const String _prefsLastBatteryWarnAt =
+      'capture_health_last_battery_warn_at';
   static const String _prefsLastFpPruneAt = 'capture_health_last_fp_prune_at';
   static const String _prefsLastPipelineRestartAt =
       'capture_health_last_pipeline_restart_at';
@@ -227,14 +228,16 @@ class CaptureHealthMonitor {
   /// intent overrides the 1 h guard.
   Future<bool> repairNow() async {
     final now = DateTime.now();
-    CaptureEventLog.instance.log(CaptureEvent(
-      id: generateUUID(),
-      timestamp: now,
-      source: CaptureEventSource.notification,
-      content: 'Reparación manual solicitada desde la UI',
-      status: CaptureEventStatus.systemEvent,
-      reason: 'manual-repair',
-    ));
+    CaptureEventLog.instance.log(
+      CaptureEvent(
+        id: generateUUID(),
+        timestamp: now,
+        source: CaptureEventSource.notification,
+        content: 'Reparación manual solicitada desde la UI',
+        status: CaptureEventStatus.systemEvent,
+        reason: 'manual-repair',
+      ),
+    );
 
     // Step 1: re-check permissions.
     try {
@@ -254,15 +257,17 @@ class CaptureHealthMonitor {
     // Step 3: if still broken, bounce the whole service. Skip the 1h
     // throttle because the user is driving.
     if (!subscribed) {
-      CaptureEventLog.instance.log(CaptureEvent(
-        id: generateUUID(),
-        timestamp: DateTime.now(),
-        source: CaptureEventSource.notification,
-        content:
-            'Listener sigue desconectado tras reintento — reiniciando servicio',
-        status: CaptureEventStatus.systemEvent,
-        reason: 'manual-repair: escalada a stop+start',
-      ));
+      CaptureEventLog.instance.log(
+        CaptureEvent(
+          id: generateUUID(),
+          timestamp: DateTime.now(),
+          source: CaptureEventSource.notification,
+          content:
+              'Listener sigue desconectado tras reintento — reiniciando servicio',
+          status: CaptureEventStatus.systemEvent,
+          reason: 'manual-repair: escalada a stop+start',
+        ),
+      );
       try {
         await NitidoBackgroundService.instance.stopService();
         await NitidoBackgroundService.instance.startService();
@@ -289,8 +294,7 @@ class CaptureHealthMonitor {
       final lastEventMs = prefs.getInt(_prefsLastEventAt);
       final lastSuccessMs = prefs.getInt(_prefsLastSuccessAt);
       final lastResubscribeMs = prefs.getInt(_prefsLastResubscribeAt);
-      final lastPipelineRestartMs =
-          prefs.getInt(_prefsLastPipelineRestartAt);
+      final lastPipelineRestartMs = prefs.getInt(_prefsLastPipelineRestartAt);
       if (lastEventMs != null) {
         _lastEventAt = DateTime.fromMillisecondsSinceEpoch(lastEventMs);
       }
@@ -314,10 +318,7 @@ class CaptureHealthMonitor {
     }
   }
 
-  Future<void> _persist({
-    required String key,
-    required DateTime value,
-  }) async {
+  Future<void> _persist({required String key, required DateTime value}) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(key, value.millisecondsSinceEpoch);
@@ -463,15 +464,19 @@ class CaptureHealthMonitor {
         if (now.difference(last) < _batteryWarnInterval) return;
       }
       await prefs.setInt(_prefsLastBatteryWarnAt, now.millisecondsSinceEpoch);
-      CaptureEventLog.instance.log(CaptureEvent(
-        id: generateUUID(),
-        timestamp: now,
-        source: CaptureEventSource.notification,
-        content: 'Nitido no está en la lista blanca de optimización de batería.',
-        status: CaptureEventStatus.systemEvent,
-        reason: 'El sistema puede matar el foreground service en Doze. '
-            'Sugerir al usuario que abra la pantalla de permisos.',
-      ));
+      CaptureEventLog.instance.log(
+        CaptureEvent(
+          id: generateUUID(),
+          timestamp: now,
+          source: CaptureEventSource.notification,
+          content:
+              'Nitido no está en la lista blanca de optimización de batería.',
+          status: CaptureEventStatus.systemEvent,
+          reason:
+              'El sistema puede matar el foreground service en Doze. '
+              'Sugerir al usuario que abra la pantalla de permisos.',
+        ),
+      );
     } catch (e) {
       debugPrint('CaptureHealthMonitor: battery warn error: $e');
     }
@@ -492,27 +497,31 @@ class CaptureHealthMonitor {
       _lastResubscribeAt = now;
       _lastResubscribeAtNotifier.value = now;
       unawaited(_persist(key: _prefsLastResubscribeAt, value: now));
-      CaptureEventLog.instance.log(CaptureEvent(
-        id: generateUUID(),
-        timestamp: now,
-        source: CaptureEventSource.notification,
-        content: succeeded
-            ? 'Health monitor reconectó listener (motivo: $reason)'
-            : 'Reconexión de listener completó sin error pero '
-                'isSubscribed=false (motivo: $reason)',
-        status: CaptureEventStatus.systemEvent,
-        reason: 'Reintento automatico de suscripcion al stream nativo',
-      ));
+      CaptureEventLog.instance.log(
+        CaptureEvent(
+          id: generateUUID(),
+          timestamp: now,
+          source: CaptureEventSource.notification,
+          content: succeeded
+              ? 'Health monitor reconectó listener (motivo: $reason)'
+              : 'Reconexión de listener completó sin error pero '
+                    'isSubscribed=false (motivo: $reason)',
+          status: CaptureEventStatus.systemEvent,
+          reason: 'Reintento automatico de suscripcion al stream nativo',
+        ),
+      );
     } catch (e) {
       debugPrint('CaptureHealthMonitor: resubscribe error: $e');
-      CaptureEventLog.instance.log(CaptureEvent(
-        id: generateUUID(),
-        timestamp: DateTime.now(),
-        source: CaptureEventSource.notification,
-        content: 'Fallo al reconectar listener: $e',
-        status: CaptureEventStatus.systemEvent,
-        reason: 'Excepcion en ensureSubscribed() (motivo: $reason)',
-      ));
+      CaptureEventLog.instance.log(
+        CaptureEvent(
+          id: generateUUID(),
+          timestamp: DateTime.now(),
+          source: CaptureEventSource.notification,
+          content: 'Fallo al reconectar listener: $e',
+          status: CaptureEventStatus.systemEvent,
+          reason: 'Excepcion en ensureSubscribed() (motivo: $reason)',
+        ),
+      );
     }
 
     if (succeeded) {
@@ -541,8 +550,7 @@ class CaptureHealthMonitor {
   Future<void> _maybeRestartPipeline({required String reason}) async {
     final now = DateTime.now();
     final last = _lastPipelineRestartAt;
-    if (last != null &&
-        now.difference(last) < kMinPipelineRestartInterval) {
+    if (last != null && now.difference(last) < kMinPipelineRestartInterval) {
       debugPrint(
         'CaptureHealthMonitor: skip pipeline restart — throttled '
         '(last=${last.toIso8601String()})',
@@ -550,29 +558,33 @@ class CaptureHealthMonitor {
       return;
     }
 
-    CaptureEventLog.instance.log(CaptureEvent(
-      id: generateUUID(),
-      timestamp: now,
-      source: CaptureEventSource.notification,
-      content:
-          'Reiniciando pipeline de captura tras fallos consecutivos ($reason)',
-      status: CaptureEventStatus.systemEvent,
-      reason: 'Escalada automatica: stopService() + startService()',
-    ));
+    CaptureEventLog.instance.log(
+      CaptureEvent(
+        id: generateUUID(),
+        timestamp: now,
+        source: CaptureEventSource.notification,
+        content:
+            'Reiniciando pipeline de captura tras fallos consecutivos ($reason)',
+        status: CaptureEventStatus.systemEvent,
+        reason: 'Escalada automatica: stopService() + startService()',
+      ),
+    );
 
     try {
       await NitidoBackgroundService.instance.stopService();
       await NitidoBackgroundService.instance.startService();
     } catch (e) {
       debugPrint('CaptureHealthMonitor: pipeline restart error: $e');
-      CaptureEventLog.instance.log(CaptureEvent(
-        id: generateUUID(),
-        timestamp: DateTime.now(),
-        source: CaptureEventSource.notification,
-        content: 'Fallo al reiniciar pipeline: $e',
-        status: CaptureEventStatus.systemEvent,
-        reason: 'Excepcion en stopService()/startService()',
-      ));
+      CaptureEventLog.instance.log(
+        CaptureEvent(
+          id: generateUUID(),
+          timestamp: DateTime.now(),
+          source: CaptureEventSource.notification,
+          content: 'Fallo al reiniciar pipeline: $e',
+          status: CaptureEventStatus.systemEvent,
+          reason: 'Excepcion en stopService()/startService()',
+        ),
+      );
     }
 
     // Update the timestamp regardless of outcome — the throttle must apply

@@ -42,7 +42,9 @@ class V3ProgressBar extends StatelessWidget {
                 height: V3Tokens.progressBarHeight,
                 decoration: BoxDecoration(
                   color: filled ? V3Tokens.accent : inactive,
-                  borderRadius: BorderRadius.circular(V3Tokens.progressBarHeight),
+                  borderRadius: BorderRadius.circular(
+                    V3Tokens.progressBarHeight,
+                  ),
                 ),
               ),
             ),

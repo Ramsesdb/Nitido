@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/services/auto_import/background/local_notification_service.dart';
 import 'package:nitido/core/services/auto_import/background/nitido_background_service.dart';
 
@@ -27,28 +27,16 @@ void main() {
     });
 
     test('foreground notification ID is stable', () {
-      expect(
-        LocalNotificationService.foregroundNotificationId,
-        equals(8880),
-      );
+      expect(LocalNotificationService.foregroundNotificationId, equals(8880));
     });
 
     test('pending notification ID is stable', () {
-      expect(
-        LocalNotificationService.pendingNotificationId,
-        equals(8881),
-      );
+      expect(LocalNotificationService.pendingNotificationId, equals(8881));
     });
 
     test('notification channel names are non-empty', () {
-      expect(
-        LocalNotificationService.captureChannelName.isNotEmpty,
-        isTrue,
-      );
-      expect(
-        LocalNotificationService.pendingChannelName.isNotEmpty,
-        isTrue,
-      );
+      expect(LocalNotificationService.captureChannelName.isNotEmpty, isTrue);
+      expect(LocalNotificationService.pendingChannelName.isNotEmpty, isTrue);
     });
   });
 }

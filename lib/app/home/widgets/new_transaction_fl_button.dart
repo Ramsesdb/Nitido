@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:nitido/app/accounts/account_form.dart';
@@ -139,7 +139,8 @@ class _NewTransactionButtonState extends State<NewTransactionButton>
     _overlayEntry = null;
   }
 
-  bool get _isOpen => _ctrl.status == AnimationStatus.forward ||
+  bool get _isOpen =>
+      _ctrl.status == AnimationStatus.forward ||
       _ctrl.status == AnimationStatus.completed;
 
   Future<void> _startReceiptImport(ImageSource source) async {
@@ -180,8 +181,7 @@ class _NewTransactionButtonState extends State<NewTransactionButton>
   void _open() {
     if (_overlayEntry != null) return;
 
-    final renderBox =
-        _fabKey.currentContext?.findRenderObject() as RenderBox?;
+    final renderBox = _fabKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
     final fabTopLeft = renderBox.localToGlobal(Offset.zero);
@@ -197,8 +197,7 @@ class _NewTransactionButtonState extends State<NewTransactionButton>
 
     final aiEnabled = appStateSettings[SettingKey.nexusAiEnabled] == '1';
     // aiVoiceEnabled defaults to '1' when null (no seed row means "enabled").
-    final aiVoiceEnabled =
-        appStateSettings[SettingKey.aiVoiceEnabled] != '0';
+    final aiVoiceEnabled = appStateSettings[SettingKey.aiVoiceEnabled] != '0';
     final voiceAffordance = aiEnabled && aiVoiceEnabled;
 
     final actions = <_FanAction>[
@@ -328,7 +327,8 @@ class _FanOverlay extends StatelessWidget {
             animation: animation,
             index: i,
             totalCount: actions.length,
-            bottom: fabBottomFromScreenBottom +
+            bottom:
+                fabBottomFromScreenBottom +
                 8 +
                 (actions.length - 1 - i) * (childSize + gap),
             centerX: fabCenterX,

@@ -70,10 +70,7 @@ class V3SecondaryButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(V3Tokens.radiusPill),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 26,
-                vertical: 15,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 15),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,

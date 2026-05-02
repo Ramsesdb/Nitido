@@ -22,7 +22,7 @@ class GenericLlmProfile implements BankProfile {
 
   /// For tests: allows injecting a mock LLM completion function.
   final Future<String?> Function(String systemPrompt, String userPrompt)?
-      completeOverride;
+  completeOverride;
 
   @override
   String get profileId => 'generic_llm';
@@ -76,8 +76,7 @@ Reglas:
     RawCaptureEvent event, {
     required String? accountId,
   }) async {
-    final senderHint =
-        kPackageToDisplayName[event.sender] ?? event.sender;
+    final senderHint = kPackageToDisplayName[event.sender] ?? event.sender;
     final userPrompt =
         'Banco: $senderHint\nFecha recepción: ${event.receivedAt.toIso8601String()}\nTexto: ${event.rawText}';
 
@@ -141,8 +140,9 @@ Reglas:
     final currencyCode =
         (json['currencyCode'] as String?)?.toUpperCase() ?? 'VES';
     final typeStr = json['type'] as String?;
-    final txType =
-        typeStr == 'income' ? TransactionType.income : TransactionType.expense;
+    final txType = typeStr == 'income'
+        ? TransactionType.income
+        : TransactionType.expense;
     final bankName = (json['bankName'] as String?) ?? senderHint;
 
     DateTime txDate = event.receivedAt;

@@ -71,23 +71,24 @@ class S2ChooseProviderStep extends StatelessWidget {
       // primary button (mirrors V3SlideTemplate's no-secondary layout).
       secondaryLabel: selectedAlreadyConfigured ? 'Usar la guardada' : null,
       onSecondary: selectedAlreadyConfigured ? onUseExisting : null,
-      secondaryLeadingIcon:
-          selectedAlreadyConfigured ? Icons.check_circle_outline : null,
+      secondaryLeadingIcon: selectedAlreadyConfigured
+          ? Icons.check_circle_outline
+          : null,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             '¿Qué proveedor querés usar?',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: V3Tokens.spaceMd),
           Text(
             'Cada proveedor tiene sus tarifas y modelos. Si tu equipo administra un Nexus, esa es la opción más simple.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: scheme.onSurfaceVariant,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: scheme.onSurfaceVariant),
           ),
           const SizedBox(height: V3Tokens.space24),
           for (final provider in AiProviderType.values) ...[

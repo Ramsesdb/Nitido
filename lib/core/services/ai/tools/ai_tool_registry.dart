@@ -39,23 +39,22 @@ class AiToolRegistry {
   /// Compatible with OpenAI, Groq, OpenRouter, and Nexus tool calling.
   List<Map<String, dynamic>> toOpenAiTools() {
     return _tools.values
-        .map((t) => <String, dynamic>{
-              'type': 'function',
-              'function': <String, dynamic>{
-                'name': t.name,
-                'description': t.description,
-                'parameters': t.parametersSchema,
-              },
-            })
+        .map(
+          (t) => <String, dynamic>{
+            'type': 'function',
+            'function': <String, dynamic>{
+              'name': t.name,
+              'description': t.description,
+              'parameters': t.parametersSchema,
+            },
+          },
+        )
         .toList(growable: false);
   }
 
   /// Dispatch a tool call. Returns an `unknown_tool` error result if [name]
   /// is not registered so the agent loop can continue.
-  Future<AiToolResult> dispatch(
-    String name,
-    Map<String, dynamic> args,
-  ) async {
+  Future<AiToolResult> dispatch(String name, Map<String, dynamic> args) async {
     final tool = _tools[name];
     if (tool == null) {
       return AiToolResult.error(

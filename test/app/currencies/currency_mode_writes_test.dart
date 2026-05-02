@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/currencies/widgets/currency_mode_picker.dart';
 import 'package:nitido/core/models/currency/currency_mode.dart';
 
@@ -21,8 +21,7 @@ import 'package:nitido/core/models/currency/currency_mode.dart';
 /// stub-test pattern adopted across `currency-modes-rework`.
 void main() {
   group('computeModeWrites — single_usd', () {
-    test('writes currencyMode + preferredCurrency, leaves secondary alone',
-        () {
+    test('writes currencyMode + preferredCurrency, leaves secondary alone', () {
       final writes = computeModeWrites(
         newMode: CurrencyMode.single_usd,
         primary: 'USD',
@@ -51,9 +50,13 @@ void main() {
         secondary: 'VES',
         selectedRateSource: 'bcv',
       );
-      expect(writes.shouldWriteSecondary, isFalse,
-          reason: 'Dual → Single MUST NOT write secondaryCurrency '
-              '(it is preserved on disk).');
+      expect(
+        writes.shouldWriteSecondary,
+        isFalse,
+        reason:
+            'Dual → Single MUST NOT write secondaryCurrency '
+            '(it is preserved on disk).',
+      );
       expect(writes.secondaryCurrency, isNull);
     });
   });
@@ -85,8 +88,7 @@ void main() {
   });
 
   group('computeModeWrites — single_other', () {
-    test('writes preferredCurrency to picked code, leaves secondary alone',
-        () {
+    test('writes preferredCurrency to picked code, leaves secondary alone', () {
       final writes = computeModeWrites(
         newMode: CurrencyMode.single_other,
         primary: 'EUR',
@@ -109,8 +111,7 @@ void main() {
       expect(writes.preferredCurrency, 'EUR');
     });
 
-    test('Dual → single_other(EUR) PRESERVES the dual secondary on disk',
-        () {
+    test('Dual → single_other(EUR) PRESERVES the dual secondary on disk', () {
       final writes = computeModeWrites(
         newMode: CurrencyMode.single_other,
         primary: 'EUR',
@@ -137,16 +138,18 @@ void main() {
       expect(writes.preferredRateSource, 'bcv');
     });
 
-    test('VES + USD (reversed pair) still gates the rate-source chip ON',
-        () {
+    test('VES + USD (reversed pair) still gates the rate-source chip ON', () {
       final writes = computeModeWrites(
         newMode: CurrencyMode.dual,
         primary: 'VES',
         secondary: 'USD',
         selectedRateSource: 'paralelo',
       );
-      expect(writes.shouldWriteRateSource, isTrue,
-          reason: 'Pair is unordered for chip gating per design §3.');
+      expect(
+        writes.shouldWriteRateSource,
+        isTrue,
+        reason: 'Pair is unordered for chip gating per design §3.',
+      );
       expect(writes.preferredRateSource, 'paralelo');
     });
 
@@ -159,8 +162,11 @@ void main() {
       );
       expect(writes.shouldWriteSecondary, isTrue);
       expect(writes.secondaryCurrency, 'ARS');
-      expect(writes.shouldWriteRateSource, isFalse,
-          reason: 'BCV/Paralelo gating is USD+VES only.');
+      expect(
+        writes.shouldWriteRateSource,
+        isFalse,
+        reason: 'BCV/Paralelo gating is USD+VES only.',
+      );
     });
 
     test('dual with null secondary defaults to VES', () {
@@ -211,9 +217,13 @@ void main() {
         if (mode == CurrencyMode.dual) {
           expect(writes.shouldWriteSecondary, isTrue);
         } else {
-          expect(writes.shouldWriteSecondary, isFalse,
-              reason: '$mode MUST NOT write secondaryCurrency '
-                  '(preservation rule).');
+          expect(
+            writes.shouldWriteSecondary,
+            isFalse,
+            reason:
+                '$mode MUST NOT write secondaryCurrency '
+                '(preservation rule).',
+          );
         }
       }
     });

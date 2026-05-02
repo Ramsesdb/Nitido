@@ -53,7 +53,7 @@ class AutoCategorizationService {
                 'Respondes en ESPANOL siempre. Sin markdown innecesario. '
                 'Debes responder SOLO con JSON valido con la forma '
                 '{"categoryId":"...","confidence":0.0}. '
-                'No agregues texto adicional.'
+                'No agregues texto adicional.',
           },
           {
             'role': 'user',
@@ -64,7 +64,7 @@ class AutoCategorizationService {
                 'Counterparty: ${proposal.counterpartyName ?? '-'}\n'
                 'Sender: ${proposal.sender ?? '-'}\n'
                 'Texto crudo: ${proposal.rawText}\n\n'
-                'Categorias permitidas:\n$categoriesPrompt'
+                'Categorias permitidas:\n$categoriesPrompt',
           },
         ],
       );

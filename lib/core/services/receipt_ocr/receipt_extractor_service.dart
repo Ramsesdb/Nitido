@@ -13,12 +13,13 @@ import 'package:nitido/core/services/auto_import/profiles/bdv_notif_profile.dart
 import 'package:nitido/core/services/auto_import/profiles/bank_profile.dart';
 import 'package:nitido/core/services/receipt_ocr/ocr_service.dart';
 
-typedef MultimodalCompleteFn = Future<String?> Function({
-  required String systemPrompt,
-  required String userPrompt,
-  required String imageBase64,
-  double temperature,
-});
+typedef MultimodalCompleteFn =
+    Future<String?> Function({
+      required String systemPrompt,
+      required String userPrompt,
+      required String imageBase64,
+      double temperature,
+    });
 
 /// Extracts a JSON object from an AI response that may be wrapped in markdown
 /// fences, surrounded by prose, or returned as bare JSON. Returns null if no
@@ -66,12 +67,7 @@ Object? _readField(Map<String, dynamic> m, List<String> keys) {
   return null;
 }
 
-enum ExtractionOutcome {
-  success,
-  empty,
-  noAmount,
-  imageCorrupt,
-}
+enum ExtractionOutcome { success, empty, noAmount, imageCorrupt }
 
 /// Deterministic fallback category assigned to non-transfer proposals when
 /// neither the AI nor the regex profile resolves one. Without this the
@@ -146,10 +142,10 @@ class ReceiptExtractorService {
     OcrService? ocrService,
     BankProfile? profile,
     MultimodalCompleteFn? multimodalComplete,
-  })  : _ocrService = ocrService ?? OcrService(),
-        _profile = profile ?? BdvNotifProfile(),
-        _multimodalComplete =
-            multimodalComplete ?? NexusAiService.instance.completeMultimodal;
+  }) : _ocrService = ocrService ?? OcrService(),
+       _profile = profile ?? BdvNotifProfile(),
+       _multimodalComplete =
+           multimodalComplete ?? NexusAiService.instance.completeMultimodal;
 
   final OcrService _ocrService;
   final BankProfile _profile;
@@ -349,7 +345,8 @@ class ReceiptExtractorService {
       return ExtractionResult.noAmount(normalized);
     }
 
-    final preferred = preferredCurrency ??
+    final preferred =
+        preferredCurrency ??
         appStateSettings[SettingKey.preferredCurrency] ??
         'USD';
 
@@ -379,8 +376,10 @@ class ReceiptExtractorService {
 
   _CurrencyDetectionResult _detectCurrency(String text) {
     final hasVes = RegExp(r'Bs\.', caseSensitive: false).hasMatch(text);
-    final hasUsd = RegExp(r'(\$\.|\$\s*\d|\bUSD\b)', caseSensitive: false)
-        .hasMatch(text);
+    final hasUsd = RegExp(
+      r'(\$\.|\$\s*\d|\bUSD\b)',
+      caseSensitive: false,
+    ).hasMatch(text);
 
     if (hasVes && !hasUsd) {
       return const _CurrencyDetectionResult(
@@ -422,7 +421,9 @@ class ReceiptExtractorService {
       final preview = rawAiContent.length > 500
           ? '${rawAiContent.substring(0, 500)}…'
           : rawAiContent;
-      debugPrint('ReceiptExtractor: AI raw response (first 500 chars): $preview');
+      debugPrint(
+        'ReceiptExtractor: AI raw response (first 500 chars): $preview',
+      );
     }
 
     final decoded = _extractJsonObject(rawAiContent);
@@ -471,7 +472,7 @@ class ReceiptExtractorService {
     final now = DateTime.now();
     final dateRaw =
         _readField(decoded, const ['date', 'fecha', 'timestamp'])?.toString() ??
-            '';
+        '';
     final parsedDate = DateTime.tryParse(dateRaw);
     final date = parsedDate ?? now;
     if (parsedDate == null) {
@@ -485,7 +486,9 @@ class ReceiptExtractorService {
 
     // currency: missing → preferred setting, descriptive values → normalize.
     final preferred =
-        (preferredCurrency ?? appStateSettings[SettingKey.preferredCurrency] ?? 'USD')
+        (preferredCurrency ??
+                appStateSettings[SettingKey.preferredCurrency] ??
+                'USD')
             .toUpperCase();
     final rawCurrency = _readField(decoded, const [
       'currencyCode',
@@ -495,7 +498,8 @@ class ReceiptExtractorService {
     ])?.toString();
     final normalizedCurrency = _normalizeCurrencyCode(rawCurrency);
     final extractedCurrency = normalizedCurrency;
-    final aiCurrency = (normalizedCurrency == null || normalizedCurrency.isEmpty)
+    final aiCurrency =
+        (normalizedCurrency == null || normalizedCurrency.isEmpty)
         ? preferred
         : normalizedCurrency;
     if (normalizedCurrency == null) {
@@ -527,7 +531,9 @@ class ReceiptExtractorService {
       'operation',
     ])?.toString();
 
-    final parseTag = appliedFallback ? 'AI parsed OK (with fallbacks)' : 'AI parsed OK';
+    final parseTag = appliedFallback
+        ? 'AI parsed OK (with fallbacks)'
+        : 'AI parsed OK';
     debugPrint(
       'ReceiptExtractor: $parseTag — amount=$amount currency=$aiCurrency type=${type.name} confidence=$confidence',
     );
@@ -545,8 +551,9 @@ class ReceiptExtractorService {
       sender: sender,
       confidence: confidence,
       parsedBySender: 'nexus_multimodal',
-      proposedCategoryId:
-          type.isIncomeOrExpense ? _kFallbackExpenseCategoryId : null,
+      proposedCategoryId: type.isIncomeOrExpense
+          ? _kFallbackExpenseCategoryId
+          : null,
     );
 
     return ExtractionResult.success(
@@ -618,7 +625,8 @@ class ReceiptExtractorService {
       'BOLIVAR',
       'BOLÍVAR',
     };
-    if (vesAliases.contains(cleaned) || upper.startsWith('BOLÍV') ||
+    if (vesAliases.contains(cleaned) ||
+        upper.startsWith('BOLÍV') ||
         upper.startsWith('BOLIV')) {
       return 'VES';
     }
@@ -634,8 +642,10 @@ class ReceiptExtractorService {
       'DOLARES',
       'DÓLARES',
     };
-    if (usdAliases.contains(cleaned) || cleaned.startsWith('US\$') ||
-        cleaned.startsWith('DOLAR') || cleaned.startsWith('DÓLAR')) {
+    if (usdAliases.contains(cleaned) ||
+        cleaned.startsWith('US\$') ||
+        cleaned.startsWith('DOLAR') ||
+        cleaned.startsWith('DÓLAR')) {
       return 'USD';
     }
 

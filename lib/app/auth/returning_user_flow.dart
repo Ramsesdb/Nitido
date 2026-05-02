@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
@@ -32,10 +32,7 @@ import 'package:nitido/core/utils/unique_app_widgets_keys.dart';
 /// listener concept). On Android, if the permission is already granted
 /// (rare on a fresh device but possible), step 2 is also skipped.
 class ReturningUserFlow extends StatefulWidget {
-  const ReturningUserFlow({
-    super.key,
-    this.displayName,
-  });
+  const ReturningUserFlow({super.key, this.displayName});
 
   /// Display name to show on the welcome-back hero. Falls back to a generic
   /// greeting if null/empty.
@@ -86,8 +83,8 @@ class _ReturningUserFlowState extends State<ReturningUserFlow> {
       setState(() => _restrictedSettingsResolved = true);
       return;
     }
-    final allowed =
-        await DeviceQuirksService.instance.isRestrictedSettingsAllowed();
+    final allowed = await DeviceQuirksService.instance
+        .isRestrictedSettingsAllowed();
     if (!mounted) return;
     setState(() {
       _restrictedSettingsBlocked = !allowed;
@@ -265,8 +262,9 @@ class _WelcomeBackStep extends StatelessWidget {
     final Color subFg = isDark ? V3Tokens.mutedDark : V3Tokens.mutedLight;
 
     final double viewportHeight = MediaQuery.of(context).size.height;
-    final double displaySize =
-        (viewportHeight * 0.085).clamp(38.0, 56.0).toDouble();
+    final double displaySize = (viewportHeight * 0.085)
+        .clamp(38.0, 56.0)
+        .toDouble();
 
     final greeting = firstName != null
         ? 'Hola, $firstName.'
@@ -418,8 +416,7 @@ class _ActivateListenerStepState extends State<_ActivateListenerStep>
     final isDark = theme.brightness == Brightness.dark;
     final Color fg = isDark ? Colors.white : const Color(0xFF141414);
     final Color subFg = isDark ? V3Tokens.mutedDark : V3Tokens.mutedLight;
-    final Color pillBg =
-        isDark ? V3Tokens.pillBgDark : V3Tokens.pillBgLight;
+    final Color pillBg = isDark ? V3Tokens.pillBgDark : V3Tokens.pillBgLight;
     final Color pillFg = isDark ? V3Tokens.mutedDark : V3Tokens.mutedLight;
 
     return Padding(
@@ -444,8 +441,7 @@ class _ActivateListenerStepState extends State<_ActivateListenerStep>
                   padding: const EdgeInsets.all(V3Tokens.spaceMd),
                   decoration: BoxDecoration(
                     color: pillBg,
-                    borderRadius:
-                        BorderRadius.circular(V3Tokens.radiusPill),
+                    borderRadius: BorderRadius.circular(V3Tokens.radiusPill),
                   ),
                   child: Icon(
                     Icons.arrow_back_ios_new,

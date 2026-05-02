@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/app/home/dashboard_widgets/models/dashboard_layout.dart';
@@ -25,8 +25,7 @@ void main() {
           );
 
           final encoded = jsonEncode(descriptor.toJson());
-          final decodedJson =
-              jsonDecode(encoded) as Map<String, dynamic>;
+          final decodedJson = jsonDecode(encoded) as Map<String, dynamic>;
           final decoded = WidgetDescriptor.fromJson(decodedJson);
 
           expect(decoded, isNotNull, reason: '${type.name}/${size.name}');
@@ -82,17 +81,11 @@ void main() {
       expect(decoded, isNotNull);
       expect(
         (decoded!.config['chips'] as List<dynamic>).cast<String>(),
-        equals(<String>[
-          'toggleHiddenMode',
-          'addExpense',
-          'openTransactions',
-        ]),
+        equals(<String>['toggleHiddenMode', 'addExpense', 'openTransactions']),
       );
       expect(decoded.config['count'], 7);
       expect(decoded.config['enabled'], isFalse);
-      final nested = Map<String, dynamic>.from(
-        decoded.config['nested'] as Map,
-      );
+      final nested = Map<String, dynamic>.from(decoded.config['nested'] as Map);
       expect(nested['k'], 'v');
       expect(nested['n'], 1);
     });

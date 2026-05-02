@@ -323,8 +323,8 @@ class _SignupPageState extends State<SignupPage> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: colorScheme.errorContainer.withValues(alpha: 
-                                0.8,
+                              color: colorScheme.errorContainer.withValues(
+                                alpha: 0.8,
                               ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
@@ -374,7 +374,9 @@ class _SignupPageState extends State<SignupPage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide(
-                                color: colorScheme.outline.withValues(alpha: 0.2),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.2,
+                                ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -416,7 +418,9 @@ class _SignupPageState extends State<SignupPage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide(
-                                color: colorScheme.outline.withValues(alpha: 0.2),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.2,
+                                ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -472,7 +476,9 @@ class _SignupPageState extends State<SignupPage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide(
-                                color: colorScheme.outline.withValues(alpha: 0.2),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.2,
+                                ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -532,7 +538,9 @@ class _SignupPageState extends State<SignupPage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide(
-                                color: colorScheme.outline.withValues(alpha: 0.2),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.2,
+                                ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -561,7 +569,9 @@ class _SignupPageState extends State<SignupPage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             elevation: 2,
-                            shadowColor: colorScheme.primary.withValues(alpha: 0.4),
+                            shadowColor: colorScheme.primary.withValues(
+                              alpha: 0.4,
+                            ),
                           ),
                           child: _isLoading
                               ? SizedBox(
@@ -588,7 +598,9 @@ class _SignupPageState extends State<SignupPage> {
                           children: [
                             Expanded(
                               child: Divider(
-                                color: colorScheme.outline.withValues(alpha: 0.3),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             Padding(
@@ -604,7 +616,9 @@ class _SignupPageState extends State<SignupPage> {
                             ),
                             Expanded(
                               child: Divider(
-                                color: colorScheme.outline.withValues(alpha: 0.3),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                           ],

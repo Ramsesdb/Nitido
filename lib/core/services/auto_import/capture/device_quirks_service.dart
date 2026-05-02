@@ -1,4 +1,4 @@
-﻿import 'dart:io' show Platform;
+import 'dart:io' show Platform;
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -54,7 +54,9 @@ class DeviceQuirksService {
 
   DeviceQuirksService._();
 
-  static const MethodChannel _channel = MethodChannel('com.nitido.capture/quirks');
+  static const MethodChannel _channel = MethodChannel(
+    'com.nitido.capture/quirks',
+  );
 
   OemQuirk? _cached;
 
@@ -109,8 +111,9 @@ class DeviceQuirksService {
   Future<bool> isIgnoringBatteryOptimizations() async {
     if (!Platform.isAndroid) return true;
     try {
-      final res = await _channel
-          .invokeMethod<bool>('isIgnoringBatteryOptimizations');
+      final res = await _channel.invokeMethod<bool>(
+        'isIgnoringBatteryOptimizations',
+      );
       return res ?? false;
     } catch (e) {
       debugPrint(
@@ -199,16 +202,15 @@ class DeviceQuirksService {
   Future<bool> isRestrictedSettingsAllowed() async {
     if (!Platform.isAndroid) return true;
     try {
-      final res =
-          await _channel.invokeMethod<bool>('isRestrictedSettingsAllowed');
+      final res = await _channel.invokeMethod<bool>(
+        'isRestrictedSettingsAllowed',
+      );
       final result = res ?? true;
       // ignore: avoid_print
       print('[DeviceQuirks] isRestrictedSettingsAllowed → $result');
       return result;
     } catch (e) {
-      debugPrint(
-        'DeviceQuirksService: isRestrictedSettingsAllowed error: $e',
-      );
+      debugPrint('DeviceQuirksService: isRestrictedSettingsAllowed error: $e');
       return true;
     }
   }
@@ -240,10 +242,12 @@ class DeviceQuirksService {
             id: 'miui_autostart',
             titleEs: 'Autoarranque (MIUI)',
             titleEn: 'Autostart (MIUI)',
-            descEs: 'Xiaomi impide que las apps sin autoarranque se '
+            descEs:
+                'Xiaomi impide que las apps sin autoarranque se '
                 'reactiven después de cerrarlas. Activalo en Seguridad → '
                 'Permisos → Autoarranque → Nitido.',
-            descEn: 'Xiaomi blocks apps without autostart from restarting '
+            descEn:
+                'Xiaomi blocks apps without autostart from restarting '
                 'after being closed. Enable it in Security → Permissions → '
                 'Autostart → Nitido.',
             ctaEs: 'Abrir autoarranque',
@@ -253,11 +257,13 @@ class DeviceQuirksService {
             id: 'miui_battery_app',
             titleEs: 'Batería sin restricciones (MIUI)',
             titleEn: 'No battery restrictions (MIUI)',
-            descEs: 'Además de la lista blanca del sistema, MIUI tiene un '
+            descEs:
+                'Además de la lista blanca del sistema, MIUI tiene un '
                 'control extra en Seguridad → Batería → Nitido → Sin '
                 'restricciones. Sin esto el listener se detiene en segundo '
                 'plano.',
-            descEn: 'On top of the system whitelist, MIUI has an extra '
+            descEn:
+                'On top of the system whitelist, MIUI has an extra '
                 'control in Security → Battery → Nitido → No restrictions. '
                 'Without it the listener stops in the background.',
             ctaEs: 'Abrir ajustes de la app',
@@ -270,10 +276,12 @@ class DeviceQuirksService {
             id: 'huawei_protected',
             titleEs: 'Apps protegidas (Huawei)',
             titleEn: 'Protected apps (Huawei)',
-            descEs: 'EMUI mata las apps al cerrar la pantalla. Marcá '
+            descEs:
+                'EMUI mata las apps al cerrar la pantalla. Marcá '
                 'Nitido como protegida en Ajustes → Batería → Inicio de '
                 'aplicaciones.',
-            descEn: 'EMUI kills apps when the screen turns off. Mark '
+            descEn:
+                'EMUI kills apps when the screen turns off. Mark '
                 'Nitido as protected in Settings → Battery → App launch.',
             ctaEs: 'Abrir inicio de apps',
             ctaEn: 'Open app launch',
@@ -286,9 +294,11 @@ class DeviceQuirksService {
             id: 'oppo_autostart',
             titleEs: 'Inicio automático (ColorOS)',
             titleEn: 'Auto-launch (ColorOS)',
-            descEs: 'Habilitá Nitido en Ajustes → Batería → Gestión de '
+            descEs:
+                'Habilitá Nitido en Ajustes → Batería → Gestión de '
                 'inicio automático.',
-            descEn: 'Enable Nitido in Settings → Battery → Auto-launch '
+            descEn:
+                'Enable Nitido in Settings → Battery → Auto-launch '
                 'management.',
             ctaEs: 'Abrir inicio automático',
             ctaEn: 'Open auto-launch',
@@ -300,7 +310,8 @@ class DeviceQuirksService {
             id: 'vivo_autostart',
             titleEs: 'Autoarranque (Funtouch OS)',
             titleEn: 'Autostart (Funtouch OS)',
-            descEs: 'Activá Nitido en Gestor de teléfono → Apps en segundo '
+            descEs:
+                'Activá Nitido en Gestor de teléfono → Apps en segundo '
                 'plano.',
             descEn: 'Enable Nitido in Phone manager → Background apps.',
             ctaEs: 'Abrir autoarranque',

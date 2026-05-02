@@ -99,7 +99,9 @@ class ProfileHeroCard extends StatelessWidget {
                             : appColors.textHint,
                       ),
                       Text(
-                        syncEnabled ? 'Sincronizado' : 'Sincronización desactivada',
+                        syncEnabled
+                            ? 'Sincronizado'
+                            : 'Sincronización desactivada',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: appColors.textHint,
                         ),

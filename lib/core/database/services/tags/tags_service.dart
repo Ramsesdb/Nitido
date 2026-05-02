@@ -24,8 +24,9 @@ class TagService {
   }
 
   Future<int> deleteTag(String tagId) async {
-    final toReturn =
-        await (db.delete(db.tags)..where((tbl) => tbl.id.equals(tagId))).go();
+    final toReturn = await (db.delete(
+      db.tags,
+    )..where((tbl) => tbl.id.equals(tagId))).go();
     unawaited(FirebaseSyncService.instance.deleteTag(tagId));
     return toReturn;
   }

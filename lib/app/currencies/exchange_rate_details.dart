@@ -1,4 +1,4 @@
-﻿import 'dart:async';
+import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -126,18 +126,20 @@ class _ExchangeRateDetailsPageState extends State<ExchangeRateDetailsPage>
     );
 
     if (confirmed == true) {
-      unawaited(CurrencyService.instance
-          .deleteCurrency(_currency.code)
-          .then((value) {
-            NitidoSnackbar.success(
-              SnackbarParams(t.currencies.currency_form.delete_success),
-            );
+      unawaited(
+        CurrencyService.instance
+            .deleteCurrency(_currency.code)
+            .then((value) {
+              NitidoSnackbar.success(
+                SnackbarParams(t.currencies.currency_form.delete_success),
+              );
 
-            RouteUtils.popRoute();
-          })
-          .catchError((err) {
-            NitidoSnackbar.error(SnackbarParams.fromError(err));
-          }));
+              RouteUtils.popRoute();
+            })
+            .catchError((err) {
+              NitidoSnackbar.error(SnackbarParams.fromError(err));
+            }),
+      );
     }
   }
 

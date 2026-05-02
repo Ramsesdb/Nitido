@@ -1,4 +1,4 @@
-﻿import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/database/services/user-setting/user_setting_service.dart';
 import 'package:nitido/core/services/ai/ai_credentials.dart';
@@ -62,10 +62,7 @@ void main() {
         providerType: AiProviderType.openai,
         apiKey: 'sk-test',
       );
-      expect(
-        service.buildProvider(openaiCreds).type,
-        AiProviderType.openai,
-      );
+      expect(service.buildProvider(openaiCreds).type, AiProviderType.openai);
 
       const anthropicCreds = AiCredentials(
         providerType: AiProviderType.anthropic,
@@ -80,29 +77,26 @@ void main() {
         providerType: AiProviderType.gemini,
         apiKey: 'AIza-test',
       );
-      expect(
-        service.buildProvider(geminiCreds).type,
-        AiProviderType.gemini,
-      );
+      expect(service.buildProvider(geminiCreds).type, AiProviderType.gemini);
 
       const nexusCreds = AiCredentials(
         providerType: AiProviderType.nexus,
         apiKey: 'sk-nexus',
       );
-      expect(
-        service.buildProvider(nexusCreds).type,
-        AiProviderType.nexus,
-      );
+      expect(service.buildProvider(nexusCreds).type, AiProviderType.nexus);
     });
   });
 
   group('AiService.complete short-circuits', () {
     test('returns null when no credentials are configured', () async {
       // No active provider, no stored creds → dispatcher should bail.
-      appStateSettings[SettingKey.activeAiProvider] = AiProviderType.openai.name;
-      final result = await service.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      appStateSettings[SettingKey.activeAiProvider] =
+          AiProviderType.openai.name;
+      final result = await service.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
       expect(result, isNull);
     });
   });
@@ -115,11 +109,13 @@ void main() {
     test('true once active provider has a credential', () async {
       appStateSettings[SettingKey.activeAiProvider] =
           AiProviderType.openai.name;
-      await store.saveCredentials(const AiCredentials(
-        providerType: AiProviderType.openai,
-        apiKey: 'sk-test',
-        model: 'gpt-4o',
-      ));
+      await store.saveCredentials(
+        const AiCredentials(
+          providerType: AiProviderType.openai,
+          apiKey: 'sk-test',
+          model: 'gpt-4o',
+        ),
+      );
       expect(await service.isConfigured(), isTrue);
     });
   });

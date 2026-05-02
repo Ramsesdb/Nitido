@@ -1,4 +1,4 @@
-﻿import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:nitido/core/models/auto_import/capture_channel.dart';
 import 'package:nitido/core/models/auto_import/raw_capture_event.dart';
 import 'package:nitido/core/models/transaction/transaction_type.enum.dart';
@@ -11,8 +11,10 @@ void main() {
     profile = BdvNotifProfile();
   });
 
-  RawCaptureEvent makeEvent(String rawText,
-      {String sender = 'com.bancodevenezuela.bdvdigital'}) {
+  RawCaptureEvent makeEvent(
+    String rawText, {
+    String sender = 'com.bancodevenezuela.bdvdigital',
+  }) {
     return RawCaptureEvent(
       rawText: rawText,
       sender: sender,
@@ -58,8 +60,7 @@ void main() {
       expect(proposal.currencyId, 'VES');
       expect(proposal.type, TransactionType.income);
       expect(proposal.bankRef, '059135723999');
-      expect(proposal.counterpartyName,
-          'JOINER ALEXANDER ROVARIO SAAVEDRA');
+      expect(proposal.counterpartyName, 'JOINER ALEXANDER ROVARIO SAAVEDRA');
       expect(proposal.confidence, 0.95);
       expect(proposal.channel, CaptureChannel.notification);
       expect(proposal.accountId, 'acc-bdv');
@@ -88,21 +89,23 @@ void main() {
       expect(proposal.parsedBySender, 'bdv_notif_v2_dynamic');
     });
 
-    test('Fixture: Pagomovil recibido WITHOUT accent on title (Format A body)',
-        () async {
-      const title = 'PagomovilBDV recibido'; // WITHOUT accent
-      const body =
-          'Recibiste un PagomovilBDV de ROBERTO CARLO PALMAR MOLERO por Bs.50,00 bajo el numero de operacion 005703907569';
-      final event = makeEvent('$title\n$body');
+    test(
+      'Fixture: Pagomovil recibido WITHOUT accent on title (Format A body)',
+      () async {
+        const title = 'PagomovilBDV recibido'; // WITHOUT accent
+        const body =
+            'Recibiste un PagomovilBDV de ROBERTO CARLO PALMAR MOLERO por Bs.50,00 bajo el numero de operacion 005703907569';
+        final event = makeEvent('$title\n$body');
 
-      final proposal = await profile.tryParse(event, accountId: 'acc-bdv');
+        final proposal = await profile.tryParse(event, accountId: 'acc-bdv');
 
-      expect(proposal, isNotNull);
-      expect(proposal!.amount, 50.00);
-      expect(proposal.counterpartyName, 'ROBERTO CARLO PALMAR MOLERO');
-      expect(proposal.bankRef, '005703907569');
-      expect(proposal.parsedBySender, 'bdv_notif_v2_dynamic');
-    });
+        expect(proposal, isNotNull);
+        expect(proposal!.amount, 50.00);
+        expect(proposal.counterpartyName, 'ROBERTO CARLO PALMAR MOLERO');
+        expect(proposal.bankRef, '005703907569');
+        expect(proposal.parsedBySender, 'bdv_notif_v2_dynamic');
+      },
+    );
   });
 
   group('BdvNotifProfile — PagomovilBDV recibido Format B (income VES)', () {
@@ -193,16 +196,12 @@ void main() {
 
   group('BdvNotifProfile — Negative tests (should return null)', () {
     test('Unknown title with no amount returns null', () async {
-      final event = makeEvent(
-        'Promoción BDV\nTenemos una oferta para ti...',
-      );
+      final event = makeEvent('Promoción BDV\nTenemos una oferta para ti...');
       expect(await profile.tryParse(event, accountId: 'acc-bdv'), isNull);
     });
 
     test('Known title but body has no amount returns null', () async {
-      final event = makeEvent(
-        'Transferencia BDV recibida\nMensaje corrupto',
-      );
+      final event = makeEvent('Transferencia BDV recibida\nMensaje corrupto');
       expect(await profile.tryParse(event, accountId: 'acc-bdv'), isNull);
     });
 
@@ -247,23 +246,25 @@ void main() {
       expect(proposal.confidence, 0.70);
     });
 
-    test('Unknown title with income keyword and amount is parsed as income',
-        () async {
-      final event = makeEvent(
-        'Alerta BDV\n'
-        'Has recibido un abono por Bs. 200,00.',
-      );
+    test(
+      'Unknown title with income keyword and amount is parsed as income',
+      () async {
+        final event = makeEvent(
+          'Alerta BDV\n'
+          'Has recibido un abono por Bs. 200,00.',
+        );
 
-      final proposal = await profile.tryParse(event, accountId: 'acc-bdv');
+        final proposal = await profile.tryParse(event, accountId: 'acc-bdv');
 
-      expect(proposal, isNotNull);
-      expect(proposal!.amount, 200.00);
-      expect(proposal.currencyId, 'VES');
-      // "recibido" matches income keyword
-      expect(proposal.type, TransactionType.income);
-      // No ref → confidence 0.85
-      expect(proposal.confidence, 0.85);
-    });
+        expect(proposal, isNotNull);
+        expect(proposal!.amount, 200.00);
+        expect(proposal.currencyId, 'VES');
+        // "recibido" matches income keyword
+        expect(proposal.type, TransactionType.income);
+        // No ref → confidence 0.85
+        expect(proposal.confidence, 0.85);
+      },
+    );
   });
 
   group('BdvNotifProfile — accountId passthrough', () {

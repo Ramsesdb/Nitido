@@ -1,4 +1,4 @@
-﻿import 'dart:io';
+import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -35,12 +35,11 @@ Future<XFile?> renderShareCard(
     // montado), `toImage` puede capturar un frame vacío. `debugNeedsPaint`
     // sólo está disponible en debug, así que nos apoyamos en el flujo
     // estándar de `toImage` que respeta el pipeline de rendering.
-    final ui.Image image = await renderObject.toImage(
-      pixelRatio: pixelRatio,
-    );
+    final ui.Image image = await renderObject.toImage(pixelRatio: pixelRatio);
 
-    final ByteData? byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData? byteData = await image.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
     image.dispose();
     if (byteData == null) return null;
 

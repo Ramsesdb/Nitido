@@ -30,7 +30,8 @@ class SpendingInsightsService {
 
     try {
       final aiEnabled = appStateSettings[SettingKey.nexusAiEnabled] == '1';
-      final featureEnabled = appStateSettings[SettingKey.aiInsightsEnabled] == '1';
+      final featureEnabled =
+          appStateSettings[SettingKey.aiInsightsEnabled] == '1';
       if (!aiEnabled || !featureEnabled) {
         completer.complete(null);
         return completer.future;
@@ -44,8 +45,14 @@ class SpendingInsightsService {
 
       final now = DateTime.now();
       final currentEnd = periodState.endDate ?? now;
-      final currentStart = periodState.startDate ?? currentEnd.subtract(const Duration(days: 30));
-      final periodDays = currentEnd.difference(currentStart).inDays.abs().clamp(1, 365);
+      final currentStart =
+          periodState.startDate ??
+          currentEnd.subtract(const Duration(days: 30));
+      final periodDays = currentEnd
+          .difference(currentStart)
+          .inDays
+          .abs()
+          .clamp(1, 365);
       final previousEnd = currentStart;
       final previousStart = previousEnd.subtract(Duration(days: periodDays));
 
@@ -54,56 +61,65 @@ class SpendingInsightsService {
           .first;
 
       if (categories.isEmpty) {
-        completer.complete(const SpendingInsightsResult('No hay categorias de gasto para analizar.'));
+        completer.complete(
+          const SpendingInsightsResult(
+            'No hay categorias de gasto para analizar.',
+          ),
+        );
         return completer.future;
       }
 
-      final deltas = await Future.wait(categories.map((category) async {
-        final currentAmount = await TransactionService.instance
-            .getTransactionsValueBalance(
-              filters: TransactionFilterSet(
-                minDate: currentStart,
-                maxDate: currentEnd,
-                categoriesIds: [category.id],
-                transactionTypes: const [TransactionType.expense],
-              ),
-            )
-            .first;
+      final deltas = await Future.wait(
+        categories.map((category) async {
+          final currentAmount = await TransactionService.instance
+              .getTransactionsValueBalance(
+                filters: TransactionFilterSet(
+                  minDate: currentStart,
+                  maxDate: currentEnd,
+                  categoriesIds: [category.id],
+                  transactionTypes: const [TransactionType.expense],
+                ),
+              )
+              .first;
 
-        final previousAmount = await TransactionService.instance
-            .getTransactionsValueBalance(
-              filters: TransactionFilterSet(
-                minDate: previousStart,
-                maxDate: previousEnd,
-                categoriesIds: [category.id],
-                transactionTypes: const [TransactionType.expense],
-              ),
-            )
-            .first;
+          final previousAmount = await TransactionService.instance
+              .getTransactionsValueBalance(
+                filters: TransactionFilterSet(
+                  minDate: previousStart,
+                  maxDate: previousEnd,
+                  categoriesIds: [category.id],
+                  transactionTypes: const [TransactionType.expense],
+                ),
+              )
+              .first;
 
-        if (currentAmount <= 0) return null;
+          if (currentAmount <= 0) return null;
 
-        final metric = previousAmount == 0
-            ? currentAmount.abs()
-            : ((currentAmount - previousAmount) / previousAmount).abs();
+          final metric = previousAmount == 0
+              ? currentAmount.abs()
+              : ((currentAmount - previousAmount) / previousAmount).abs();
 
-        final label = previousAmount == 0
-            ? 'Nuevo gasto: ${currentAmount.toStringAsFixed(2)} en ${category.name}'
-            : '${category.name}: ${currentAmount.toStringAsFixed(2)} vs ${previousAmount.toStringAsFixed(2)} '
-                '(${(((currentAmount - previousAmount) / previousAmount) * 100).toStringAsFixed(1)}%)';
+          final label = previousAmount == 0
+              ? 'Nuevo gasto: ${currentAmount.toStringAsFixed(2)} en ${category.name}'
+              : '${category.name}: ${currentAmount.toStringAsFixed(2)} vs ${previousAmount.toStringAsFixed(2)} '
+                    '(${(((currentAmount - previousAmount) / previousAmount) * 100).toStringAsFixed(1)}%)';
 
-        return (metric: metric, label: label);
-      }));
+          return (metric: metric, label: label);
+        }),
+      );
 
-      final topDeltas = deltas
-          .whereType<({double metric, String label})>()
-          .toList()
-        ..sort((a, b) => b.metric.compareTo(a.metric));
+      final topDeltas =
+          deltas.whereType<({double metric, String label})>().toList()
+            ..sort((a, b) => b.metric.compareTo(a.metric));
 
       final top5 = topDeltas.take(5).toList();
 
       if (top5.isEmpty) {
-        completer.complete(const SpendingInsightsResult('No hay cambios significativos de gasto en el periodo.'));
+        completer.complete(
+          const SpendingInsightsResult(
+            'No hay cambios significativos de gasto en el periodo.',
+          ),
+        );
         return completer.future;
       }
 
@@ -117,7 +133,7 @@ class SpendingInsightsService {
             'role': 'system',
             'content':
                 'Respondes en ESPANOL siempre. Sin markdown innecesario. '
-                'Genera 2-3 frases claras y accionables sobre el comportamiento de gasto.'
+                'Genera 2-3 frases claras y accionables sobre el comportamiento de gasto.',
           },
           {
             'role': 'user',
@@ -125,7 +141,7 @@ class SpendingInsightsService {
                 'Analiza estos cambios de gasto entre periodos:\n'
                 'Periodo actual: ${formatter.format(currentStart)} - ${formatter.format(currentEnd)}\n'
                 'Periodo anterior: ${formatter.format(previousStart)} - ${formatter.format(previousEnd)}\n'
-                '$payload'
+                '$payload',
           },
         ],
       );

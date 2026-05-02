@@ -18,12 +18,12 @@ class NexusProvider implements AiProvider {
     String? model,
     http.Client? client,
     Duration requestTimeout = const Duration(seconds: 15),
-  })  : _baseUrl = (baseUrl == null || baseUrl.trim().isEmpty)
-            ? _defaultBaseUrl
-            : baseUrl.trim().replaceAll(RegExp(r'/+$'), ''),
-        _model = (model == null || model.trim().isEmpty) ? null : model.trim(),
-        _client = client ?? http.Client(),
-        _requestTimeout = requestTimeout;
+  }) : _baseUrl = (baseUrl == null || baseUrl.trim().isEmpty)
+           ? _defaultBaseUrl
+           : baseUrl.trim().replaceAll(RegExp(r'/+$'), ''),
+       _model = (model == null || model.trim().isEmpty) ? null : model.trim(),
+       _client = client ?? http.Client(),
+       _requestTimeout = requestTimeout;
 
   static const _defaultBaseUrl = 'https://api.ramsesdb.tech';
   static const _endpoint = '/v1/chat/completions';
@@ -50,10 +50,7 @@ class NexusProvider implements AiProvider {
     }
 
     final resolvedModel = model ?? _model;
-    final body = <String, dynamic>{
-      'stream': false,
-      'messages': messages,
-    };
+    final body = <String, dynamic>{'stream': false, 'messages': messages};
     if (temperature != null) body['temperature'] = temperature;
     if (maxTokens != null) body['max_tokens'] = maxTokens;
     if (resolvedModel != null && resolvedModel.isNotEmpty) {

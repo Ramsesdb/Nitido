@@ -32,8 +32,7 @@ class FakeVoiceService implements VoiceService {
   int _emitIndex = 0;
 
   @override
-  Stream<String> get partials =>
-      _ctrl?.stream ?? const Stream<String>.empty();
+  Stream<String> get partials => _ctrl?.stream ?? const Stream<String>.empty();
 
   @override
   bool get isListening => _active;

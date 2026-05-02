@@ -1,4 +1,4 @@
-﻿import 'dart:convert';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -23,53 +23,57 @@ class _FakeClient extends http.BaseClient {
 
 void main() {
   group('GeminiProvider', () {
-    test('converts assistant role to model + extracts systemInstruction',
-        () async {
-      final body = jsonEncode({
-        'candidates': [
-          {
-            'content': {
-              'parts': [
-                {'text': 'pong'},
-              ],
+    test(
+      'converts assistant role to model + extracts systemInstruction',
+      () async {
+        final body = jsonEncode({
+          'candidates': [
+            {
+              'content': {
+                'parts': [
+                  {'text': 'pong'},
+                ],
+              },
             },
-          },
-        ],
-      });
-      final client = _FakeClient(200, body);
-      final provider = GeminiProvider(
-        apiKey: 'AIza-test',
-        model: 'gemini-2.5-flash',
-        client: client,
-      );
+          ],
+        });
+        final client = _FakeClient(200, body);
+        final provider = GeminiProvider(
+          apiKey: 'AIza-test',
+          model: 'gemini-2.5-flash',
+          client: client,
+        );
 
-      await provider.complete(messages: [
-        {'role': 'system', 'content': 'You are a banker'},
-        {'role': 'user', 'content': 'hi'},
-        {'role': 'assistant', 'content': 'previous reply'},
-        {'role': 'user', 'content': 'follow up'},
-      ]);
+        await provider.complete(
+          messages: [
+            {'role': 'system', 'content': 'You are a banker'},
+            {'role': 'user', 'content': 'hi'},
+            {'role': 'assistant', 'content': 'previous reply'},
+            {'role': 'user', 'content': 'follow up'},
+          ],
+        );
 
-      final request = client.lastRequest as http.Request;
-      expect(
-        request.url.toString(),
-        contains(
-            'generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent'),
-      );
-      expect(request.url.queryParameters['key'], 'AIza-test');
+        final request = client.lastRequest as http.Request;
+        expect(
+          request.url.toString(),
+          contains(
+            'generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+          ),
+        );
+        expect(request.url.queryParameters['key'], 'AIza-test');
 
-      final payload = jsonDecode(request.body) as Map<String, dynamic>;
-      expect(payload['systemInstruction'], isA<Map<String, dynamic>>());
-      final sysParts =
-          (payload['systemInstruction'] as Map)['parts'] as List;
-      expect((sysParts.first as Map)['text'], 'You are a banker');
+        final payload = jsonDecode(request.body) as Map<String, dynamic>;
+        expect(payload['systemInstruction'], isA<Map<String, dynamic>>());
+        final sysParts = (payload['systemInstruction'] as Map)['parts'] as List;
+        expect((sysParts.first as Map)['text'], 'You are a banker');
 
-      final contents = payload['contents'] as List;
-      expect(contents.length, 3);
-      expect((contents[0] as Map)['role'], 'user');
-      expect((contents[1] as Map)['role'], 'model'); // was 'assistant'
-      expect((contents[2] as Map)['role'], 'user');
-    });
+        final contents = payload['contents'] as List;
+        expect(contents.length, 3);
+        expect((contents[0] as Map)['role'], 'user');
+        expect((contents[1] as Map)['role'], 'model'); // was 'assistant'
+        expect((contents[2] as Map)['role'], 'user');
+      },
+    );
 
     test('omits systemInstruction when no system message present', () async {
       final body = jsonEncode({
@@ -90,12 +94,15 @@ void main() {
         client: client,
       );
 
-      await provider.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      await provider.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
 
-      final payload = jsonDecode((client.lastRequest as http.Request).body)
-          as Map<String, dynamic>;
+      final payload =
+          jsonDecode((client.lastRequest as http.Request).body)
+              as Map<String, dynamic>;
       expect(payload.containsKey('systemInstruction'), isFalse);
     });
 
@@ -117,9 +124,11 @@ void main() {
         model: 'gemini-2.5-flash',
         client: client,
       );
-      final out = await provider.complete(messages: [
-        {'role': 'user', 'content': 'hi'},
-      ]);
+      final out = await provider.complete(
+        messages: [
+          {'role': 'user', 'content': 'hi'},
+        ],
+      );
       expect(out, 'hello');
     });
 
@@ -131,9 +140,11 @@ void main() {
         client: client,
       );
       expect(
-        await provider.complete(messages: [
-          {'role': 'user', 'content': 'hi'},
-        ]),
+        await provider.complete(
+          messages: [
+            {'role': 'user', 'content': 'hi'},
+          ],
+        ),
         isNull,
       );
     });
@@ -165,8 +176,9 @@ void main() {
         maxTokens: 256,
       );
 
-      final payload = jsonDecode((client.lastRequest as http.Request).body)
-          as Map<String, dynamic>;
+      final payload =
+          jsonDecode((client.lastRequest as http.Request).body)
+              as Map<String, dynamic>;
       final genConfig = payload['generationConfig'] as Map<String, dynamic>;
       expect(genConfig['temperature'], 0.42);
       expect(genConfig['maxOutputTokens'], 256);

@@ -155,7 +155,6 @@ class _LoginPageState extends State<LoginPage> {
               datetime('now')
             )
           ''');
-
       }
 
       // Update app state (only `onboarded`; `introSeen` is flipped at the end
@@ -298,8 +297,8 @@ class _LoginPageState extends State<LoginPage> {
                           Container(
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: colorScheme.errorContainer.withValues(alpha: 
-                                0.8,
+                              color: colorScheme.errorContainer.withValues(
+                                alpha: 0.8,
                               ),
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
@@ -350,7 +349,9 @@ class _LoginPageState extends State<LoginPage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide(
-                                color: colorScheme.outline.withValues(alpha: 0.2),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.2,
+                                ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -407,7 +408,9 @@ class _LoginPageState extends State<LoginPage> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(16),
                               borderSide: BorderSide(
-                                color: colorScheme.outline.withValues(alpha: 0.2),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.2,
+                                ),
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
@@ -439,7 +442,9 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             elevation: 2,
-                            shadowColor: colorScheme.primary.withValues(alpha: 0.4),
+                            shadowColor: colorScheme.primary.withValues(
+                              alpha: 0.4,
+                            ),
                           ),
                           child: _isLoading
                               ? SizedBox(
@@ -492,7 +497,9 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             Expanded(
                               child: Divider(
-                                color: colorScheme.outline.withValues(alpha: 0.3),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                             Padding(
@@ -508,7 +515,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             Expanded(
                               child: Divider(
-                                color: colorScheme.outline.withValues(alpha: 0.3),
+                                color: colorScheme.outline.withValues(
+                                  alpha: 0.3,
+                                ),
                               ),
                             ),
                           ],
