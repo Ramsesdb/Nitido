@@ -172,46 +172,42 @@ void main() {
 
   // TODO(día-3): pre-existing failure — TimeoutException >10min, requires
   // attachments DB + file system mocks not yet set up in test environment.
-  testWidgets(
-    '5.8 receipt chip appears only when receipt attachment exists',
-    (tester) async {
-      final tx = await TransactionService.instance
-          .getTransactionById(txId)
-          .first;
-      expect(tx, isNotNull);
+  testWidgets('5.8 receipt chip appears only when receipt attachment exists', (
+    tester,
+  ) async {
+    final tx = await TransactionService.instance.getTransactionById(txId).first;
+    expect(tx, isNotNull);
 
-      await tester.pumpWidget(
-        _wrap(TransactionDetailsPage(transaction: tx!, heroTag: null)),
-      );
-      // TransactionDetailsPage contains Drift watch-stream StreamBuilders
-      // (TransactionService, CurrencyService, ExchangeRateService) that never
-      // complete, so pumpAndSettle() would loop until the test timeout.
-      // pump(2s) is enough to let all FutureBuilders and the first stream events
-      // settle without blocking forever.
-      await tester.pump(const Duration(seconds: 2));
+    await tester.pumpWidget(
+      _wrap(TransactionDetailsPage(transaction: tx!, heroTag: null)),
+    );
+    // TransactionDetailsPage contains Drift watch-stream StreamBuilders
+    // (TransactionService, CurrencyService, ExchangeRateService) that never
+    // complete, so pumpAndSettle() would loop until the test timeout.
+    // pump(2s) is enough to let all FutureBuilders and the first stream events
+    // settle without blocking forever.
+    await tester.pump(const Duration(seconds: 2));
 
-      final ctx = tester.element(find.byType(TransactionDetailsPage));
-      final t = Translations.of(ctx);
+    final ctx = tester.element(find.byType(TransactionDetailsPage));
+    final t = Translations.of(ctx);
 
-      expect(find.text(t.transaction.view_receipt), findsNothing);
+    expect(find.text(t.transaction.view_receipt), findsNothing);
 
-      final source = File('${tempRoot.path}/receipt_source.png')
-        ..writeAsBytesSync(img.encodePng(img.Image(width: 80, height: 80)));
+    final source = File('${tempRoot.path}/receipt_source.png')
+      ..writeAsBytesSync(img.encodePng(img.Image(width: 80, height: 80)));
 
-      await AttachmentsService.instance.attach(
-        ownerType: AttachmentOwnerType.transaction,
-        ownerId: txId,
-        sourceFile: source,
-        role: 'receipt',
-      );
+    await AttachmentsService.instance.attach(
+      ownerType: AttachmentOwnerType.transaction,
+      ownerId: txId,
+      sourceFile: source,
+      role: 'receipt',
+    );
 
-      await tester.pumpWidget(
-        _wrap(TransactionDetailsPage(transaction: tx, heroTag: null)),
-      );
-      await tester.pump(const Duration(seconds: 2));
+    await tester.pumpWidget(
+      _wrap(TransactionDetailsPage(transaction: tx, heroTag: null)),
+    );
+    await tester.pump(const Duration(seconds: 2));
 
-      expect(find.text(t.transaction.view_receipt), findsOneWidget);
-    },
-    skip: true,
-  );
+    expect(find.text(t.transaction.view_receipt), findsOneWidget);
+  }, skip: true);
 }

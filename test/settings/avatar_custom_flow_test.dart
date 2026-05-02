@@ -48,171 +48,192 @@ File _createImageFile(String path, int red) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  group('avatar custom flow tests', () {
-    const pathProviderChannel = MethodChannel(
-      'plugins.flutter.io/path_provider',
-    );
+  group(
+    'avatar custom flow tests',
+    () {
+      const pathProviderChannel = MethodChannel(
+        'plugins.flutter.io/path_provider',
+      );
 
-    late Directory tempRoot;
+      late Directory tempRoot;
 
-    setUp(() async {
-    await LocaleSettings.setLocale(AppLocale.en);
-    appStateSettings[SettingKey.font] = '0';
-    appStateSettings[SettingKey.accentColor] = 'auto';
-    appStateSettings[SettingKey.amoledMode] = '0';
-    appStateSettings[SettingKey.themeMode] = 'system';
+      setUp(() async {
+        await LocaleSettings.setLocale(AppLocale.en);
+        appStateSettings[SettingKey.font] = '0';
+        appStateSettings[SettingKey.accentColor] = 'auto';
+        appStateSettings[SettingKey.amoledMode] = '0';
+        appStateSettings[SettingKey.themeMode] = 'system';
 
-    tempRoot = await Directory.systemTemp.createTemp('nitido_avatar_test_');
+        tempRoot = await Directory.systemTemp.createTemp('nitido_avatar_test_');
 
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(pathProviderChannel, (MethodCall call) async {
-          if (call.method == 'getApplicationDocumentsDirectory') {
-            return tempRoot.path;
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(pathProviderChannel, (
+              MethodCall call,
+            ) async {
+              if (call.method == 'getApplicationDocumentsDirectory') {
+                return tempRoot.path;
+              }
+              return null;
+            });
+
+        await AttachmentsService.instance.deleteByOwner(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+        );
+      });
+
+      tearDown(() async {
+        await AttachmentsService.instance.deleteByOwner(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+        );
+
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(pathProviderChannel, null);
+
+        if (await tempRoot.exists()) {
+          try {
+            await tempRoot.delete(recursive: true);
+          } on FileSystemException {
+            // Ignore Windows file-lock races from shared DB handles in tests.
           }
-          return null;
-        });
+        }
+      });
 
-    await AttachmentsService.instance.deleteByOwner(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-    );
-  });
+      test('6.7 replace avatar leaves only latest row and file', () async {
+        final firstSource = _createImageFile(
+          '${tempRoot.path}/avatar_a.png',
+          120,
+        );
+        final secondSource = _createImageFile(
+          '${tempRoot.path}/avatar_b.png',
+          210,
+        );
 
-  tearDown(() async {
-    await AttachmentsService.instance.deleteByOwner(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-    );
+        final first = await AttachmentsService.instance.attach(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+          sourceFile: firstSource,
+          role: 'avatar',
+        );
 
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(pathProviderChannel, null);
+        await AttachmentsService.instance.deleteById(first.id);
 
-    if (await tempRoot.exists()) {
-      try {
-        await tempRoot.delete(recursive: true);
-      } on FileSystemException {
-        // Ignore Windows file-lock races from shared DB handles in tests.
-      }
-    }
-  });
+        final second = await AttachmentsService.instance.attach(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+          sourceFile: secondSource,
+          role: 'avatar',
+        );
 
-  test('6.7 replace avatar leaves only latest row and file', () async {
-    final firstSource = _createImageFile('${tempRoot.path}/avatar_a.png', 120);
-    final secondSource = _createImageFile('${tempRoot.path}/avatar_b.png', 210);
+        final list = await AttachmentsService.instance.listByOwner(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+        );
 
-    final first = await AttachmentsService.instance.attach(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-      sourceFile: firstSource,
-      role: 'avatar',
-    );
+        expect(list, hasLength(1));
+        expect(list.first.id, second.id);
 
-    await AttachmentsService.instance.deleteById(first.id);
+        final firstResolved = await AttachmentsService.instance.resolveFile(
+          first,
+        );
+        final secondResolved = await AttachmentsService.instance.resolveFile(
+          second,
+        );
 
-    final second = await AttachmentsService.instance.attach(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-      sourceFile: secondSource,
-      role: 'avatar',
-    );
+        expect(firstResolved.existsSync(), isFalse);
+        expect(secondResolved.existsSync(), isTrue);
+      });
 
-    final list = await AttachmentsService.instance.listByOwner(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-    );
+      testWidgets(
+        '6.8 UserAvatarDisplay renders custom image or fallback preset',
+        (tester) async {
+          await tester.pumpWidget(
+            _wrap(const UserAvatarDisplay(avatar: 'man')),
+          );
+          // UserAvatarDisplay uses FutureBuilder + Image.file. The image decode
+          // pipeline schedules additional frames that prevent pumpAndSettle from
+          // ever draining the frame queue, causing a ~112s hang. pump(2s) is
+          // sufficient for both FutureBuilders and Image decode to complete.
+          await tester.pump(const Duration(seconds: 2));
 
-    expect(list, hasLength(1));
-    expect(list.first.id, second.id);
+          expect(find.byType(UserAvatar), findsOneWidget);
 
-    final firstResolved = await AttachmentsService.instance.resolveFile(first);
-    final secondResolved = await AttachmentsService.instance.resolveFile(
-      second,
-    );
+          final customSource = _createImageFile(
+            '${tempRoot.path}/avatar_custom.png',
+            80,
+          );
+          await AttachmentsService.instance.attach(
+            ownerType: AttachmentOwnerType.userProfile,
+            ownerId: 'current',
+            sourceFile: customSource,
+            role: 'avatar',
+          );
 
-    expect(firstResolved.existsSync(), isFalse);
-    expect(secondResolved.existsSync(), isTrue);
-  });
+          await tester.pumpWidget(
+            _wrap(const UserAvatarDisplay(avatar: 'man')),
+          );
+          await tester.pump(const Duration(seconds: 2));
 
-  testWidgets(
-    '6.8 UserAvatarDisplay renders custom image or fallback preset',
-    (tester) async {
-      await tester.pumpWidget(_wrap(const UserAvatarDisplay(avatar: 'man')));
-      // UserAvatarDisplay uses FutureBuilder + Image.file. The image decode
-      // pipeline schedules additional frames that prevent pumpAndSettle from
-      // ever draining the frame queue, causing a ~112s hang. pump(2s) is
-      // sufficient for both FutureBuilders and Image decode to complete.
-      await tester.pump(const Duration(seconds: 2));
-
-      expect(find.byType(UserAvatar), findsOneWidget);
-
-      final customSource = _createImageFile(
-        '${tempRoot.path}/avatar_custom.png',
-        80,
-      );
-      await AttachmentsService.instance.attach(
-        ownerType: AttachmentOwnerType.userProfile,
-        ownerId: 'current',
-        sourceFile: customSource,
-        role: 'avatar',
+          expect(find.byType(Image), findsOneWidget);
+        },
       );
 
-      await tester.pumpWidget(_wrap(const UserAvatarDisplay(avatar: 'man')));
-      await tester.pump(const Duration(seconds: 2));
+      testWidgets('6.9 use preset path removes custom avatar and falls back', (
+        tester,
+      ) async {
+        final customSource = _createImageFile(
+          '${tempRoot.path}/avatar_to_remove.png',
+          60,
+        );
+        final custom = await AttachmentsService.instance.attach(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+          sourceFile: customSource,
+          role: 'avatar',
+        );
 
-      expect(find.byType(Image), findsOneWidget);
+        await AttachmentsService.instance.deleteById(custom.id);
+
+        await tester.pumpWidget(
+          _wrap(const UserAvatarDisplay(avatar: 'woman')),
+        );
+        await tester.pump(const Duration(seconds: 2));
+
+        expect(find.byType(UserAvatar), findsOneWidget);
+      });
+
+      test('6.10 no orphan files remain after avatar replace path', () async {
+        final firstSource = _createImageFile(
+          '${tempRoot.path}/avatar_orphan_a.png',
+          100,
+        );
+        final secondSource = _createImageFile(
+          '${tempRoot.path}/avatar_orphan_b.png',
+          180,
+        );
+
+        final first = await AttachmentsService.instance.attach(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+          sourceFile: firstSource,
+          role: 'avatar',
+        );
+
+        await AttachmentsService.instance.deleteById(first.id);
+
+        await AttachmentsService.instance.attach(
+          ownerType: AttachmentOwnerType.userProfile,
+          ownerId: 'current',
+          sourceFile: secondSource,
+          role: 'avatar',
+        );
+
+        final removed = await AttachmentsService.instance.purgeOrphans();
+        expect(removed, 0);
+      });
     },
+    skip:
+        'TODO(día-3): all tests in this group hang due to missing Firebase Storage + file system mocks in test environment. Re-enable when infra mocks are set up (Fase 2 item #21).',
   );
-
-  testWidgets('6.9 use preset path removes custom avatar and falls back', (
-    tester,
-  ) async {
-    final customSource = _createImageFile(
-      '${tempRoot.path}/avatar_to_remove.png',
-      60,
-    );
-    final custom = await AttachmentsService.instance.attach(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-      sourceFile: customSource,
-      role: 'avatar',
-    );
-
-    await AttachmentsService.instance.deleteById(custom.id);
-
-    await tester.pumpWidget(_wrap(const UserAvatarDisplay(avatar: 'woman')));
-    await tester.pump(const Duration(seconds: 2));
-
-    expect(find.byType(UserAvatar), findsOneWidget);
-  });
-
-  test('6.10 no orphan files remain after avatar replace path', () async {
-    final firstSource = _createImageFile(
-      '${tempRoot.path}/avatar_orphan_a.png',
-      100,
-    );
-    final secondSource = _createImageFile(
-      '${tempRoot.path}/avatar_orphan_b.png',
-      180,
-    );
-
-    final first = await AttachmentsService.instance.attach(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-      sourceFile: firstSource,
-      role: 'avatar',
-    );
-
-    await AttachmentsService.instance.deleteById(first.id);
-
-    await AttachmentsService.instance.attach(
-      ownerType: AttachmentOwnerType.userProfile,
-      ownerId: 'current',
-      sourceFile: secondSource,
-      role: 'avatar',
-    );
-
-    final removed = await AttachmentsService.instance.purgeOrphans();
-    expect(removed, 0);
-  });
-  }, skip: 'TODO(día-3): all tests in this group hang due to missing Firebase Storage + file system mocks in test environment. Re-enable when infra mocks are set up (Fase 2 item #21).');
 }
