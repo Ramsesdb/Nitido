@@ -20,7 +20,6 @@
 
     <!-- Robust permissions for listener liveness (Tanda 3: Permisos Robustos) -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <!-- Required for BankDetectionService to enumerate installed apps (onboarding-v2-auto-import) -->
@@ -36,6 +35,7 @@
         android:label="Nitido"
         android:name=".NitidoApplication"
         android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
         android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".MainActivity"
