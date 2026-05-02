@@ -66,6 +66,20 @@ deleting history.
 **Code generation** — Drift and slang require build_runner. Run after any schema or
 model change. Generated files (`*.g.dart`) are excluded from the repo; regenerate locally.
 
+## Development
+
+### Pre-commit checks (run locally before pushing)
+
+Before pushing changes, run the same three checks that CI runs:
+
+```bash
+dart format --set-exit-if-changed lib/ test/
+flutter analyze --no-fatal-infos
+flutter test --no-pub
+```
+
+CI runs these on every push to `main` and on every PR. PRs that fail any of the three checks cannot be merged into `main`.
+
 ## License
 
 AGPL-3.0 (inherited from Monekin upstream).
