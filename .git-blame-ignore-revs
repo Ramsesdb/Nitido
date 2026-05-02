@@ -1,0 +1,3 @@
+# Mass-format migration to Dart 3.7+ tall format (Día 3, 2026-05-02)
+# Excludes the format-only commit from git blame on production files.
+a617667519ecd5fa335cc4ac52426754666f2fba
