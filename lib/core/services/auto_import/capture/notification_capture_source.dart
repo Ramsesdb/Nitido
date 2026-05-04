@@ -7,6 +7,8 @@ import 'package:notification_listener_service/notification_listener_service.dart
 import 'package:nitido/core/models/auto_import/capture_channel.dart';
 import 'package:nitido/core/models/auto_import/raw_capture_event.dart';
 import 'package:nitido/core/services/auto_import/capture/capture_health_monitor.dart';
+import 'package:nitido/core/services/auto_import/constants.dart';
+import 'package:nitido/core/utils/logger.dart';
 
 import 'capture_source.dart';
 
@@ -149,6 +151,16 @@ class NotificationCaptureSource implements CaptureSource {
       final title = event.title ?? '';
       final content = event.content ?? '';
       final rawText = '$title\n$content';
+
+      // --- Guard: reject oversized payloads early ---
+      if (rawText.length > kMaxNotificationLength) {
+        Logger.recordError(
+          Exception('Oversized notification rejected'),
+          StackTrace.current,
+          reason: 'text length=${rawText.length} from package=$packageName',
+        );
+        return; // drop silently — do NOT feed parsers or LLM
+      }
 
       // Plugin `notification_listener_service` 0.3.5 exposes `id` (int?) and
       // `hasRemoved` (bool?) but NOT `postTime`. Use `receivedAt` as proxy.

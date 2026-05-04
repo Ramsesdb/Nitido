@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:nitido/core/models/auto_import/capture_channel.dart';
@@ -5,7 +6,9 @@ import 'package:nitido/core/models/auto_import/raw_capture_event.dart';
 import 'package:nitido/core/models/auto_import/transaction_proposal.dart';
 import 'package:nitido/core/models/transaction/transaction_type.enum.dart';
 import 'package:nitido/core/services/ai/ai_service.dart';
+import 'package:nitido/core/services/auto_import/constants.dart';
 import 'package:nitido/core/services/auto_import/supported_banks.dart';
+import 'package:nitido/core/utils/logger.dart';
 
 import 'bank_profile.dart';
 
@@ -94,7 +97,20 @@ Reglas:
               temperature: 0.1,
               maxTokens: 256,
             )
-            .timeout(const Duration(seconds: 10));
+            .timeout(
+              kLlmCallTimeout,
+              onTimeout: () {
+                Logger.recordError(
+                  TimeoutException(
+                    'LLM call exceeded ${kLlmCallTimeout.inSeconds}s',
+                  ),
+                  StackTrace.current,
+                  reason:
+                      'package=${event.sender}, textLen=${event.rawText.length}',
+                );
+                return null;
+              },
+            );
       }
     } catch (e) {
       return ParseResult.failed('llm_unavailable: $e');
