@@ -26,9 +26,6 @@ def keystoreProperties = new Properties()
 // Load your keystore.properties file into the keystoreProperties object.
 if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-    println "keystore loaded: storePassword=[${keystoreProperties['storePassword']}], keyAlias=[${keystoreProperties['keyAlias']}], keyPassword=[${keystoreProperties['keyPassword']}], storeFile=[${keystoreProperties['storeFile']}]"
-} else {
-    println "WARNING: key.properties not found at ${keystorePropertiesFile.absolutePath}"
 }
 
 android {
