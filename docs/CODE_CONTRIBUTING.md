@@ -96,6 +96,6 @@ So far you should have pushed your work to your working branch and have tested t
 If you have any doubts or need further guidance, feel free to ask! You can:
 
 - **Post on the Forum**: Join discussions or raise your queries in our community forum.
-- **Contact Directly**: Reach out to me via email at lozin.technologies@gmail.com.
+- **Contact Directly**: Reach out to me via email at ramsesdb.dev@gmail.com.
 
 We’re here to help and excited to see your contributions to Nitido!

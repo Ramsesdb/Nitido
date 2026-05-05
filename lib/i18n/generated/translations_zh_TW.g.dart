@@ -1282,7 +1282,7 @@ class _TranslationsBackupExportZhTw extends TranslationsBackupExportEn {
 	@override String get send_file => '發送文件';
 	@override String get see_folder => '查看文件夾';
 	@override String success({required Object x}) => '檔案已在${x}中成功儲存/下載';
-	@override String get error => '下載檔案時發生錯誤。請透過 lozin.technologies@gmail.com 聯絡開發人員';
+	@override String get error => '下載檔案時發生錯誤。請透過 ramsesdb.dev@gmail.com 聯絡開發人員';
 	@override String get dialog_title => '儲存/傳送文件';
 }
 
@@ -1303,7 +1303,7 @@ class _TranslationsBackupImportZhTw extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => '點選選擇檔案';
 	@override late final _TranslationsBackupImportManualImportZhTw manual_import = _TranslationsBackupImportManualImportZhTw._(_root);
 	@override String get success => '導入成功';
-	@override String get error => '匯入檔案時發生錯誤。請透過 lozin.technologies@gmail.com 聯絡開發人員。';
+	@override String get error => '匯入檔案時發生錯誤。請透過 ramsesdb.dev@gmail.com 聯絡開發人員。';
 	@override String get cancelled => '導入已被用戶取消';
 }
 
@@ -2667,7 +2667,7 @@ extension on TranslationsZhTw {
 			'backup.export.send_file' => '發送文件',
 			'backup.export.see_folder' => '查看文件夾',
 			'backup.export.success' => ({required Object x}) => '檔案已在${x}中成功儲存/下載',
-			'backup.export.error' => '下載檔案時發生錯誤。請透過 lozin.technologies@gmail.com 聯絡開發人員',
+			'backup.export.error' => '下載檔案時發生錯誤。請透過 ramsesdb.dev@gmail.com 聯絡開發人員',
 			'backup.export.dialog_title' => '儲存/傳送文件',
 			'backup.import.title' => '匯入您的資料',
 			'backup.import.title_short' => '匯入',
@@ -2697,7 +2697,7 @@ extension on TranslationsZhTw {
 			'backup.import.manual_import.steps_descr.5' => '選擇其他交易屬性的資料列',
 			'backup.import.manual_import.success' => ({required Object x}) => '已成功導入${x}筆交易',
 			'backup.import.success' => '導入成功',
-			'backup.import.error' => '匯入檔案時發生錯誤。請透過 lozin.technologies@gmail.com 聯絡開發人員。',
+			'backup.import.error' => '匯入檔案時發生錯誤。請透過 ramsesdb.dev@gmail.com 聯絡開發人員。',
 			'backup.import.cancelled' => '導入已被用戶取消',
 			'backup.about.title' => '有關您的資料庫的資訊',
 			'backup.about.create_date' => '建立日期',

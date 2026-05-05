@@ -789,7 +789,7 @@
       "send_file": "Envoyer le fichier",
       "see_folder": "Voir le dossier",
       "success": "Fichier enregistré avec succès dans {{x}}",
-      "error": "Erreur lors du téléchargement du fichier. Veuillez contacter le développeur via lozin.technologies@gmail.com"
+      "error": "Erreur lors du téléchargement du fichier. Veuillez contacter le développeur via ramsesdb.dev@gmail.com"
     },
     "IMPORT": {
       "title": "Importer vos données",
@@ -826,7 +826,7 @@
         "success": "{{x}} transactions importées avec succès"
       },
       "success": "Import réalisé avec succès",
-      "error": "Erreur lors de l'import du fichier. Veuillez contacter le développeur via lozin.technologies@gmail.com"
+      "error": "Erreur lors de l'import du fichier. Veuillez contacter le développeur via ramsesdb.dev@gmail.com"
     },
     "ABOUT": {
       "title": "Informations sur votre base de données",

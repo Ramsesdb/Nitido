@@ -1282,7 +1282,7 @@ class _TranslationsBackupExportZhCn extends TranslationsBackupExportEn {
 	@override String get send_file => '发送文件';
 	@override String get see_folder => '查看文件夹';
 	@override String success({required Object x}) => '文件已成功保存/下载至 ${x}';
-	@override String get error => '下载文件时发生错误。请通过 lozin.technologies@gmail.com 联系开发人员';
+	@override String get error => '下载文件时发生错误。请通过 ramsesdb.dev@gmail.com 联系开发人员';
 	@override String get dialog_title => '保存/发送文件';
 }
 
@@ -1303,7 +1303,7 @@ class _TranslationsBackupImportZhCn extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => '点击选择文件';
 	@override late final _TranslationsBackupImportManualImportZhCn manual_import = _TranslationsBackupImportManualImportZhCn._(_root);
 	@override String get success => '导入成功';
-	@override String get error => '导入文件时发生错误。请通过 lozin.technologies@gmail.com 联系开发人员。';
+	@override String get error => '导入文件时发生错误。请通过 ramsesdb.dev@gmail.com 联系开发人员。';
 	@override String get cancelled => '导入被用户取消';
 }
 
@@ -2667,7 +2667,7 @@ extension on TranslationsZhCn {
 			'backup.export.send_file' => '发送文件',
 			'backup.export.see_folder' => '查看文件夹',
 			'backup.export.success' => ({required Object x}) => '文件已成功保存/下载至 ${x}',
-			'backup.export.error' => '下载文件时发生错误。请通过 lozin.technologies@gmail.com 联系开发人员',
+			'backup.export.error' => '下载文件时发生错误。请通过 ramsesdb.dev@gmail.com 联系开发人员',
 			'backup.export.dialog_title' => '保存/发送文件',
 			'backup.import.title' => '导入您的数据',
 			'backup.import.title_short' => '导入',
@@ -2697,7 +2697,7 @@ extension on TranslationsZhCn {
 			'backup.import.manual_import.steps_descr.5' => '选择其它交易属性的数据列',
 			'backup.import.manual_import.success' => ({required Object x}) => '成功导入 ${x} 笔交易',
 			'backup.import.success' => '导入成功',
-			'backup.import.error' => '导入文件时发生错误。请通过 lozin.technologies@gmail.com 联系开发人员。',
+			'backup.import.error' => '导入文件时发生错误。请通过 ramsesdb.dev@gmail.com 联系开发人员。',
 			'backup.import.cancelled' => '导入被用户取消',
 			'backup.about.title' => '有关您的数据库的信息',
 			'backup.about.create_date' => '创建日期',

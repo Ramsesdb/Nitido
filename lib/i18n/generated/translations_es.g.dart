@@ -1680,7 +1680,7 @@ class _TranslationsBackupExportEs extends TranslationsBackupExportEn {
 	@override String get send_file => 'Enviar archivo';
 	@override String get see_folder => 'Ver carpeta';
 	@override String success({required Object x}) => 'Archivo guardado correctamente en ${x}';
-	@override String get error => 'Error al descargar el archivo. Por favor contacte con el desarrollador via lozin.technologies@gmail.com';
+	@override String get error => 'Error al descargar el archivo. Por favor contacte con el desarrollador via ramsesdb.dev@gmail.com';
 	@override String get dialog_title => 'Guardar/Enviar archivo';
 }
 
@@ -1701,7 +1701,7 @@ class _TranslationsBackupImportEs extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => 'Pulsa para seleccionar un archivo';
 	@override late final _TranslationsBackupImportManualImportEs manual_import = _TranslationsBackupImportManualImportEs._(_root);
 	@override String get success => 'Importación realizada con exito';
-	@override String get error => 'Error al importar el archivo. Por favor contacte con el desarrollador via lozin.technologies@gmail.com';
+	@override String get error => 'Error al importar el archivo. Por favor contacte con el desarrollador via ramsesdb.dev@gmail.com';
 	@override String get cancelled => 'La importación fue cancelada por el usuario';
 }
 
@@ -3567,7 +3567,7 @@ extension on TranslationsEs {
 			'backup.export.send_file' => 'Enviar archivo',
 			'backup.export.see_folder' => 'Ver carpeta',
 			'backup.export.success' => ({required Object x}) => 'Archivo guardado correctamente en ${x}',
-			'backup.export.error' => 'Error al descargar el archivo. Por favor contacte con el desarrollador via lozin.technologies@gmail.com',
+			'backup.export.error' => 'Error al descargar el archivo. Por favor contacte con el desarrollador via ramsesdb.dev@gmail.com',
 			'backup.export.dialog_title' => 'Guardar/Enviar archivo',
 			'backup.import.title' => 'Importar tus datos',
 			'backup.import.title_short' => 'Importar',
@@ -3597,7 +3597,7 @@ extension on TranslationsEs {
 			'backup.import.manual_import.steps_descr.5' => 'Especifica las columnas para otros atributos optativos de las transacciones',
 			'backup.import.manual_import.success' => ({required Object x}) => 'Se han importado correctamente ${x} transacciones',
 			'backup.import.success' => 'Importación realizada con exito',
-			'backup.import.error' => 'Error al importar el archivo. Por favor contacte con el desarrollador via lozin.technologies@gmail.com',
+			'backup.import.error' => 'Error al importar el archivo. Por favor contacte con el desarrollador via ramsesdb.dev@gmail.com',
 			'backup.import.cancelled' => 'La importación fue cancelada por el usuario',
 			'backup.about.title' => 'Información sobre tu base de datos',
 			'backup.about.create_date' => 'Fecha de creación',

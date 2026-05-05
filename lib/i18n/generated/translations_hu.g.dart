@@ -1282,7 +1282,7 @@ class _TranslationsBackupExportHu extends TranslationsBackupExportEn {
 	@override String get send_file => 'Fájl küldése';
 	@override String get see_folder => 'Lásd a mappát';
 	@override String success({required Object x}) => 'A fájl sikeresen mentve/letöltve ide: ${x}';
-	@override String get error => 'Hiba a fájl letöltésében. Kérjük, lépjen kapcsolatba a fejlesztővel a lozin.technologies@gmail.com címen keresztül.';
+	@override String get error => 'Hiba a fájl letöltésében. Kérjük, lépjen kapcsolatba a fejlesztővel a ramsesdb.dev@gmail.com címen keresztül.';
 	@override String get dialog_title => 'Fájl mentése/küldése';
 }
 
@@ -1303,7 +1303,7 @@ class _TranslationsBackupImportHu extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => 'Koppintson a fájl kiválasztásához';
 	@override late final _TranslationsBackupImportManualImportHu manual_import = _TranslationsBackupImportManualImportHu._(_root);
 	@override String get success => 'Az importálás sikeresen végrehajtva';
-	@override String get error => 'Hiba történt importálásakor. Kérjük, lépjen kapcsolatba a fejlesztővel a lozin.technologies@gmail.com címen keresztül.';
+	@override String get error => 'Hiba történt importálásakor. Kérjük, lépjen kapcsolatba a fejlesztővel a ramsesdb.dev@gmail.com címen keresztül.';
 	@override String get cancelled => 'Az importálást a felhasználó megszakította';
 }
 
@@ -2667,7 +2667,7 @@ extension on TranslationsHu {
 			'backup.export.send_file' => 'Fájl küldése',
 			'backup.export.see_folder' => 'Lásd a mappát',
 			'backup.export.success' => ({required Object x}) => 'A fájl sikeresen mentve/letöltve ide: ${x}',
-			'backup.export.error' => 'Hiba a fájl letöltésében. Kérjük, lépjen kapcsolatba a fejlesztővel a lozin.technologies@gmail.com címen keresztül.',
+			'backup.export.error' => 'Hiba a fájl letöltésében. Kérjük, lépjen kapcsolatba a fejlesztővel a ramsesdb.dev@gmail.com címen keresztül.',
 			'backup.export.dialog_title' => 'Fájl mentése/küldése',
 			'backup.import.title' => 'Adatok importálása',
 			'backup.import.title_short' => 'Importálás',
@@ -2697,7 +2697,7 @@ extension on TranslationsHu {
 			'backup.import.manual_import.steps_descr.5' => 'Az egyéb opcionális tranzakciós attribútumok oszlopainak meghatározása',
 			'backup.import.manual_import.success' => ({required Object x}) => '${x} tranzakció sikeresen importálva',
 			'backup.import.success' => 'Az importálás sikeresen végrehajtva',
-			'backup.import.error' => 'Hiba történt importálásakor. Kérjük, lépjen kapcsolatba a fejlesztővel a lozin.technologies@gmail.com címen keresztül.',
+			'backup.import.error' => 'Hiba történt importálásakor. Kérjük, lépjen kapcsolatba a fejlesztővel a ramsesdb.dev@gmail.com címen keresztül.',
 			'backup.import.cancelled' => 'Az importálást a felhasználó megszakította',
 			'backup.about.title' => 'Információk az adatbázisról',
 			'backup.about.create_date' => 'Létrehozás dátuma',

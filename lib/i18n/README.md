@@ -65,7 +65,7 @@ If you are not familiar with GitHub or JSON, don’t worry! Follow these steps:
 3. **Save your changes**.
 
 4. **Send the file via email**:
-   - You could email your new translations files to **lozin.technologies@gmail.com** using as the subject line something like: _Translation Contribution for [Language]_.
+   - You could email your new translations files to **ramsesdb.dev@gmail.com** using as the subject line something like: _Translation Contribution for [Language]_.
 
 ### For Technical Contributors
 
@@ -102,6 +102,6 @@ You can learn more about the slang library tools in the [docs](https://github.co
 If you have any doubts or need further guidance, feel free to ask! You can:
 
 - **Post on the Forum**: Join discussions or raise your queries in our community forum.
-- **Contact Directly**: Reach out to me via email at [lozin.technologies@gmail.com].
+- **Contact Directly**: Reach out to me via email at [ramsesdb.dev@gmail.com].
 
 We’re here to help and excited to see your contributions to Nitido!

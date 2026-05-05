@@ -789,7 +789,7 @@
       "send_file": "Invia file",
       "see_folder": "Vedi cartella",
       "success": "File salvato/scaricato con successo in {{x}}",
-      "error": "Errore durante il download del file. Contatta lo sviluppatore tramite lozin.technologies@gmail.com",
+      "error": "Errore durante il download del file. Contatta lo sviluppatore tramite ramsesdb.dev@gmail.com",
       "dialog_title": "Salva/Invia file"
     },
     "IMPORT": {
@@ -827,7 +827,7 @@
         "success": "{{x}} transazioni importate con successo"
       },
       "success": "Importazione eseguita con successo",
-      "error": "Errore durante l'importazione del file. Contatta lo sviluppatore tramite lozin.technologies@gmail.com",
+      "error": "Errore durante l'importazione del file. Contatta lo sviluppatore tramite ramsesdb.dev@gmail.com",
       "cancelled": "Importazione annullata dall'utente"
     },
     "ABOUT": {

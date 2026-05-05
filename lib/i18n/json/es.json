@@ -1084,7 +1084,7 @@
       "send_file": "Enviar archivo",
       "see_folder": "Ver carpeta",
       "success": "Archivo guardado correctamente en {{x}}",
-      "error": "Error al descargar el archivo. Por favor contacte con el desarrollador via lozin.technologies@gmail.com",
+      "error": "Error al descargar el archivo. Por favor contacte con el desarrollador via ramsesdb.dev@gmail.com",
       "dialog_title": "Guardar/Enviar archivo"
     },
     "IMPORT": {
@@ -1122,7 +1122,7 @@
         "success": "Se han importado correctamente {{x}} transacciones"
       },
       "success": "Importación realizada con exito",
-      "error": "Error al importar el archivo. Por favor contacte con el desarrollador via lozin.technologies@gmail.com",
+      "error": "Error al importar el archivo. Por favor contacte con el desarrollador via ramsesdb.dev@gmail.com",
       "cancelled": "La importación fue cancelada por el usuario"
     },
     "ABOUT": {

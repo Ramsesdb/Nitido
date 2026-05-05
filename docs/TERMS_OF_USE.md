@@ -34,4 +34,4 @@ The app is provided "as is", without warranty of any kind, express or implied, i
 
 ## Contact
 
-For questions or support, contact: rbriceno@bigwise.com
+For questions or support, contact: ramsesdb.dev@gmail.com

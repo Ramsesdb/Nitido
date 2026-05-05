@@ -1282,7 +1282,7 @@ class _TranslationsBackupExportUk extends TranslationsBackupExportEn {
 	@override String get send_file => 'Надіслати файл';
 	@override String get see_folder => 'Дивіться папку';
 	@override String success({required Object x}) => 'Файл успішно збережено/завантажено у ${x}';
-	@override String get error => 'Помилка при завантаженні файлу. Будь ласка, зв\'яжіться з розробником за адресою lozin.technologies@gmail.com';
+	@override String get error => 'Помилка при завантаженні файлу. Будь ласка, зв\'яжіться з розробником за адресою ramsesdb.dev@gmail.com';
 	@override String get dialog_title => 'Зберегти/Відправити файл';
 }
 
@@ -1303,7 +1303,7 @@ class _TranslationsBackupImportUk extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => 'Торкніться, щоб вибрати файл';
 	@override late final _TranslationsBackupImportManualImportUk manual_import = _TranslationsBackupImportManualImportUk._(_root);
 	@override String get success => 'Імпорт виконано успішно';
-	@override String get error => 'Помилка імпорту файлу. Будь ласка, зв\'яжіться з розробником за адресою lozin.technologies@gmail.com';
+	@override String get error => 'Помилка імпорту файлу. Будь ласка, зв\'яжіться з розробником за адресою ramsesdb.dev@gmail.com';
 	@override String get cancelled => 'Імпорт скасовано користувачем';
 }
 
@@ -2667,7 +2667,7 @@ extension on TranslationsUk {
 			'backup.export.send_file' => 'Надіслати файл',
 			'backup.export.see_folder' => 'Дивіться папку',
 			'backup.export.success' => ({required Object x}) => 'Файл успішно збережено/завантажено у ${x}',
-			'backup.export.error' => 'Помилка при завантаженні файлу. Будь ласка, зв\'яжіться з розробником за адресою lozin.technologies@gmail.com',
+			'backup.export.error' => 'Помилка при завантаженні файлу. Будь ласка, зв\'яжіться з розробником за адресою ramsesdb.dev@gmail.com',
 			'backup.export.dialog_title' => 'Зберегти/Відправити файл',
 			'backup.import.title' => 'Імпорт ваших даних',
 			'backup.import.title_short' => 'Імпорт',
@@ -2697,7 +2697,7 @@ extension on TranslationsUk {
 			'backup.import.manual_import.steps_descr.5' => 'Вкажіть стовпці для інших необов\'язкових атрибутів транзакцій',
 			'backup.import.manual_import.success' => ({required Object x}) => 'Успішно імпортовано ${x} транзакцій',
 			'backup.import.success' => 'Імпорт виконано успішно',
-			'backup.import.error' => 'Помилка імпорту файлу. Будь ласка, зв\'яжіться з розробником за адресою lozin.technologies@gmail.com',
+			'backup.import.error' => 'Помилка імпорту файлу. Будь ласка, зв\'яжіться з розробником за адресою ramsesdb.dev@gmail.com',
 			'backup.import.cancelled' => 'Імпорт скасовано користувачем',
 			'backup.about.title' => 'Інформація про вашу базу даних',
 			'backup.about.create_date' => 'Дата створення',

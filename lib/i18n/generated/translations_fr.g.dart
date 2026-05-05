@@ -1282,7 +1282,7 @@ class _TranslationsBackupExportFr extends TranslationsBackupExportEn {
 	@override String get send_file => 'Envoyer le fichier';
 	@override String get see_folder => 'Voir le dossier';
 	@override String success({required Object x}) => 'Fichier enregistré avec succès dans ${x}';
-	@override String get error => 'Erreur lors du téléchargement du fichier. Veuillez contacter le développeur via lozin.technologies@gmail.com';
+	@override String get error => 'Erreur lors du téléchargement du fichier. Veuillez contacter le développeur via ramsesdb.dev@gmail.com';
 }
 
 // Path: backup.import
@@ -1302,7 +1302,7 @@ class _TranslationsBackupImportFr extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => 'Touchez pour sélectionner un fichier';
 	@override late final _TranslationsBackupImportManualImportFr manual_import = _TranslationsBackupImportManualImportFr._(_root);
 	@override String get success => 'Import réalisé avec succès';
-	@override String get error => 'Erreur lors de l\'import du fichier. Veuillez contacter le développeur via lozin.technologies@gmail.com';
+	@override String get error => 'Erreur lors de l\'import du fichier. Veuillez contacter le développeur via ramsesdb.dev@gmail.com';
 }
 
 // Path: backup.about
@@ -2665,7 +2665,7 @@ extension on TranslationsFr {
 			'backup.export.send_file' => 'Envoyer le fichier',
 			'backup.export.see_folder' => 'Voir le dossier',
 			'backup.export.success' => ({required Object x}) => 'Fichier enregistré avec succès dans ${x}',
-			'backup.export.error' => 'Erreur lors du téléchargement du fichier. Veuillez contacter le développeur via lozin.technologies@gmail.com',
+			'backup.export.error' => 'Erreur lors du téléchargement du fichier. Veuillez contacter le développeur via ramsesdb.dev@gmail.com',
 			'backup.import.title' => 'Importer vos données',
 			'backup.import.title_short' => 'Importer',
 			'backup.import.restore_backup' => 'Restaurer une sauvegarde',
@@ -2694,7 +2694,7 @@ extension on TranslationsFr {
 			'backup.import.manual_import.steps_descr.5' => 'Indiquez les colonnes pour les autres attributs optionnels de la transaction',
 			'backup.import.manual_import.success' => ({required Object x}) => '${x} transactions importées avec succès',
 			'backup.import.success' => 'Import réalisé avec succès',
-			'backup.import.error' => 'Erreur lors de l\'import du fichier. Veuillez contacter le développeur via lozin.technologies@gmail.com',
+			'backup.import.error' => 'Erreur lors de l\'import du fichier. Veuillez contacter le développeur via ramsesdb.dev@gmail.com',
 			'backup.about.title' => 'Informations sur votre base de données',
 			'backup.about.create_date' => 'Date de création',
 			'backup.about.modify_date' => 'Dernière modification',

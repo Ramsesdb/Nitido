@@ -789,7 +789,7 @@
       "send_file": "Fájl küldése",
       "see_folder": "Lásd a mappát",
       "success": "A fájl sikeresen mentve/letöltve ide: {{x}}",
-      "error": "Hiba a fájl letöltésében. Kérjük, lépjen kapcsolatba a fejlesztővel a lozin.technologies@gmail.com címen keresztül.",
+      "error": "Hiba a fájl letöltésében. Kérjük, lépjen kapcsolatba a fejlesztővel a ramsesdb.dev@gmail.com címen keresztül.",
       "dialog_title": "Fájl mentése/küldése"
     },
     "IMPORT": {
@@ -827,7 +827,7 @@
         "success": "{{x}} tranzakció sikeresen importálva"
       },
       "success": "Az importálás sikeresen végrehajtva",
-      "error": "Hiba történt importálásakor. Kérjük, lépjen kapcsolatba a fejlesztővel a lozin.technologies@gmail.com címen keresztül.",
+      "error": "Hiba történt importálásakor. Kérjük, lépjen kapcsolatba a fejlesztővel a ramsesdb.dev@gmail.com címen keresztül.",
       "cancelled": "Az importálást a felhasználó megszakította"
     },
     "ABOUT": {

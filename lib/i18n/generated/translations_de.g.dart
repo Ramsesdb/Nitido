@@ -1342,7 +1342,7 @@ class _TranslationsBackupImportDe extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => 'Tippe, um eine Datei auszuwählen';
 	@override late final _TranslationsBackupImportManualImportDe manual_import = _TranslationsBackupImportManualImportDe._(_root);
 	@override String get success => 'Der Import wurde erfolgreich durchgeführt';
-	@override String get error => 'Fehler beim Importieren der Datei. Bitte kontaktiere den Entwickler lozin.technologies@gmail.com';
+	@override String get error => 'Fehler beim Importieren der Datei. Bitte kontaktiere den Entwickler ramsesdb.dev@gmail.com';
 	@override String get cancelled => 'Der Import wurde vom Benutzer abgebrochen';
 }
 
@@ -2793,7 +2793,7 @@ extension on TranslationsDe {
 			'backup.import.manual_import.steps_descr.5' => 'Gibt die Spalten für andere optionale Transaktionsattribute an',
 			'backup.import.manual_import.success' => ({required Object x}) => 'Erfolgreich ${x} Transaktionen importiert',
 			'backup.import.success' => 'Der Import wurde erfolgreich durchgeführt',
-			'backup.import.error' => 'Fehler beim Importieren der Datei. Bitte kontaktiere den Entwickler lozin.technologies@gmail.com',
+			'backup.import.error' => 'Fehler beim Importieren der Datei. Bitte kontaktiere den Entwickler ramsesdb.dev@gmail.com',
 			'backup.import.cancelled' => 'Der Import wurde vom Benutzer abgebrochen',
 			'backup.about.title' => 'Informationen zu Deiner Datenbank',
 			'backup.about.create_date' => 'Erstellungsdatum',

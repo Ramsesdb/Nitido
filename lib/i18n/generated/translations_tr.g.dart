@@ -1282,7 +1282,7 @@ class _TranslationsBackupExportTr extends TranslationsBackupExportEn {
 	@override String get send_file => 'Dosyayı gönder';
 	@override String get see_folder => 'Klasöre bakın';
 	@override String success({required Object x}) => 'Dosya ${x} olarak başarıyla kaydedildi/indirildi';
-	@override String get error => 'Dosya indirilirken hata oluştu. Lütfen lozin.technologies@gmail.com adresinden geliştirici ile iletişime geçin';
+	@override String get error => 'Dosya indirilirken hata oluştu. Lütfen ramsesdb.dev@gmail.com adresinden geliştirici ile iletişime geçin';
 	@override String get dialog_title => 'Dosyayı Kaydet/Gönder';
 }
 
@@ -1303,7 +1303,7 @@ class _TranslationsBackupImportTr extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => 'Bir dosya seçmek için dokunun';
 	@override late final _TranslationsBackupImportManualImportTr manual_import = _TranslationsBackupImportManualImportTr._(_root);
 	@override String get success => 'İçe aktarma başarıyla gerçekleştirildi';
-	@override String get error => 'Dosya içe aktarılırken hata oluştu. Lütfen lozin.technologies@gmail.com adresinden geliştirici ile iletişime geçin';
+	@override String get error => 'Dosya içe aktarılırken hata oluştu. Lütfen ramsesdb.dev@gmail.com adresinden geliştirici ile iletişime geçin';
 	@override String get cancelled => 'İçe aktarma kullanıcı tarafından iptal edildi';
 }
 
@@ -2667,7 +2667,7 @@ extension on TranslationsTr {
 			'backup.export.send_file' => 'Dosyayı gönder',
 			'backup.export.see_folder' => 'Klasöre bakın',
 			'backup.export.success' => ({required Object x}) => 'Dosya ${x} olarak başarıyla kaydedildi/indirildi',
-			'backup.export.error' => 'Dosya indirilirken hata oluştu. Lütfen lozin.technologies@gmail.com adresinden geliştirici ile iletişime geçin',
+			'backup.export.error' => 'Dosya indirilirken hata oluştu. Lütfen ramsesdb.dev@gmail.com adresinden geliştirici ile iletişime geçin',
 			'backup.export.dialog_title' => 'Dosyayı Kaydet/Gönder',
 			'backup.import.title' => 'Verilerinizi içe aktarın',
 			'backup.import.title_short' => 'İçe Aktar',
@@ -2697,7 +2697,7 @@ extension on TranslationsTr {
 			'backup.import.manual_import.steps_descr.5' => 'Diğer isteğe bağlı işlem öznitelikleri için sütunları belirtir',
 			'backup.import.manual_import.success' => ({required Object x}) => '${x} işlem başarıyla içe aktarıldı',
 			'backup.import.success' => 'İçe aktarma başarıyla gerçekleştirildi',
-			'backup.import.error' => 'Dosya içe aktarılırken hata oluştu. Lütfen lozin.technologies@gmail.com adresinden geliştirici ile iletişime geçin',
+			'backup.import.error' => 'Dosya içe aktarılırken hata oluştu. Lütfen ramsesdb.dev@gmail.com adresinden geliştirici ile iletişime geçin',
 			'backup.import.cancelled' => 'İçe aktarma kullanıcı tarafından iptal edildi',
 			'backup.about.title' => 'Veritabanınız hakkında bilgiler',
 			'backup.about.create_date' => 'Oluşturulma tarihi',

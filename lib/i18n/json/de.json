@@ -863,7 +863,7 @@
         "success": "Erfolgreich {{x}} Transaktionen importiert"
       },
       "success": "Der Import wurde erfolgreich durchgeführt",
-      "error": "Fehler beim Importieren der Datei. Bitte kontaktiere den Entwickler lozin.technologies@gmail.com",
+      "error": "Fehler beim Importieren der Datei. Bitte kontaktiere den Entwickler ramsesdb.dev@gmail.com",
       "cancelled": "Der Import wurde vom Benutzer abgebrochen"
     },
     "ABOUT": {

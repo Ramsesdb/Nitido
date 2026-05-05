@@ -789,7 +789,7 @@
       "send_file": "发送文件",
       "see_folder": "查看文件夹",
       "success": "文件已成功保存/下载至 {{x}}",
-      "error": "下载文件时发生错误。请通过 lozin.technologies@gmail.com 联系开发人员",
+      "error": "下载文件时发生错误。请通过 ramsesdb.dev@gmail.com 联系开发人员",
       "dialog_title": "保存/发送文件"
     },
     "IMPORT": {
@@ -827,7 +827,7 @@
         "success": "成功导入 {{x}} 笔交易"
       },
       "success": "导入成功",
-      "error": "导入文件时发生错误。请通过 lozin.technologies@gmail.com 联系开发人员。",
+      "error": "导入文件时发生错误。请通过 ramsesdb.dev@gmail.com 联系开发人员。",
       "cancelled": "导入被用户取消"
     },
     "ABOUT": {

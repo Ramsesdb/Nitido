@@ -2986,8 +2986,8 @@ class TranslationsBackupExportEn {
 	/// en: 'File saved successfully in {{x}}'
 	String success({required Object x}) => 'File saved successfully in ${x}';
 
-	/// en: 'Error downloading the file. Please contact the developer via lozin.technologies@gmail.com'
-	String get error => 'Error downloading the file. Please contact the developer via lozin.technologies@gmail.com';
+	/// en: 'Error downloading the file. Please contact the developer via ramsesdb.dev@gmail.com'
+	String get error => 'Error downloading the file. Please contact the developer via ramsesdb.dev@gmail.com';
 
 	/// en: 'Save/Send file'
 	String get dialog_title => 'Save/Send file';
@@ -3030,8 +3030,8 @@ class TranslationsBackupImportEn {
 	/// en: 'Import performed successfully'
 	String get success => 'Import performed successfully';
 
-	/// en: 'Error importing file. Please contact developer via lozin.technologies@gmail.com'
-	String get error => 'Error importing file. Please contact developer via lozin.technologies@gmail.com';
+	/// en: 'Error importing file. Please contact developer via ramsesdb.dev@gmail.com'
+	String get error => 'Error importing file. Please contact developer via ramsesdb.dev@gmail.com';
 
 	/// en: 'Import was cancelled by the user'
 	String get cancelled => 'Import was cancelled by the user';
@@ -5669,7 +5669,7 @@ extension on Translations {
 			'backup.export.send_file' => 'Send file',
 			'backup.export.see_folder' => 'See folder',
 			'backup.export.success' => ({required Object x}) => 'File saved successfully in ${x}',
-			'backup.export.error' => 'Error downloading the file. Please contact the developer via lozin.technologies@gmail.com',
+			'backup.export.error' => 'Error downloading the file. Please contact the developer via ramsesdb.dev@gmail.com',
 			'backup.export.dialog_title' => 'Save/Send file',
 			'backup.import.title' => 'Import your data',
 			'backup.import.title_short' => 'Import',
@@ -5699,7 +5699,7 @@ extension on Translations {
 			'backup.import.manual_import.steps_descr.5' => 'Specifies the columns for other optional transaction attributes',
 			'backup.import.manual_import.success' => ({required Object x}) => 'Successfully imported ${x} transactions',
 			'backup.import.success' => 'Import performed successfully',
-			'backup.import.error' => 'Error importing file. Please contact developer via lozin.technologies@gmail.com',
+			'backup.import.error' => 'Error importing file. Please contact developer via ramsesdb.dev@gmail.com',
 			'backup.import.cancelled' => 'Import was cancelled by the user',
 			'backup.about.title' => 'Information about your database',
 			'backup.about.create_date' => 'Creation date',

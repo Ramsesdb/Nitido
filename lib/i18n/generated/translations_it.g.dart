@@ -1282,7 +1282,7 @@ class _TranslationsBackupExportIt extends TranslationsBackupExportEn {
 	@override String get send_file => 'Invia file';
 	@override String get see_folder => 'Vedi cartella';
 	@override String success({required Object x}) => 'File salvato/scaricato con successo in ${x}';
-	@override String get error => 'Errore durante il download del file. Contatta lo sviluppatore tramite lozin.technologies@gmail.com';
+	@override String get error => 'Errore durante il download del file. Contatta lo sviluppatore tramite ramsesdb.dev@gmail.com';
 	@override String get dialog_title => 'Salva/Invia file';
 }
 
@@ -1303,7 +1303,7 @@ class _TranslationsBackupImportIt extends TranslationsBackupImportEn {
 	@override String get tap_to_select_file => 'Tocca per selezionare un file';
 	@override late final _TranslationsBackupImportManualImportIt manual_import = _TranslationsBackupImportManualImportIt._(_root);
 	@override String get success => 'Importazione eseguita con successo';
-	@override String get error => 'Errore durante l\'importazione del file. Contatta lo sviluppatore tramite lozin.technologies@gmail.com';
+	@override String get error => 'Errore durante l\'importazione del file. Contatta lo sviluppatore tramite ramsesdb.dev@gmail.com';
 	@override String get cancelled => 'Importazione annullata dall\'utente';
 }
 
@@ -2667,7 +2667,7 @@ extension on TranslationsIt {
 			'backup.export.send_file' => 'Invia file',
 			'backup.export.see_folder' => 'Vedi cartella',
 			'backup.export.success' => ({required Object x}) => 'File salvato/scaricato con successo in ${x}',
-			'backup.export.error' => 'Errore durante il download del file. Contatta lo sviluppatore tramite lozin.technologies@gmail.com',
+			'backup.export.error' => 'Errore durante il download del file. Contatta lo sviluppatore tramite ramsesdb.dev@gmail.com',
 			'backup.export.dialog_title' => 'Salva/Invia file',
 			'backup.import.title' => 'Importa i tuoi dati',
 			'backup.import.title_short' => 'Importa',
@@ -2697,7 +2697,7 @@ extension on TranslationsIt {
 			'backup.import.manual_import.steps_descr.5' => 'Specifica le colonne per altri attributi opzionali della transazione',
 			'backup.import.manual_import.success' => ({required Object x}) => '${x} transazioni importate con successo',
 			'backup.import.success' => 'Importazione eseguita con successo',
-			'backup.import.error' => 'Errore durante l\'importazione del file. Contatta lo sviluppatore tramite lozin.technologies@gmail.com',
+			'backup.import.error' => 'Errore durante l\'importazione del file. Contatta lo sviluppatore tramite ramsesdb.dev@gmail.com',
 			'backup.import.cancelled' => 'Importazione annullata dall\'utente',
 			'backup.about.title' => 'Informazioni sul tuo database',
 			'backup.about.create_date' => 'Data di creazione',

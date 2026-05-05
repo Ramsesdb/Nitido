@@ -789,7 +789,7 @@
       "send_file": "Dosyayı gönder",
       "see_folder": "Klasöre bakın",
       "success": "Dosya {{x}} olarak başarıyla kaydedildi/indirildi",
-      "error": "Dosya indirilirken hata oluştu. Lütfen lozin.technologies@gmail.com adresinden geliştirici ile iletişime geçin",
+      "error": "Dosya indirilirken hata oluştu. Lütfen ramsesdb.dev@gmail.com adresinden geliştirici ile iletişime geçin",
       "dialog_title": "Dosyayı Kaydet/Gönder"
     },
     "IMPORT": {
@@ -827,7 +827,7 @@
         "success": "{{x}} işlem başarıyla içe aktarıldı"
       },
       "success": "İçe aktarma başarıyla gerçekleştirildi",
-      "error": "Dosya içe aktarılırken hata oluştu. Lütfen lozin.technologies@gmail.com adresinden geliştirici ile iletişime geçin",
+      "error": "Dosya içe aktarılırken hata oluştu. Lütfen ramsesdb.dev@gmail.com adresinden geliştirici ile iletişime geçin",
       "cancelled": "İçe aktarma kullanıcı tarafından iptal edildi"
     },
     "ABOUT": {
