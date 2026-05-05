@@ -59,7 +59,7 @@ const List<SupportedBank> kSupportedBanks = [
     profileId: 'zinli_notif',
     displayName: 'Zinli',
     packageNames: ['com.zinli.app', 'com.zinli.wallet'],
-    hasDedicatedParser: true,
+    hasDedicatedParser: false,
     defaultCurrency: 'USD',
   ),
   SupportedBank(

@@ -11,5 +11,4 @@ final List<BankProfile> bankProfilesRegistry = [
   BdvSmsProfile(),
   BdvNotifProfile(),
   BinanceApiProfile(),
-  // Tanda 3C: ZinliNotifProfile
 ];
