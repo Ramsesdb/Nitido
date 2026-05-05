@@ -71,4 +71,4 @@ We may update this Privacy Policy from time to time. Changes are posted on this 
 
 **Contact Us**
 
-For questions about this Privacy Policy: lozin.technologies@gmail.com.
+For questions about this Privacy Policy: ramsesdb.dev@gmail.com.
