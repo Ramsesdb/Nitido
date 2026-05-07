@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:nitido/app/accounts/account_type_selector.dart';
-import 'package:nitido/app/accounts/widgets/retroactive_dialogs.dart';
 import 'package:nitido/app/categories/form/icon_and_color_selector.dart';
 import 'package:nitido/app/layout/page_framework.dart';
 import 'package:nitido/core/database/app_db.dart';
@@ -26,6 +25,7 @@ import 'package:nitido/core/presentation/widgets/form_fields/read_only_form_fiel
 import 'package:nitido/core/presentation/widgets/icon_selector_modal.dart';
 import 'package:nitido/core/presentation/widgets/inline_info_card.dart';
 import 'package:nitido/core/presentation/widgets/persistent_footer_button.dart';
+import 'package:nitido/core/presentation/widgets/retroactive_preview_dialog.dart';
 import 'package:nitido/core/presentation/widgets/show_more_content_button.dart';
 import 'package:nitido/core/presentation/widgets/transaction_filter/transaction_filter_set.dart';
 import 'package:nitido/core/routes/route_utils.dart';

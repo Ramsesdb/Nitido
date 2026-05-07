@@ -690,6 +690,7 @@ class _TranslationsStatementImportEs extends TranslationsStatementImportEn {
 	@override late final _TranslationsStatementImportConfirmEs confirm = _TranslationsStatementImportConfirmEs._(_root);
 	@override late final _TranslationsStatementImportSuccessEs success = _TranslationsStatementImportSuccessEs._(_root);
 	@override late final _TranslationsStatementImportUndoEs undo = _TranslationsStatementImportUndoEs._(_root);
+	@override late final _TranslationsStatementImportPreFreshEs pre_fresh = _TranslationsStatementImportPreFreshEs._(_root);
 	@override String get entry_point => 'Importar estado de cuenta';
 }
 
@@ -1830,6 +1831,15 @@ class _TranslationsStatementImportCaptureEs extends TranslationsStatementImportC
 	@override String get pdf_warning_continue => 'Continuar';
 	@override String get date_picker_title => '¿Cuándo tomaste la captura?';
 	@override String get error_read => 'No se pudo leer la imagen';
+	@override String multi_count({required Object n}) => '${n} imágenes';
+	@override String cap_reached({required Object max}) => 'Máximo ${max} imágenes por sesión';
+	@override String continue_cta({required Object n}) => 'Continuar · ${n} imágenes';
+	@override String get missing_pivot_title => 'Fechas pendientes';
+	@override String get missing_pivot_body => 'Algunas imágenes no tienen fecha en sus metadatos. Asigna una para cada una.';
+	@override String get missing_pivot_all_today => 'Usar hoy para todas';
+	@override String get missing_pivot_continue => 'Continuar';
+	@override String get missing_pivot_select => 'Selecciona una fecha';
+	@override String missing_pivot_image_label({required Object n}) => 'Imagen ${n}';
 }
 
 // Path: statement_import.processing
@@ -1847,6 +1857,8 @@ class _TranslationsStatementImportProcessingEs extends TranslationsStatementImpo
 	@override String get error_generic => 'No pudimos leer. Reintenta';
 	@override String get retry => 'Reintentar';
 	@override String get back => 'Volver';
+	@override String progress({required Object current, required Object total}) => 'Procesando ${current} de ${total}';
+	@override String get all_failed => 'No se pudo extraer nada de las imágenes';
 }
 
 // Path: statement_import.review
@@ -1870,6 +1882,7 @@ class _TranslationsStatementImportReviewEs extends TranslationsStatementImportRe
 	@override String get tag_exists => 'Ya existe';
 	@override String get tag_fee => 'Comisión';
 	@override String get tag_prefresh => 'Pre-Fresh';
+	@override String image_failed({required Object index}) => 'Imagen ${index}: no se extrajeron movimientos';
 }
 
 // Path: statement_import.modes
@@ -1934,6 +1947,17 @@ class _TranslationsStatementImportUndoEs extends TranslationsStatementImportUndo
 	@override String get dialog_confirm => 'Deshacer';
 	@override String get dialog_cancel => 'Cancelar';
 	@override String get success => 'Importación deshecha';
+}
+
+// Path: statement_import.pre_fresh
+class _TranslationsStatementImportPreFreshEs extends TranslationsStatementImportPreFreshEn {
+	_TranslationsStatementImportPreFreshEs._(TranslationsEs root) : this._root = root, super.internal(root);
+
+	final TranslationsEs _root; // ignore: unused_field
+
+	// Translations
+	@override String get auto_adjust_title => 'Ajustar fecha de seguimiento';
+	@override String auto_adjust_body({required Object date}) => 'Estos movimientos son anteriores a tu fecha de seguimiento. ¿Mover el inicio de tracking a ${date}?';
 }
 
 // Path: more.search
@@ -3716,6 +3740,15 @@ extension on TranslationsEs {
 			'statement_import.capture.pdf_warning_continue' => 'Continuar',
 			'statement_import.capture.date_picker_title' => '¿Cuándo tomaste la captura?',
 			'statement_import.capture.error_read' => 'No se pudo leer la imagen',
+			'statement_import.capture.multi_count' => ({required Object n}) => '${n} imágenes',
+			'statement_import.capture.cap_reached' => ({required Object max}) => 'Máximo ${max} imágenes por sesión',
+			'statement_import.capture.continue_cta' => ({required Object n}) => 'Continuar · ${n} imágenes',
+			'statement_import.capture.missing_pivot_title' => 'Fechas pendientes',
+			'statement_import.capture.missing_pivot_body' => 'Algunas imágenes no tienen fecha en sus metadatos. Asigna una para cada una.',
+			'statement_import.capture.missing_pivot_all_today' => 'Usar hoy para todas',
+			'statement_import.capture.missing_pivot_continue' => 'Continuar',
+			'statement_import.capture.missing_pivot_select' => 'Selecciona una fecha',
+			'statement_import.capture.missing_pivot_image_label' => ({required Object n}) => 'Imagen ${n}',
 			'statement_import.processing.title' => 'Leyendo estado de cuenta…',
 			'statement_import.processing.analyzing' => 'Analizando…',
 			'statement_import.processing.found' => ({required Object n}) => '${n} encontrados',
@@ -3724,6 +3757,8 @@ extension on TranslationsEs {
 			'statement_import.processing.error_generic' => 'No pudimos leer. Reintenta',
 			'statement_import.processing.retry' => 'Reintentar',
 			'statement_import.processing.back' => 'Volver',
+			'statement_import.processing.progress' => ({required Object current, required Object total}) => 'Procesando ${current} de ${total}',
+			'statement_import.processing.all_failed' => 'No se pudo extraer nada de las imágenes',
 			'statement_import.review.title' => 'Revisar movimientos',
 			'statement_import.review.empty' => 'No se detectaron movimientos',
 			'statement_import.review.toggle_all' => 'Todos',
@@ -3738,6 +3773,7 @@ extension on TranslationsEs {
 			'statement_import.review.tag_exists' => 'Ya existe',
 			'statement_import.review.tag_fee' => 'Comisión',
 			'statement_import.review.tag_prefresh' => 'Pre-Fresh',
+			'statement_import.review.image_failed' => ({required Object index}) => 'Imagen ${index}: no se extrajeron movimientos',
 			'statement_import.modes.missing' => 'Faltantes',
 			'statement_import.modes.income' => 'Ingresos',
 			'statement_import.modes.expense' => 'Gastos',
@@ -3766,6 +3802,8 @@ extension on TranslationsEs {
 			'statement_import.undo.dialog_confirm' => 'Deshacer',
 			'statement_import.undo.dialog_cancel' => 'Cancelar',
 			'statement_import.undo.success' => 'Importación deshecha',
+			'statement_import.pre_fresh.auto_adjust_title' => 'Ajustar fecha de seguimiento',
+			'statement_import.pre_fresh.auto_adjust_body' => ({required Object date}) => 'Estos movimientos son anteriores a tu fecha de seguimiento. ¿Mover el inicio de tracking a ${date}?',
 			'statement_import.entry_point' => 'Importar estado de cuenta',
 			'more.title' => 'Más',
 			'more.title_long' => 'Más acciones',
@@ -3800,6 +3838,8 @@ extension on TranslationsEs {
 			'more.data.delete_all_message2' => 'Al eliminar una cuenta eliminarás todos tus datos personales almacenados. Tus cuentas, transacciones, presupuestos y categorías serán borrados y no podrán ser recuperados. ¿Estas de acuerdo?',
 			'more.about_us.display' => 'Información de la app',
 			'more.about_us.description' => 'Consulta información relevante sobre NITIDO. Conecta reportando errores o compartiendo ideas',
+			_ => null,
+		} ?? switch (path) {
 			'more.about_us.legal.display' => 'Información legal',
 			'more.about_us.legal.privacy' => 'Política de privacidad',
 			'more.about_us.legal.terms' => 'Términos de uso',
@@ -3814,8 +3854,6 @@ extension on TranslationsEs {
 			'more.help_us.display' => 'Ayúdanos',
 			'more.help_us.description' => 'Descubre de que formas puedes ayudar a que NITIDO sea cada vez mejor',
 			'more.help_us.rate_us' => 'Califícanos',
-			_ => null,
-		} ?? switch (path) {
 			'more.help_us.rate_us_descr' => '¡Cualquier valoración es bienvenida!',
 			'more.help_us.share' => 'Comparte NITIDO',
 			'more.help_us.share_descr' => 'Comparte nuestra app a amigos y familiares',

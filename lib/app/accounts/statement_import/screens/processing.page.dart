@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:nitido/app/accounts/statement_import/statement_import_flow.dart';
 import 'package:nitido/app/accounts/statement_import/widgets/si_header.dart';
+import 'package:nitido/core/services/statement_import/dedupe_in_session.dart';
+import 'package:nitido/core/services/statement_import/image_pivot.dart';
 import 'package:nitido/core/services/statement_import/matching_engine.dart';
 import 'package:nitido/core/services/statement_import/models/extracted_row.dart';
 import 'package:nitido/core/services/statement_import/statement_extractor_service.dart';
@@ -23,8 +25,11 @@ class _ProcessingPageState extends State<ProcessingPage>
   Object? _error;
   int _foundCount = 0;
   bool _done = false;
+  bool _allFailed = false;
 
-  String? _lastImageBase64;
+  final ValueNotifier<int> _currentImageIndex = ValueNotifier<int>(0);
+  int _totalImages = 0;
+  String? _signature;
 
   @override
   void initState() {
@@ -40,17 +45,21 @@ class _ProcessingPageState extends State<ProcessingPage>
     super.didChangeDependencies();
 
     final state = StatementImportFlow.of(context);
-    final base64 = state.imageBase64;
+    final images = state.images;
+    if (images.isEmpty) return;
 
-    if (base64 == null || state.pivotDate == null) return;
-
-    if (!_started || _lastImageBase64 != base64) {
-      _lastImageBase64 = base64;
+    final sig =
+        '${images.map((i) => i.base64.length).join(':')}#${images.length}';
+    if (!_started || _signature != sig) {
+      _signature = sig;
       _started = true;
       _cancelled = false;
       _error = null;
       _foundCount = 0;
       _done = false;
+      _allFailed = false;
+      _totalImages = images.length;
+      _currentImageIndex.value = 0;
       _runExtract();
     }
   }
@@ -58,30 +67,55 @@ class _ProcessingPageState extends State<ProcessingPage>
   @override
   void dispose() {
     _scanCtrl.dispose();
+    _currentImageIndex.dispose();
     super.dispose();
   }
 
-  void _runExtract() {
+  Future<void> _runExtract() async {
     final flow = StatementImportFlow.of(context);
-    final base64 = flow.imageBase64!;
-    final pivot = flow.pivotDate!;
+    final images = flow.images;
+    final accumulated = <ExtractedRow>[];
+    final failed = <int>[];
 
-    StatementExtractorService()
-        .extractFromImage(imageBase64: base64, pivotDate: pivot)
-        .timeout(const Duration(seconds: 30))
-        .then((rows) {
-          if (!mounted || _cancelled) return;
-          setState(() {
-            _foundCount = rows.length;
-            _done = true;
-          });
-          _onRowsReady(rows);
-        })
-        .catchError((e, st) {
-          debugPrint('ProcessingPage.extract failed: $e\n$st');
-          if (!mounted || _cancelled) return;
-          setState(() => _error = e);
-        });
+    for (var i = 0; i < images.length; i++) {
+      if (_cancelled || !mounted) return;
+      _currentImageIndex.value = i;
+      final ImagePivot img = images[i];
+      try {
+        final rows = await StatementExtractorService()
+            .extractFromImage(
+              imageBase64: img.base64,
+              pivotDate: img.resolvedPivot,
+            )
+            .timeout(const Duration(seconds: 30));
+        accumulated.addAll(rows);
+      } catch (e, st) {
+        debugPrint('ProcessingPage.extract image $i failed: $e\n$st');
+        failed.add(i);
+      }
+    }
+
+    if (!mounted || _cancelled) return;
+
+    if (failed.length == images.length) {
+      setState(() {
+        _allFailed = true;
+        _error = const StatementExtractorException(
+          'No images extracted any movements',
+        );
+      });
+      flow.onFailedImageIndices(failed);
+      return;
+    }
+
+    flow.onFailedImageIndices(failed);
+
+    final deduped = dedupeInSession(accumulated);
+    setState(() {
+      _foundCount = deduped.rows.length;
+      _done = true;
+    });
+    await _onRowsReady(deduped.rows);
   }
 
   Future<void> _onRowsReady(List<ExtractedRow> rows) async {
@@ -119,7 +153,9 @@ class _ProcessingPageState extends State<ProcessingPage>
       _done = false;
       _started = true;
       _cancelled = false;
+      _allFailed = false;
     });
+    _currentImageIndex.value = 0;
     _runExtract();
   }
 
@@ -146,15 +182,23 @@ class _ProcessingPageState extends State<ProcessingPage>
         children: [
           SiHeader(account: account),
           Expanded(
-            child: _error != null
-                ? _ErrorBody(error: _error!, onRetry: _retry, onBack: _cancel)
-                : _ProcessingBody(
-                    scanCtrl: _scanCtrl,
-                    foundCount: _foundCount,
-                    done: _done,
-                  ),
+            child: _allFailed
+                ? _AllFailedBody(onRetry: _retry, onCancel: _cancel)
+                : _error != null
+                    ? _ErrorBody(
+                        error: _error!,
+                        onRetry: _retry,
+                        onBack: _cancel,
+                      )
+                    : _ProcessingBody(
+                        scanCtrl: _scanCtrl,
+                        foundCount: _foundCount,
+                        done: _done,
+                        currentImageIndex: _currentImageIndex,
+                        totalImages: _totalImages,
+                      ),
           ),
-          if (_error == null)
+          if (_error == null && !_allFailed)
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
               child: OutlinedButton(
@@ -176,11 +220,15 @@ class _ProcessingBody extends StatelessWidget {
     required this.scanCtrl,
     required this.foundCount,
     required this.done,
+    required this.currentImageIndex,
+    required this.totalImages,
   });
 
   final AnimationController scanCtrl;
   final int foundCount;
   final bool done;
+  final ValueNotifier<int> currentImageIndex;
+  final int totalImages;
 
   @override
   Widget build(BuildContext context) {
@@ -216,14 +264,30 @@ class _ProcessingBody extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      done
-                          ? t.statement_import.processing.found(n: foundCount)
-                          : t.statement_import.processing.analyzing,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant,
+                    if (!done && totalImages > 1)
+                      ValueListenableBuilder<int>(
+                        valueListenable: currentImageIndex,
+                        builder: (ctx, idx, _) => Text(
+                          t.statement_import.processing.progress(
+                            current: idx + 1,
+                            total: totalImages,
+                          ),
+                          style: Theme.of(ctx)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(color: cs.onSurfaceVariant),
+                        ),
+                      )
+                    else
+                      Text(
+                        done
+                            ? t.statement_import.processing
+                                .found(n: foundCount)
+                            : t.statement_import.processing.analyzing,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 2),
                     Text(
                       t.statement_import.ai_badge,
@@ -425,6 +489,55 @@ class _ErrorBody extends StatelessWidget {
               minimumSize: const Size.fromHeight(48),
             ),
             child: Text(t.statement_import.processing.back),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AllFailedBody extends StatelessWidget {
+  const _AllFailedBody({required this.onRetry, required this.onCancel});
+
+  final VoidCallback onRetry;
+  final VoidCallback onCancel;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Icon(Icons.report_gmailerrorred_outlined, size: 64, color: cs.error),
+          const SizedBox(height: 16),
+          Text(
+            t.statement_import.processing.all_failed,
+            key: const ValueKey('processing-all-failed'),
+            textAlign: TextAlign.center,
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+          ),
+          const SizedBox(height: 24),
+          FilledButton.icon(
+            onPressed: onRetry,
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(48),
+            ),
+            icon: const Icon(Icons.refresh),
+            label: Text(t.statement_import.processing.retry),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton(
+            onPressed: onCancel,
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size.fromHeight(48),
+            ),
+            child: Text(t.statement_import.processing.cancel),
           ),
         ],
       ),

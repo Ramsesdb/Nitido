@@ -6,6 +6,7 @@ import 'package:nitido/app/accounts/statement_import/screens/review.page.dart';
 import 'package:nitido/app/accounts/statement_import/screens/success.page.dart';
 import 'package:nitido/core/database/services/account/account_service.dart';
 import 'package:nitido/core/models/account/account.dart';
+import 'package:nitido/core/services/statement_import/image_pivot.dart';
 import 'package:nitido/core/services/statement_import/models/extracted_row.dart';
 import 'package:nitido/core/services/statement_import/models/matching_result.dart';
 
@@ -28,8 +29,8 @@ class StatementImportFlow extends StatefulWidget {
 class StatementImportFlowState extends State<StatementImportFlow> {
   final _controller = PageController();
 
-  String? imageBase64;
-  DateTime? pivotDate;
+  List<ImagePivot> images = const [];
+  List<int> failedImageIndices = const [];
   List<ExtractedRow>? extractedRows;
   List<MatchingResult>? matchingResults;
   List<MatchingResult>? approvedResults;
@@ -42,19 +43,23 @@ class StatementImportFlowState extends State<StatementImportFlow> {
 
   Account get account => _refreshedAccount ?? widget.account;
 
+  /// Backwards-compatible getter for callers still on the single-image API.
+  /// Phase 3 will retire this once `confirm.page.dart` no longer references it.
+  String? get imageBase64 => images.isEmpty ? null : images.first.base64;
+
+  /// Backwards-compatible getter for callers still on the single-image API.
+  DateTime? get pivotDate => images.isEmpty ? null : images.first.resolvedPivot;
+
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
 
-  void goToProcessing({
-    required String imageBase64,
-    required DateTime pivotDate,
-  }) {
+  void goToProcessing({required List<ImagePivot> images}) {
     setState(() {
-      this.imageBase64 = imageBase64;
-      this.pivotDate = pivotDate;
+      this.images = List<ImagePivot>.unmodifiable(images);
+      failedImageIndices = const [];
       extractedRows = null;
       matchingResults = null;
       approvedResults = null;
@@ -67,8 +72,8 @@ class StatementImportFlowState extends State<StatementImportFlow> {
 
   void backToCapture() {
     setState(() {
-      imageBase64 = null;
-      pivotDate = null;
+      images = const [];
+      failedImageIndices = const [];
       extractedRows = null;
       matchingResults = null;
       approvedResults = null;
@@ -79,6 +84,10 @@ class StatementImportFlowState extends State<StatementImportFlow> {
 
   void onRowsExtracted(List<ExtractedRow> rows) {
     setState(() => extractedRows = rows);
+  }
+
+  void onFailedImageIndices(List<int> indices) {
+    setState(() => failedImageIndices = List<int>.unmodifiable(indices));
   }
 
   void onMatchingComplete(List<MatchingResult> results) {

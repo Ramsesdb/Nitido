@@ -1,17 +1,43 @@
+import 'package:drift/drift.dart' as drift;
 import 'package:flutter/material.dart';
 import 'package:nitido/app/accounts/statement_import/statement_import_flow.dart';
 import 'package:nitido/app/accounts/statement_import/widgets/si_header.dart';
+import 'package:nitido/core/constants/fallback_categories.dart';
+import 'package:nitido/core/constants/feature_flags.dart';
 import 'package:nitido/core/database/app_db.dart';
+import 'package:nitido/core/database/services/account/account_service.dart';
 import 'package:nitido/core/database/services/category/category_service.dart';
+import 'package:nitido/core/models/account/account.dart';
 import 'package:nitido/core/models/category/category.dart';
 import 'package:nitido/core/models/transaction/transaction_status.enum.dart';
 import 'package:nitido/core/models/transaction/transaction_type.enum.dart';
 import 'package:nitido/core/presentation/helpers/snackbar.dart';
 import 'package:nitido/core/presentation/widgets/number_ui_formatters/currency_displayer.dart';
+import 'package:nitido/core/presentation/widgets/retroactive_preview_dialog.dart';
 import 'package:nitido/core/services/statement_import/models/matching_result.dart';
 import 'package:nitido/core/services/statement_import/statement_batches_service.dart';
 import 'package:nitido/core/utils/uuid.dart';
 import 'package:nitido/i18n/generated/translations.g.dart';
+
+/// Relative diff threshold that escalates the retroactive preview to the
+/// strong-confirm dialog. Mirrors `account-pre-tracking-period`'s rule used in
+/// `account_form.dart`: shift > 50% OR projected balance < 0.
+const double kRetroactivePreFreshDiffThreshold = 0.5;
+
+/// Pure predicate that decides whether the strong-confirmation dialog must be
+/// shown instead of the simple preview when adjusting `trackedSince` at
+/// import time. Reused by tests; mirrors the rule in `account_form.dart`.
+@visibleForTesting
+bool shouldEscalatePreFreshDialog({
+  required double currentBalance,
+  required double simulatedBalance,
+}) {
+  final diff = (currentBalance - simulatedBalance).abs();
+  return simulatedBalance < 0 ||
+      (currentBalance.abs() > 0 &&
+          diff / currentBalance.abs() > kRetroactivePreFreshDiffThreshold) ||
+      (currentBalance.abs() == 0 && simulatedBalance < 0);
+}
 
 class ConfirmPage extends StatefulWidget {
   const ConfirmPage({super.key});
@@ -27,13 +53,92 @@ class _ConfirmPageState extends State<ConfirmPage> {
   /// The DB CHECK constraint requires exactly one of
   /// `categoryID` / `receivingAccountID` to be non-null.
   Future<Category?> _resolveCategoryForKind(String kind) async {
-    final isIncome = kind == 'income';
-    final types = isIncome
-        ? [CategoryType.I, CategoryType.B]
-        : [CategoryType.E, CategoryType.B];
-
+    final type = kind == 'income'
+        ? TransactionType.income
+        : TransactionType.expense;
     final categories = await CategoryService.instance.getCategories().first;
-    return categories.where((c) => types.contains(c.type)).firstOrNull;
+    return resolveFallbackCategory(type, categories);
+  }
+
+  /// Detects pre-fresh rows in the approved set and (when the feature flag is
+  /// on) offers the user to push `account.trackedSince` back so they remain
+  /// visible in the account view after commit.
+  ///
+  /// Return semantics — "should the commit continue?":
+  /// - `true` when there are no pre-fresh rows.
+  /// - `true` when `account.trackedSince` is null (no tracking configured).
+  /// - `true` when the user accepts the dialog (mutation applied).
+  /// - `true` when the user dismisses the standard preview dialog without
+  ///   accepting (no mutation; pre-fresh rows persist as historical).
+  /// - `false` only when the strong-confirm dialog was shown AND actively
+  ///   rejected by the user — that's an explicit abort.
+  Future<bool> _handlePreFresh(
+    Account account,
+    List<MatchingResult> approved,
+  ) async {
+    if (account.trackedSince == null) return true;
+
+    final preFresh = approved.where((r) => r.isPreFresh).toList();
+    if (preFresh.isEmpty) return true;
+
+    final proposed = preFresh
+        .map((r) => r.row.date)
+        .reduce((a, b) => a.isBefore(b) ? a : b);
+    final proposedTruncated = DateTime(
+      proposed.year,
+      proposed.month,
+      proposed.day,
+    );
+
+    final accountService = AccountService.instance;
+    final currentBalance = await accountService
+        .getAccountsMoney(accountIds: [account.id])
+        .first;
+    final simulatedBalance = await accountService
+        .getAccountsMoneyPreview(
+          accountId: account.id,
+          simulatedTrackedSince: proposedTruncated,
+        )
+        .first;
+
+    final bool isStrong = shouldEscalatePreFreshDialog(
+      currentBalance: currentBalance,
+      simulatedBalance: simulatedBalance,
+    );
+
+    if (!mounted) return true;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => isStrong
+          ? RetroactiveStrongConfirmDialog(
+              currentBalance: currentBalance,
+              simulatedBalance: simulatedBalance,
+              currency: account.currency,
+            )
+          : RetroactivePreviewDialog(
+              currentBalance: currentBalance,
+              simulatedBalance: simulatedBalance,
+              currency: account.currency,
+            ),
+    );
+
+    if (confirmed == true) {
+      await accountService.updateAccount(
+        account.copyWith(trackedSince: drift.Value(proposedTruncated)),
+      );
+      if (!mounted) return true;
+      await StatementImportFlow.of(context).refreshAccount();
+      return true;
+    }
+
+    // Strong-confirm with explicit rejection → abort the commit.
+    if (isStrong) return false;
+
+    // Standard preview dismissed without accepting → proceed with commit;
+    // pre-fresh rows will persist but stay flagged as historical.
+    return true;
   }
 
   Future<void> _commit() async {
@@ -42,6 +147,16 @@ class _ConfirmPageState extends State<ConfirmPage> {
     final approved = flow.approvedResults ?? const <MatchingResult>[];
     final account = flow.account;
     if (approved.isEmpty) return;
+
+    if (kEnablePreFreshAutoAdjust) {
+      final shouldContinue = await _handlePreFresh(account, approved);
+      if (!shouldContinue) return;
+      if (!mounted) return;
+    }
+
+    // Re-read flow + account in case `_handlePreFresh` triggered a refresh.
+    final currentFlow = StatementImportFlow.of(context);
+    final currentAccount = currentFlow.account;
 
     setState(() => _committing = true);
 
@@ -80,7 +195,7 @@ class _ConfirmPageState extends State<ConfirmPage> {
           date: row.date,
           value: value,
           isHidden: false,
-          accountID: account.id,
+          accountID: currentAccount.id,
           type: isIncome ? TransactionType.income : TransactionType.expense,
           status: TransactionStatus.reconciled,
           notes: row.description.isEmpty ? null : row.description,
@@ -92,12 +207,12 @@ class _ConfirmPageState extends State<ConfirmPage> {
 
     try {
       final batchId = await StatementBatchesService.instance.commit(
-        accountId: account.id,
+        accountId: currentAccount.id,
         transactionsToInsert: txs,
-        activeModes: flow.activeModes.toList(),
+        activeModes: currentFlow.activeModes.toList(),
       );
       if (!mounted) return;
-      flow.goToSuccess(batchId: batchId, count: txs.length);
+      currentFlow.goToSuccess(batchId: batchId, count: txs.length);
     } catch (e, st) {
       debugPrint('ConfirmPage._commit failed: $e\n$st');
       if (!mounted) return;

@@ -20,6 +20,7 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   Set<String> _activeModes = <String>{};
   final Set<String> _deselectedRowIds = <String>{};
+  final Set<int> _dismissedFailedChips = <int>{};
 
   List<MatchingResult> get _results {
     return StatementImportFlow.of(context).matchingResults ?? const [];
@@ -169,6 +170,13 @@ class _ReviewPageState extends State<ReviewPage> {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                     children: [
+                      _FailedImageChips(
+                        failedIndices: flow.failedImageIndices,
+                        dismissed: _dismissedFailedChips,
+                        onDismiss: (idx) {
+                          setState(() => _dismissedFailedChips.add(idx));
+                        },
+                      ),
                       ModeChips(
                         activeModes: _activeModes,
                         onChanged: _onModesChanged,
@@ -251,6 +259,52 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
               ],
             ),
+    );
+  }
+}
+
+class _FailedImageChips extends StatelessWidget {
+  const _FailedImageChips({
+    required this.failedIndices,
+    required this.dismissed,
+    required this.onDismiss,
+  });
+
+  final List<int> failedIndices;
+  final Set<int> dismissed;
+  final void Function(int index) onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final visible = failedIndices.where((i) => !dismissed.contains(i)).toList();
+    if (visible.isEmpty) return const SizedBox.shrink();
+    final t = Translations.of(context);
+    final cs = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 6,
+        children: [
+          for (final idx in visible)
+            InputChip(
+              key: ValueKey('failed-image-chip-$idx'),
+              avatar: Icon(
+                Icons.broken_image_outlined,
+                size: 18,
+                color: cs.error,
+              ),
+              label: Text(
+                t.statement_import.review.image_failed(index: idx + 1),
+                style: TextStyle(color: cs.onErrorContainer),
+              ),
+              backgroundColor: cs.errorContainer,
+              side: BorderSide(color: cs.error.withValues(alpha: 0.4)),
+              onDeleted: () => onDismiss(idx),
+              deleteIconColor: cs.onErrorContainer,
+            ),
+        ],
+      ),
     );
   }
 }

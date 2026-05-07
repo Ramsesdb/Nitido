@@ -1,16 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:exif/exif.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:nitido/app/accounts/statement_import/statement_import_flow.dart';
+import 'package:nitido/app/accounts/statement_import/widgets/missing_pivot_sheet.dart';
+import 'package:nitido/core/constants/feature_flags.dart';
 import 'package:nitido/core/presentation/helpers/snackbar.dart';
+import 'package:nitido/core/services/statement_import/image_pivot.dart';
 import 'package:nitido/core/services/statement_import/pdf_to_image_service.dart';
 import 'package:nitido/i18n/generated/translations.g.dart';
+
+const int kMaxImagesPerSession = 10;
 
 class CapturePage extends StatefulWidget {
   const CapturePage({super.key});
@@ -21,9 +25,14 @@ class CapturePage extends StatefulWidget {
 
 class _CapturePageState extends State<CapturePage> {
   bool _busy = false;
+  final List<ImagePivot> _images = [];
+
+  bool get _multiEnabled => kEnableMultiImageImport;
+  bool get _capReached => _images.length >= kMaxImagesPerSession;
+  int get _remaining => kMaxImagesPerSession - _images.length;
 
   Future<void> _onTakePhoto() async {
-    if (_busy) return;
+    if (_busy || _capReached) return;
     setState(() => _busy = true);
     try {
       final picker = ImagePicker();
@@ -35,19 +44,12 @@ class _CapturePageState extends State<CapturePage> {
       if (picked == null) return;
 
       final bytes = await File(picked.path).readAsBytes();
-      final exifDate = await _readExifDate(bytes);
+      await _ingestImageBytes(bytes);
 
-      if (!mounted) return;
-      final pivot = exifDate ?? await _promptDate(context);
-      if (pivot == null) return;
-
-      final resized = _resizeIfNeeded(bytes);
-      final base64 = base64Encode(resized);
-
-      if (!mounted) return;
-      StatementImportFlow.of(
-        context,
-      ).goToProcessing(imageBase64: base64, pivotDate: pivot);
+      if (!_multiEnabled) {
+        if (!mounted) return;
+        await _continueIfReady();
+      }
     } catch (e, st) {
       debugPrint('CapturePage.takePhoto failed: $e\n$st');
       _showReadError();
@@ -57,24 +59,36 @@ class _CapturePageState extends State<CapturePage> {
   }
 
   Future<void> _onPickFile() async {
-    if (_busy) return;
+    if (_busy || _capReached) return;
     setState(() => _busy = true);
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
         withData: true,
+        allowMultiple: _multiEnabled,
       );
       if (result == null || result.files.isEmpty) return;
 
-      final file = result.files.single;
-      final bytes = file.bytes ?? await File(file.path!).readAsBytes();
-      final ext = (file.extension ?? '').toLowerCase();
+      for (final file in result.files) {
+        if (_capReached) {
+          _showCapReached();
+          break;
+        }
+        final bytes =
+            file.bytes ?? await File(file.path!).readAsBytes();
+        final ext = (file.extension ?? '').toLowerCase();
+        if (ext == 'pdf') {
+          await _handlePdf(bytes);
+        } else {
+          await _ingestImageBytes(bytes);
+        }
+        if (!_multiEnabled) break;
+      }
 
-      if (ext == 'pdf') {
-        await _handlePdf(bytes);
-      } else {
-        await _handleImageBytes(bytes);
+      if (!_multiEnabled) {
+        if (!mounted) return;
+        await _continueIfReady();
       }
     } catch (e, st) {
       debugPrint('CapturePage.pickFile failed: $e\n$st');
@@ -84,103 +98,73 @@ class _CapturePageState extends State<CapturePage> {
     }
   }
 
-  Future<void> _handleImageBytes(Uint8List bytes) async {
-    final exifDate = await _readExifDate(bytes);
-
-    if (!mounted) return;
-    final pivot = exifDate ?? await _promptDate(context);
-    if (pivot == null) return;
-
+  Future<void> _ingestImageBytes(Uint8List bytes) async {
+    if (_capReached) {
+      _showCapReached();
+      return;
+    }
+    final exifDate = await readExifDateFromBytes(bytes);
     final resized = _resizeIfNeeded(bytes);
     final base64 = base64Encode(resized);
-
-    if (!mounted) return;
-    StatementImportFlow.of(
-      context,
-    ).goToProcessing(imageBase64: base64, pivotDate: pivot);
+    final pivot = ImagePivot(
+      base64: base64,
+      exifDate: exifDate,
+      resolvedPivot: exifDate ?? DateTime.now(),
+    );
+    setState(() => _images.add(pivot));
   }
 
   Future<void> _handlePdf(Uint8List bytes) async {
     final service = PdfToImageService();
     final pages = await service.pageCount(bytes);
 
-    if (pages > 1) {
-      if (!mounted) return;
-      final t = Translations.of(context);
-      final proceed = await showDialog<bool>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text(t.statement_import.capture.pdf_warning_title),
-          content: Text(
-            t.statement_import.capture.pdf_warning_body(pages: pages),
+    if (!_multiEnabled) {
+      if (pages > 1) {
+        if (!mounted) return;
+        final t = Translations.of(context);
+        final proceed = await showDialog<bool>(
+          context: context,
+          builder: (ctx) => AlertDialog(
+            title: Text(t.statement_import.capture.pdf_warning_title),
+            content: Text(
+              t.statement_import.capture.pdf_warning_body(pages: pages),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: Text(t.ui_actions.cancel),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: Text(t.statement_import.capture.pdf_warning_continue),
+              ),
+            ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, false),
-              child: Text(t.ui_actions.cancel),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(ctx, true),
-              child: Text(t.statement_import.capture.pdf_warning_continue),
-            ),
-          ],
-        ),
-      );
-      if (proceed != true) return;
+        );
+        if (proceed != true) return;
+      }
+      final raster = await service.rasterizeFirstPage(bytes);
+      await _ingestImageBytes(raster);
+      return;
     }
 
-    final raster = await service.rasterizeFirstPage(bytes);
-
-    if (!mounted) return;
-    final pivot = await _promptDate(context);
-    if (pivot == null) return;
-
-    final resized = _resizeIfNeeded(raster);
-    final base64 = base64Encode(resized);
-
-    if (!mounted) return;
-    StatementImportFlow.of(
-      context,
-    ).goToProcessing(imageBase64: base64, pivotDate: pivot);
-  }
-
-  Future<DateTime?> _readExifDate(Uint8List bytes) async {
-    try {
-      final tags = await readExifFromBytes(bytes);
-      if (tags.isEmpty) return null;
-      final raw =
-          tags['EXIF DateTimeOriginal']?.printable ??
-          tags['Image DateTime']?.printable;
-      if (raw == null || raw.isEmpty) return null;
-      final match = RegExp(
-        r'^(\d{4}):(\d{2}):(\d{2})\s+(\d{2}):(\d{2}):(\d{2})$',
-      ).firstMatch(raw.trim());
-      if (match == null) return null;
-      return DateTime(
-        int.parse(match.group(1)!),
-        int.parse(match.group(2)!),
-        int.parse(match.group(3)!),
-        int.parse(match.group(4)!),
-        int.parse(match.group(5)!),
-        int.parse(match.group(6)!),
-      );
-    } catch (e) {
-      debugPrint('CapturePage.readExif failed: $e');
-      return null;
+    final cap = _remaining;
+    if (cap <= 0) {
+      _showCapReached();
+      return;
     }
-  }
-
-  Future<DateTime?> _promptDate(BuildContext context) async {
-    final now = DateTime.now();
-    return showDatePicker(
-      context: context,
-      initialDate: now,
-      firstDate: DateTime(now.year - 5),
-      lastDate: now,
-      helpText: Translations.of(
-        context,
-      ).statement_import.capture.date_picker_title,
+    if (pages > cap) {
+      if (!mounted) return;
+      _showCapReached();
+    }
+    final pageImages = await service.rasterizeAllPages(
+      bytes,
+      maxPages: cap,
     );
+    for (final raster in pageImages) {
+      if (_capReached) break;
+      await _ingestImageBytes(raster);
+    }
   }
 
   Uint8List _resizeIfNeeded(Uint8List bytes) {
@@ -208,7 +192,30 @@ class _CapturePageState extends State<CapturePage> {
 
   void _showReadError() {
     final t = Translations.of(context);
-    NitidoSnackbar.error(SnackbarParams(t.statement_import.capture.error_read));
+    NitidoSnackbar.error(
+      SnackbarParams(t.statement_import.capture.error_read),
+    );
+  }
+
+  void _showCapReached() {
+    final t = Translations.of(context);
+    NitidoSnackbar.info(
+      SnackbarParams(
+        t.statement_import.capture.cap_reached(max: kMaxImagesPerSession),
+      ),
+    );
+  }
+
+  void _removeImage(int index) {
+    setState(() => _images.removeAt(index));
+  }
+
+  Future<void> _continueIfReady() async {
+    if (_images.isEmpty) return;
+    final resolved = await promptMissingPivots(context, _images);
+    if (resolved == null) return;
+    if (!mounted) return;
+    StatementImportFlow.of(context).goToProcessing(images: resolved);
   }
 
   @override
@@ -246,7 +253,7 @@ class _CapturePageState extends State<CapturePage> {
               _PrivacyBadge(),
               const SizedBox(height: 20),
               FilledButton.icon(
-                onPressed: _busy ? null : _onTakePhoto,
+                onPressed: _busy || _capReached ? null : _onTakePhoto,
                 style: FilledButton.styleFrom(
                   minimumSize: const Size.fromHeight(52),
                   textStyle: const TextStyle(
@@ -265,7 +272,7 @@ class _CapturePageState extends State<CapturePage> {
               ),
               const SizedBox(height: 10),
               OutlinedButton.icon(
-                onPressed: _busy ? null : _onPickFile,
+                onPressed: _busy || _capReached ? null : _onPickFile,
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size.fromHeight(52),
                   textStyle: const TextStyle(
@@ -276,6 +283,27 @@ class _CapturePageState extends State<CapturePage> {
                 icon: const Icon(Icons.upload_file_outlined),
                 label: Text(t.statement_import.capture.cta_file),
               ),
+              if (_multiEnabled && _images.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _MultiCounter(count: _images.length),
+                const SizedBox(height: 10),
+                _ImageStrip(
+                  images: _images,
+                  onRemove: _removeImage,
+                ),
+                const SizedBox(height: 12),
+                FilledButton(
+                  onPressed: _busy ? null : _continueIfReady,
+                  style: FilledButton.styleFrom(
+                    minimumSize: const Size.fromHeight(52),
+                  ),
+                  child: Text(
+                    t.statement_import.capture.continue_cta(
+                      n: _images.length,
+                    ),
+                  ),
+                ),
+              ],
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(12),
@@ -294,6 +322,109 @@ class _CapturePageState extends State<CapturePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MultiCounter extends StatelessWidget {
+  const _MultiCounter({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = Translations.of(context);
+    final cs = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: cs.primary.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.collections_outlined, size: 16, color: cs.primary),
+          const SizedBox(width: 6),
+          Text(
+            t.statement_import.capture.multi_count(n: count),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: cs.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ImageStrip extends StatelessWidget {
+  const _ImageStrip({required this.images, required this.onRemove});
+
+  final List<ImagePivot> images;
+  final void Function(int index) onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return SizedBox(
+      height: 92,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: images.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (ctx, idx) {
+          final img = images[idx];
+          Uint8List? bytes;
+          try {
+            bytes = base64Decode(img.base64);
+          } catch (_) {
+            bytes = null;
+          }
+          return Stack(
+            clipBehavior: Clip.none,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: bytes == null
+                    ? Container(
+                        width: 84,
+                        height: 84,
+                        color: cs.surfaceContainer,
+                        child: const Icon(
+                          Icons.image_not_supported_outlined,
+                          size: 18,
+                        ),
+                      )
+                    : Image.memory(
+                        bytes,
+                        width: 84,
+                        height: 84,
+                        fit: BoxFit.cover,
+                      ),
+              ),
+              Positioned(
+                top: -6,
+                right: -6,
+                child: Material(
+                  color: cs.surface,
+                  shape: const CircleBorder(),
+                  elevation: 2,
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: () => onRemove(idx),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Icon(Icons.close, size: 14, color: cs.onSurface),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

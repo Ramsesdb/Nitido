@@ -1278,7 +1278,16 @@
       "pdf-warning-body": "This PDF has {{pages}} pages. We will only process page 1.",
       "pdf-warning-continue": "Continue",
       "date-picker-title": "When did you take the capture?",
-      "error-read": "Could not read the image"
+      "error-read": "Could not read the image",
+      "multi-count": "{{n}} images",
+      "cap-reached": "Maximum {{max}} images per session",
+      "continue-cta": "Continue · {{n}} images",
+      "missing-pivot-title": "Pending dates",
+      "missing-pivot-body": "Some images do not have a date in their metadata. Assign one for each.",
+      "missing-pivot-all-today": "Use today for all",
+      "missing-pivot-continue": "Continue",
+      "missing-pivot-select": "Select a date",
+      "missing-pivot-image-label": "Image {{n}}"
     },
     "processing": {
       "title": "Reading account statement…",
@@ -1288,7 +1297,9 @@
       "error-timeout": "Could not read in time. Try again",
       "error-generic": "Could not read. Try again",
       "retry": "Retry",
-      "back": "Back"
+      "back": "Back",
+      "progress": "Processing {{current}} of {{total}}",
+      "all-failed": "Could not extract anything from the images"
     },
     "review": {
       "title": "Review movements",
@@ -1304,7 +1315,8 @@
       "fresh-start-configure": "Configure now",
       "tag-exists": "Already exists",
       "tag-fee": "Fee",
-      "tag-prefresh": "Pre-Fresh"
+      "tag-prefresh": "Pre-Fresh",
+      "image-failed": "Image {{index}}: no movements extracted"
     },
     "modes": {
       "missing": "Missing",
@@ -1341,6 +1353,10 @@
       "dialog-confirm": "Undo",
       "dialog-cancel": "Cancel",
       "success": "Import undone"
+    },
+    "PRE_FRESH": {
+      "auto-adjust-title": "Adjust tracking date",
+      "auto-adjust-body": "These movements are older than your tracking date. Move the tracking start to {{date}}?"
     },
     "entry-point": "Import account statement"
   },

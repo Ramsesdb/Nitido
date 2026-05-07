@@ -1340,6 +1340,7 @@ class TranslationsStatementImportEn {
 	late final TranslationsStatementImportConfirmEn confirm = TranslationsStatementImportConfirmEn.internal(_root);
 	late final TranslationsStatementImportSuccessEn success = TranslationsStatementImportSuccessEn.internal(_root);
 	late final TranslationsStatementImportUndoEn undo = TranslationsStatementImportUndoEn.internal(_root);
+	late final TranslationsStatementImportPreFreshEn pre_fresh = TranslationsStatementImportPreFreshEn.internal(_root);
 
 	/// en: 'Import account statement'
 	String get entry_point => 'Import account statement';
@@ -3259,6 +3260,33 @@ class TranslationsStatementImportCaptureEn {
 
 	/// en: 'Could not read the image'
 	String get error_read => 'Could not read the image';
+
+	/// en: '{{n}} images'
+	String multi_count({required Object n}) => '${n} images';
+
+	/// en: 'Maximum {{max}} images per session'
+	String cap_reached({required Object max}) => 'Maximum ${max} images per session';
+
+	/// en: 'Continue · {{n}} images'
+	String continue_cta({required Object n}) => 'Continue · ${n} images';
+
+	/// en: 'Pending dates'
+	String get missing_pivot_title => 'Pending dates';
+
+	/// en: 'Some images do not have a date in their metadata. Assign one for each.'
+	String get missing_pivot_body => 'Some images do not have a date in their metadata. Assign one for each.';
+
+	/// en: 'Use today for all'
+	String get missing_pivot_all_today => 'Use today for all';
+
+	/// en: 'Continue'
+	String get missing_pivot_continue => 'Continue';
+
+	/// en: 'Select a date'
+	String get missing_pivot_select => 'Select a date';
+
+	/// en: 'Image {{n}}'
+	String missing_pivot_image_label({required Object n}) => 'Image ${n}';
 }
 
 // Path: statement_import.processing
@@ -3292,6 +3320,12 @@ class TranslationsStatementImportProcessingEn {
 
 	/// en: 'Back'
 	String get back => 'Back';
+
+	/// en: 'Processing {{current}} of {{total}}'
+	String progress({required Object current, required Object total}) => 'Processing ${current} of ${total}';
+
+	/// en: 'Could not extract anything from the images'
+	String get all_failed => 'Could not extract anything from the images';
 }
 
 // Path: statement_import.review
@@ -3343,6 +3377,9 @@ class TranslationsStatementImportReviewEn {
 
 	/// en: 'Pre-Fresh'
 	String get tag_prefresh => 'Pre-Fresh';
+
+	/// en: 'Image {{index}}: no movements extracted'
+	String image_failed({required Object index}) => 'Image ${index}: no movements extracted';
 }
 
 // Path: statement_import.modes
@@ -3463,6 +3500,21 @@ class TranslationsStatementImportUndoEn {
 
 	/// en: 'Import undone'
 	String get success => 'Import undone';
+}
+
+// Path: statement_import.pre_fresh
+class TranslationsStatementImportPreFreshEn {
+	TranslationsStatementImportPreFreshEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Adjust tracking date'
+	String get auto_adjust_title => 'Adjust tracking date';
+
+	/// en: 'These movements are older than your tracking date. Move the tracking start to {{date}}?'
+	String auto_adjust_body({required Object date}) => 'These movements are older than your tracking date. Move the tracking start to ${date}?';
 }
 
 // Path: more.search
@@ -5818,6 +5870,15 @@ extension on Translations {
 			'statement_import.capture.pdf_warning_continue' => 'Continue',
 			'statement_import.capture.date_picker_title' => 'When did you take the capture?',
 			'statement_import.capture.error_read' => 'Could not read the image',
+			'statement_import.capture.multi_count' => ({required Object n}) => '${n} images',
+			'statement_import.capture.cap_reached' => ({required Object max}) => 'Maximum ${max} images per session',
+			'statement_import.capture.continue_cta' => ({required Object n}) => 'Continue · ${n} images',
+			'statement_import.capture.missing_pivot_title' => 'Pending dates',
+			'statement_import.capture.missing_pivot_body' => 'Some images do not have a date in their metadata. Assign one for each.',
+			'statement_import.capture.missing_pivot_all_today' => 'Use today for all',
+			'statement_import.capture.missing_pivot_continue' => 'Continue',
+			'statement_import.capture.missing_pivot_select' => 'Select a date',
+			'statement_import.capture.missing_pivot_image_label' => ({required Object n}) => 'Image ${n}',
 			'statement_import.processing.title' => 'Reading account statement…',
 			'statement_import.processing.analyzing' => 'Analyzing…',
 			'statement_import.processing.found' => ({required Object n}) => '${n} found',
@@ -5826,6 +5887,8 @@ extension on Translations {
 			'statement_import.processing.error_generic' => 'Could not read. Try again',
 			'statement_import.processing.retry' => 'Retry',
 			'statement_import.processing.back' => 'Back',
+			'statement_import.processing.progress' => ({required Object current, required Object total}) => 'Processing ${current} of ${total}',
+			'statement_import.processing.all_failed' => 'Could not extract anything from the images',
 			'statement_import.review.title' => 'Review movements',
 			'statement_import.review.empty' => 'No movements detected',
 			'statement_import.review.toggle_all' => 'All',
@@ -5840,6 +5903,7 @@ extension on Translations {
 			'statement_import.review.tag_exists' => 'Already exists',
 			'statement_import.review.tag_fee' => 'Fee',
 			'statement_import.review.tag_prefresh' => 'Pre-Fresh',
+			'statement_import.review.image_failed' => ({required Object index}) => 'Image ${index}: no movements extracted',
 			'statement_import.modes.missing' => 'Missing',
 			'statement_import.modes.income' => 'Income',
 			'statement_import.modes.expense' => 'Expenses',
@@ -5868,6 +5932,8 @@ extension on Translations {
 			'statement_import.undo.dialog_confirm' => 'Undo',
 			'statement_import.undo.dialog_cancel' => 'Cancel',
 			'statement_import.undo.success' => 'Import undone',
+			'statement_import.pre_fresh.auto_adjust_title' => 'Adjust tracking date',
+			'statement_import.pre_fresh.auto_adjust_body' => ({required Object date}) => 'These movements are older than your tracking date. Move the tracking start to ${date}?',
 			'statement_import.entry_point' => 'Import account statement',
 			'more.title' => 'More',
 			'more.title_long' => 'More actions',
@@ -5902,6 +5968,8 @@ extension on Translations {
 			'more.data.delete_all_message2' => 'By deleting an account you will delete all your stored personal data. Your accounts, transactions, budgets and categories will be deleted and cannot be recovered. Do you agree?',
 			'more.about_us.display' => 'App information',
 			'more.about_us.description' => 'Find NITIDO’s terms, important info, and connect by reporting bugs or sharing ideas',
+			_ => null,
+		} ?? switch (path) {
 			'more.about_us.legal.display' => 'Legal information',
 			'more.about_us.legal.privacy' => 'Privacy policy',
 			'more.about_us.legal.terms' => 'Terms of use',
@@ -5916,8 +5984,6 @@ extension on Translations {
 			'more.help_us.display' => 'Help us',
 			'more.help_us.description' => 'Find out how you can help NITIDO become better and better',
 			'more.help_us.rate_us' => 'Rate us',
-			_ => null,
-		} ?? switch (path) {
 			'more.help_us.rate_us_descr' => 'Any rate is welcome!',
 			'more.help_us.share' => 'Share NITIDO',
 			'more.help_us.share_descr' => 'Share our app to friends and family',

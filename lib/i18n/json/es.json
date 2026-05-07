@@ -1280,7 +1280,16 @@
       "pdf-warning-body": "Este PDF tiene {{pages}} páginas. Solo procesaremos la página 1.",
       "pdf-warning-continue": "Continuar",
       "date-picker-title": "¿Cuándo tomaste la captura?",
-      "error-read": "No se pudo leer la imagen"
+      "error-read": "No se pudo leer la imagen",
+      "multi-count": "{{n}} imágenes",
+      "cap-reached": "Máximo {{max}} imágenes por sesión",
+      "continue-cta": "Continuar · {{n}} imágenes",
+      "missing-pivot-title": "Fechas pendientes",
+      "missing-pivot-body": "Algunas imágenes no tienen fecha en sus metadatos. Asigna una para cada una.",
+      "missing-pivot-all-today": "Usar hoy para todas",
+      "missing-pivot-continue": "Continuar",
+      "missing-pivot-select": "Selecciona una fecha",
+      "missing-pivot-image-label": "Imagen {{n}}"
     },
     "processing": {
       "title": "Leyendo estado de cuenta…",
@@ -1290,7 +1299,9 @@
       "error-timeout": "No pudimos leer en tiempo. Reintenta",
       "error-generic": "No pudimos leer. Reintenta",
       "retry": "Reintentar",
-      "back": "Volver"
+      "back": "Volver",
+      "progress": "Procesando {{current}} de {{total}}",
+      "all-failed": "No se pudo extraer nada de las imágenes"
     },
     "review": {
       "title": "Revisar movimientos",
@@ -1306,7 +1317,8 @@
       "fresh-start-configure": "Configurar ahora",
       "tag-exists": "Ya existe",
       "tag-fee": "Comisión",
-      "tag-prefresh": "Pre-Fresh"
+      "tag-prefresh": "Pre-Fresh",
+      "image-failed": "Imagen {{index}}: no se extrajeron movimientos"
     },
     "modes": {
       "missing": "Faltantes",
@@ -1343,6 +1355,10 @@
       "dialog-confirm": "Deshacer",
       "dialog-cancel": "Cancelar",
       "success": "Importación deshecha"
+    },
+    "PRE_FRESH": {
+      "auto-adjust-title": "Ajustar fecha de seguimiento",
+      "auto-adjust-body": "Estos movimientos son anteriores a tu fecha de seguimiento. ¿Mover el inicio de tracking a {{date}}?"
     },
     "entry-point": "Importar estado de cuenta"
   },

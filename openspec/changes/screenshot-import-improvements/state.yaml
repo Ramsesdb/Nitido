@@ -1,0 +1,203 @@
+change: screenshot-import-improvements
+mode: openspec
+phases:
+  explore:
+    status: complete
+    artifact: openspec/changes/screenshot-import-improvements/exploration.md
+  propose:
+    status: complete
+    artifact: openspec/changes/screenshot-import-improvements/proposal.md
+  spec:
+    status: complete
+    artifacts:
+      - openspec/changes/screenshot-import-improvements/specs/statement-import-multi-image.md
+      - openspec/changes/screenshot-import-improvements/specs/categorization-fallback.md
+      - openspec/changes/screenshot-import-improvements/specs/pre-fresh-auto-adjust.md
+  design:
+    status: complete
+    artifact: openspec/changes/screenshot-import-improvements/design.md
+  tasks:
+    status: complete
+    artifact: openspec/changes/screenshot-import-improvements/tasks.md
+  apply:
+    status: in_progress
+    progress:
+      phase_0:
+        status: complete
+        tasks: [0.1, 0.2, 0.3, 0.4]
+        notes: >-
+          Phase 0 (prep / shared utilities) complete. Created
+          lib/core/constants/feature_flags.dart and
+          lib/core/constants/fallback_categories.dart, moved retroactive
+          dialogs from lib/app/accounts/widgets/retroactive_dialogs.dart to
+          lib/core/presentation/widgets/retroactive_preview_dialog.dart and
+          updated the account_form.dart import. Added 9 unit tests in
+          test/core/constants/fallback_categories_test.dart (all pass).
+          flutter analyze on touched files: 0 issues.
+      phase_1:
+        status: complete
+        tasks:
+          [
+            1.1,
+            1.2,
+            1.3,
+            1.3a,
+            1.3b,
+            1.3c,
+            1.4,
+            1.5,
+            1.6,
+            1.7,
+            1.8,
+            1.9,
+            1.10,
+            1.11a,
+            1.11b,
+            1.11c,
+          ]
+        deferred: [1.11d]
+        notes: >-
+          Phase 1 (multi-image import) complete. ImagePivot value class +
+          readExifDate helper at lib/core/services/statement_import/image_pivot.dart.
+          dedupeInSession helper at lib/core/services/statement_import/dedupe_in_session.dart
+          with 4h-bucket key (amount.abs, currency.upper, floor(ms/4h),
+          description.lowerTrim) returning DedupeResult(rows, collisions).
+          StatementImportFlow now holds List<ImagePivot> images +
+          List<int> failedImageIndices with backward-compat getters
+          imageBase64/pivotDate (single-image) preserved for confirm.page
+          until Phase 3. Capture.page wires multi-image gated by
+          kEnableMultiImageImport flag: cap of 10 (kMaxImagesPerSession),
+          counter strip + remove buttons, FilePicker.pickFiles allowMultiple,
+          PDF rasterizeAllPages with cap, missing-pivot bottom sheet
+          (widgets/missing_pivot_sheet.dart). Processing.page runs serial
+          for-loop with per-image try/catch, exposes
+          ValueNotifier<int> _currentImageIndex, applies dedupeInSession
+          before MatchingEngine, surfaces failedImageIndices via
+          flow.onFailedImageIndices, and shows _AllFailedBody (retry/cancel)
+          when every image fails. Review.page renders dismissible InputChips
+          for failedImageIndices at the top of the list (Wrap of
+          Icons.broken_image_outlined chips, error-container colors).
+          i18n keys added to es.json + en.json:
+          capture.multi-count/cap-reached/continue-cta/missing-pivot-*,
+          processing.progress/all-failed, review.image-failed; slang
+          regenerated cleanly. Tests: 9 dedupe boundary tests + 3 multi_count
+          render tests + 4 progress/all_failed/image_failed render tests
+          (16 total) all green; 1.11d integration deferred (cost vs benefit;
+          covered by Phase 4 smoke). flutter analyze on touched paths:
+          0 new issues (1 pre-existing deprecated NexusAiService info).
+      phase_2:
+        status: complete
+        tasks: [2.1, 2.2, 2.3, 2.4, 2.5a, 2.5b]
+        notes: >-
+          Phase 2 (categorization fallback) complete. Wired
+          resolveFallbackCategory in proposal_review.page.dart
+          (_resolveFallbackCategoryForType) and confirm.page.dart
+          (_resolveCategoryForKind), replacing the legacy `.first` paths.
+          Removed the savings auto-create detour from the proposal-review
+          fallback chain to honour the spec's "no drift between sites"
+          rule (the savings helper is still used by the
+          Binance/BDV-USD heuristic at line ~229). Added
+          kMinConfidence = 0.55 (renamed from _kMinConfidence so the
+          new test file can reference it) at the top of
+          auto_categorization_service.dart. Extracted a pure
+          parseCategorizationResponse helper that gates on the
+          threshold, and refactored AutoCategorizationService.suggest to
+          delegate to it. Appended the literal Spanish neutral-fallback
+          instruction to the LLM user prompt. Added 14 unit tests in
+          test/core/services/ai/auto_categorization_service_test.dart
+          covering threshold gating (0.40 below, 0.55 at, 0.5499 just
+          under, 0.85 above), null/empty/malformed payloads, allowed-id
+          filtering, string confidence parsing, clamping, and JSON
+          extraction from surrounding text. flutter analyze on touched
+          files: 0 issues. All 23 tests (9 fallback_categories + 14
+          new) pass.
+      phase_3:
+        status: complete
+        tasks:
+          [
+            3.1,
+            3.1a,
+            3.1b,
+            3.1c,
+            3.1d,
+            3.1e,
+            3.2,
+            3.3,
+            3.4,
+            3.5a,
+            3.5b,
+            3.5c,
+          ]
+        deferred: [3.5d]
+        notes: >-
+          Phase 3 (pre-fresh auto-adjust) complete. Added _handlePreFresh in
+          confirm.page.dart that detects MatchingResult.isPreFresh rows,
+          truncates proposedTrackedSince to date precision, queries
+          AccountService.getAccountsMoney + getAccountsMoneyPreview, and
+          shows RetroactivePreviewDialog or RetroactiveStrongConfirmDialog
+          based on shouldEscalatePreFreshDialog (shift > 50% OR simulated
+          balance < 0; mirrors account_form.dart). Hook is gated on
+          kEnablePreFreshAutoAdjust; returns true on accept (mutation +
+          flow.refreshAccount), true on null trackedSince / no pre-fresh /
+          standard-preview dismissal, false only on explicit strong-confirm
+          rejection. _commit re-reads currentFlow/currentAccount after the
+          hook to see the refreshed Account. Extracted
+          shouldEscalatePreFreshDialog as a top-level @visibleForTesting
+          predicate plus kRetroactivePreFreshDiffThreshold const. i18n keys
+          STATEMENT_IMPORT.PRE_FRESH.auto-adjust-title and auto-adjust-body
+          added to es.json + en.json (Spanish baseline + English mirror);
+          slang regenerated cleanly. Tests in
+          test/statement_import/pre_fresh_dialog_test.dart cover the
+          predicate (5 cases including 50% boundary), preview-dialog render,
+          strong-confirm dialog with text-input enable/disable, and the
+          trackedSince-null bypass contract — 8 tests total, all green.
+          3.5d (full integration) deferred for the same reason as 1.11d:
+          singleton AccountService + StatementBatchesService make widget
+          plumbing costly; Phase 4 smoke 4.2d/4.2e covers the path.
+          flutter analyze on touched files: 0 issues.
+      phase_4:
+        status: pending
+  verify:
+    status: complete
+    artifact: openspec/changes/screenshot-import-improvements/verify-report.md
+    notes: >-
+      PASS-WITH-CAVEATS. All Phase 0/1/2/3 implementation tasks present and
+      structurally correct. flutter test full suite green: 602 passed, 8
+      skipped, 0 failed. flutter analyze: 41 issues, all pre-existing
+      (36 generated-translations override warnings, 4 NexusAiService
+      deprecation infos, 1 curly_braces info, 1 use_build_context info);
+      0 new regressions in any new or modified file. Spec coverage: every
+      requirement across the three delta specs has structural + (where
+      reasonable) test evidence in lib/ and test/. Deferred integration
+      tests 1.11d and 3.5d are NOT regressions — they were explicitly
+      deferred by design and are covered by Phase 4 smoke (4.2c-e).
+      Pending before archive: user-driven manual smoke 4.2a–f and
+      task 4.4 (flip kEnableMultiImageImport = true post-smoke).
+  archive:
+    status: pending
+locked_decisions:
+  - "Bundle as one change with three sub-deltas (multi-image, categorization fallback, pre-fresh auto-adjust)"
+  - "Multi-image: serial loop (Approach A), max 10 images per session"
+  - "Pre-fresh: auto-adjust trackedSince at import time, with RetroactivePreviewDialog confirmation (NOT silent)"
+  - "Categorization fallback: hardcoded C19 (expense) / C03 (income) constants + LLM prompt update; defense in depth"
+  - "Multi-image dedupe: in-session by (amount, currency, date±4h, counterpartyName)"
+  - "Failure isolation: N-of-M image failures continue with the rest, report in review screen"
+  - "Reuse existing infra from account-pre-tracking-period (no new Drift migration; rides on v24)"
+  - "Image cap = 10 fixed (not user-configurable in v1); PDF rasterization counts each page against the cap"
+  - "Pivot date per image: EXIF auto-detect first, prompt user only for images missing EXIF; user may override any pivot"
+  - "Confidence threshold: pass-through (spec describes behavior; design phase picks numeric value)"
+  - "RetroactivePreviewDialog/RetroactiveStrongConfirmDialog lifted to lib/core/presentation/widgets/retroactive_preview_dialog.dart"
+  - "Strong-confirm trigger reused from account-pre-tracking-period: shift > 50% OR projected balance < 0"
+  - "Confidence threshold _kMinConfidence = 0.55 (top-level const in auto_categorization_service.dart); below threshold → discard suggestion → fallback fires"
+  - "EXIF: reuse package:exif ^3.3.0 already in pubspec; new ImagePivot value class in lib/core/services/statement_import/image_pivot.dart"
+  - "Dedupe key tuple: (amount.abs, currency.upper, dateBucket=floor(ms/4h), counterpartyName.lowerTrim); applied AFTER all extractions, BEFORE MatchingEngine"
+  - "Fallback category lookup must accept type 'B' for expense queries (C19 has type 'B' in seed)"
+  - "Feature flags in lib/core/constants/feature_flags.dart (NEW file): kEnableMultiImageImport=false, kEnablePreFreshAutoAdjust=true; categorization fallback has NO flag"
+  - "PR ordering: this change merges AFTER account-pre-tracking-period archives (lift of retroactive dialogs touches its already-shipped code)"
+out_of_scope:
+  - telemetry
+  - batched-LLM call (single request with N images)
+  - dedicated per-bank parsers
+  - transfer detection in extracted rows
+  - Firebase sync of trackedSince
+next_recommended: sdd-apply

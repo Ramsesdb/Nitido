@@ -8,6 +8,7 @@ import 'package:nitido/app/transactions/auto_import/widgets/proposal_status_chip
 import 'package:nitido/core/database/app_db.dart';
 import 'package:nitido/core/database/services/account/account_service.dart';
 import 'package:nitido/core/database/services/category/category_service.dart';
+import 'package:nitido/core/constants/fallback_categories.dart';
 import 'package:nitido/core/database/services/pending_import/pending_import_service.dart';
 import 'package:nitido/core/database/services/transaction/transaction_service.dart';
 import 'package:nitido/core/models/account/account.dart';
@@ -940,26 +941,7 @@ class _ProposalReviewPageState extends State<ProposalReviewPage> {
     TransactionType type,
   ) async {
     final categories = await CategoryService.instance.getCategories().first;
-
-    final normalized = categories.where((category) {
-      if (type == TransactionType.income) {
-        return category.type == CategoryType.I ||
-            category.type == CategoryType.B;
-      }
-
-      return category.type == CategoryType.E || category.type == CategoryType.B;
-    }).toList();
-
-    if (normalized.isEmpty) return null;
-
-    if (type == TransactionType.expense) {
-      final savings = await _findOrCreateSavingsCategory();
-      if (savings != null) {
-        return savings;
-      }
-    }
-
-    return normalized.first;
+    return resolveFallbackCategory(type, categories);
   }
 
   Future<Category?> _findOrCreateSavingsCategory() async {
